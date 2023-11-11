@@ -1,6 +1,11 @@
 import React from "react";
 
 const LogInPanel = (): JSX.Element => {
+
+  function abcxyz() {
+
+  }
+
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -20,7 +25,7 @@ const LogInPanel = (): JSX.Element => {
           </svg>
           Sign in with Google
         </button>
-        <button className="btn text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mb-2">
+        <button onClick={abcxyz} className="btn text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mb-2">
           <svg
             className="w-4 h-4 mr-2"
             aria-hidden="true"
