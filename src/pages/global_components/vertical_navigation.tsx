@@ -7,20 +7,27 @@ const VerticalNavigation: React.FC = () => {
     <nav className="w-1/5 bg-gray-800 text-white h-screen">
       <ul className="p-4">
         <li className="mb-4">
-          <Link href="/">
-            <a className="hover:text-gray-300">Home</a>
+          <Link href="/" className="hover:text-gray-300">
+            Home
+          </Link>
+          
+        </li>
+        <li className="mb-4">
+          <Link href="/" className="hover:text-gray-300">
+            Discovery
           </Link>
         </li>
         <li className="mb-4">
-          <Link href="/my-library/draft">
-            <a className="hover:text-gray-300">About</a>
+          <Link href="/" className="hover:text-gray-300">
+           Reports
           </Link>
         </li>
         <li className="mb-4">
-          <Link href="/">
-            <a className="hover:text-gray-300">Contact</a>
+          <Link href="/my-library/home" className="hover:text-gray-300">
+            Library
           </Link>
         </li>
+        
       </ul>
     </nav>
   );

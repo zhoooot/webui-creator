@@ -1,10 +1,10 @@
 import React from 'react';
-import Layout from './home_page/global_components/layout';
+import Layout from './global_components/layout';
 
 const Home: React.FC = () => {
   return (
     <Layout>
-      <h1>Home Page</h1>
+    <h1>love SE</h1>
       {/* Your home page content goes here */}
     </Layout>
   );
