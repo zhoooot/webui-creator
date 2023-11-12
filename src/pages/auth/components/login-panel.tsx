@@ -1,7 +1,6 @@
 import React from "react";
 
 const LogInPanel = (): JSX.Element => {
-
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -37,11 +36,11 @@ const LogInPanel = (): JSX.Element => {
           </svg>
           Sign in with Facebook
         </button>
-        <div className="flex flex-row self-center">
-          <hr className="border-t-2 w-5/12 divide-solid self-center"></hr>
-          <text className="w-2/12 text-center">OR</text>
-          <hr className="border-t-2 w-5/12 divide-solid self-center"></hr>
+
+        <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
+          Or
         </div>
+        
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text">Email</span>
@@ -62,7 +61,9 @@ const LogInPanel = (): JSX.Element => {
             className="input input-bordered w-full"
           />
         </div>
-        <a className="link link-primary flex justify-center p-2">Forgot password?</a>
+        <a className="link link-primary flex justify-center p-2">
+          Forgot password?
+        </a>
         <button className="btn btn-primary">Log In</button>
         <p className="flex justify-center p-2">
           Haven't got an account?{" "}
