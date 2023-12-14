@@ -57,6 +57,6 @@ const config: Config = {
   ]
     },
   },
-  plugins: [require("daisyui"), require('preline/plugin'),],
+  plugins: [require("daisyui"), require('preline/plugin'), require("rippleui"), ],
 }
 export default config

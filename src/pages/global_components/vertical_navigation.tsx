@@ -13,7 +13,7 @@ const VerticalNavigation: React.FC = () => {
           
         </li>
         <li className="mb-4">
-          <Link href="/" className="hover:text-gray-300">
+          <Link href="/discover" className="hover:text-gray-300">
             Discovery
           </Link>
         </li>

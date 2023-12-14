@@ -8,7 +8,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <VerticalNavigation />
       <main className="w-4/5 p-4">{children}</main>
     </div>
