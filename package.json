@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@iconify/react": "^4.1.1",
     "@preline/dropdown": "^2.0.1",
     "next": "^14.0.1",
     "preline": "^2.0.0",
