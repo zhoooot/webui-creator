@@ -1,8 +1,9 @@
-import Layout from "../global_components/layout";
-import QuizCard from "./components/quiz_card";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Layout from "../../global_components/layout";
+import QuizCard from "./quiz_card";
 
-const Discover: React.FC = () => {
-  const quizData = [
+const PrivateQuizzes: React.FC = () => {
+  const privateQuizzes = [
     {
       id: 1,
       imageUrl: "https://picsum.photos/200/300",
@@ -130,26 +131,42 @@ const Discover: React.FC = () => {
       questionCount: 10,
     },
   ];
+  // limit to 9 quizzes
+  privateQuizzes.length = 6;
   return (
-    <Layout>
-      <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
-        <h1 className="text-3xl font-bold pb-4">DISCOVER</h1>
-        {/* <button className="btn btn-wide">See more...</button> */}
-        <div className="grid grid-cols-3 gap-4 grow w-full overflow-y-auto">
-          {quizData.map((quiz) => (
-            <QuizCard
-              key={quiz.id}
-              imageUrl={quiz.imageUrl}
-              number={quiz.number}
-              name={quiz.name}
-              questionCount={quiz.questionCount}
-              id={quiz.id}
-            />
-          ))}
-        </div>
+    <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
+      <div className="flex flex-row justify-between items-center w-full pb-4">
+        <h1 className="text-xl font-bold">MY ZHOOTS</h1>
+        <a href="/create">
+          <button
+            type="button"
+            className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <Icon icon="akar-icons:plus" className="w-4 h-4 mr-1" />
+            Create
+          </button>
+        </a>
       </div>
-    </Layout>
+      <div className="grid grid-cols-3 gap-4 grow w-full">
+        {privateQuizzes.map((quiz) => (
+          <QuizCard
+            key={quiz.id}
+            imageUrl={quiz.imageUrl}
+            number={quiz.number}
+            name={quiz.name}
+            questionCount={quiz.questionCount}
+            id={quiz.id}
+          />
+        ))}
+      </div>
+      <button
+        type="button"
+        className="w-fit self-end py-3 px-4 mt-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-2xl border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+      >
+        <a href="/my-library">See all</a>
+      </button>
+    </div>
   );
 };
 
-export default Discover;
+export default PrivateQuizzes;

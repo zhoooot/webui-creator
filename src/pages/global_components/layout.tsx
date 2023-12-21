@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="flex-none">
         <TopBar name="Taylor Swift"></TopBar>
       </div>
-      <div className="flex-1 flex h-2 p-4">{children}</div>
+      <div className="flex-1 flex h-2">{children}</div>
     </div>
   );
 };

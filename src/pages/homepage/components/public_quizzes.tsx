@@ -1,8 +1,8 @@
-import Layout from "../global_components/layout";
-import QuizCard from "./components/quiz_card";
+import Layout from "../../global_components/layout";
+import QuizCard from "./quiz_card";
 
-const Discover: React.FC = () => {
-  const quizData = [
+const PublicQuizzes: React.FC = () => {
+  const publicQuizzes = [
     {
       id: 1,
       imageUrl: "https://picsum.photos/200/300",
@@ -130,26 +130,33 @@ const Discover: React.FC = () => {
       questionCount: 10,
     },
   ];
+  // limit to 9 quizzes
+  publicQuizzes.length = 6;
   return (
-    <Layout>
-      <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
-        <h1 className="text-3xl font-bold pb-4">DISCOVER</h1>
-        {/* <button className="btn btn-wide">See more...</button> */}
-        <div className="grid grid-cols-3 gap-4 grow w-full overflow-y-auto">
-          {quizData.map((quiz) => (
-            <QuizCard
-              key={quiz.id}
-              imageUrl={quiz.imageUrl}
-              number={quiz.number}
-              name={quiz.name}
-              questionCount={quiz.questionCount}
-              id={quiz.id}
-            />
-          ))}
-        </div>
+    <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
+      <div className="flex flex-row justify-between items-center w-full pb-4">
+        <h1 className="text-xl font-bold">TOP ZHOOTS</h1>
+        <button
+          type="button"
+          className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          <a href="/discover">Discover more</a>
+        </button>
       </div>
-    </Layout>
+      <div className="grid grid-cols-3 gap-4 grow w-full">
+        {publicQuizzes.map((quiz) => (
+          <QuizCard
+            key={quiz.id}
+            imageUrl={quiz.imageUrl}
+            number={quiz.number}
+            name={quiz.name}
+            questionCount={quiz.questionCount}
+            id={quiz.id}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default Discover;
+export default PublicQuizzes;
