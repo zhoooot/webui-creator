@@ -4,8 +4,9 @@ import Favorite from './components/favorite';
 import Draft from './components/draft';
 import Recent from './components/recent';
 import SharedWithMe from './components/shared-with-me';
-import Layout from '../global_components/layout';
 import Header from './components/header';
+import Layout from '../global_components/layout';
+
 const YourPage = () => {
   const tabData = [
     { 

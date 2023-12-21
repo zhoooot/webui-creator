@@ -1,6 +1,5 @@
-// components/Layout.tsx
-import React, { ReactNode } from 'react';
-import VerticalNavigation from './vertical_navigation';
+import TopBar from "./topbar";
+import React, { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,9 +7,11 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex h-screen">
-      <VerticalNavigation />
-      <main className="w-4/5 p-4">{children}</main>
+    <div className="sm:ml-48 h-full flex flex-col bg-primary-500">
+      <div className="flex-none">
+        <TopBar name="Taylor Swift"></TopBar>
+      </div>
+      <div className="flex-1 flex h-2 p-4">{children}</div>
     </div>
   );
 };

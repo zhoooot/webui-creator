@@ -13,7 +13,7 @@ type ActionProps = {
 
 const Action: React.FC<ActionProps> = (props) => {
   const buttonClass =
-    "h-full border-0 font-medium rounded-full text-sm p-0 text-center inline-flex items-center";
+    "h-full border-0 font-medium rounded-full text-sm p-0 text-center inline-flex items-center p-1";
   const iconClass = "w-full h-full fill-current stroke-current";
   const subiconClass = "stroke-current stroke-10 mr-3 text-2xl";
   const optionClass =
