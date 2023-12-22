@@ -62,6 +62,14 @@ const QuizPage: React.FC = () => {
       time: 0,
       powerUps: true,
     },
+    {
+      questionNumber: 5,
+      questionText: "What is the capital of Fance?",
+      answerTexts: ["Paris", "London", "Berlin", "Madrid"],
+      correctAnswer: 1,
+      time: 0,
+      powerUps: true,
+    },
   ]);
 
   const [questionValue, setQuestionValue] = useState(
@@ -98,7 +106,17 @@ const QuizPage: React.FC = () => {
   };
 
   const handleCreateQuestion = () => {
-    // Create question
+    const newQuestion: Question = {
+      questionNumber: questionData.length,
+      questionText: "",
+      answerTexts: ["", "", "", ""],
+      correctAnswer: 1,
+      time: 0,
+      powerUps: true,
+    };
+    setQuestionData((prev) => [...prev, newQuestion]);
+    setActiveQuestion(questionData.length);
+    setQuestionValue("");
   };
 
   const handleQuestionCardClick = (clickedQuestion: Question) => {
@@ -134,34 +152,48 @@ const QuizPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen relative">
+
+    {/* Update Modal */}
+    {isUpdateModalVisible && (
+      <Modal />
+    )}
       {/* Navbar */}
       <Navbar
         setQuizTitle={setQuizTitle}
         handleUpdateModal={handleUpdateModal}
       />
-
-      {/* Update Modal */}
-      {isUpdateModalVisible && (
-        <Modal>{/* Modal content with input fields for quiz settings */}</Modal>
-      )}
-
-      <div className="bg-white flex grow border-gray-200 dark:bg-gray-800">
-        <div className="bg-white flex flex-col w-64 border-gray-200 dark:bg-gray-500">
-          {questionData.map((question) => (
-            <Card
-              key={question.questionNumber}
-              onClick={() => handleQuestionCardClick(question)}
-              index={question.questionNumber}
-              question={question.questionText}
-              answer={question.answerTexts[question.correctAnswer - 1]}
-              time={TIME[question.time]}
-              powerUps={question.powerUps}
-              activeIndex={activeQuestion}
-            />
-          ))}
+     
+      <div className="bg-white flex flex-row grow border-gray-200 dark:bg-gray-800 overflow-y-auto">
+        <div className="flex flex-col justify-center items-center">
+          <div className="bg-white grow w-64 h-full border-gray-200 dark:bg-gray-500 overflow-y-auto">
+            <div className="flex flex-col flex-1 ">
+              {questionData.map((question) => (
+                <Card
+                  key={question.questionNumber}
+                  onClick={() => handleQuestionCardClick(question)}
+                  index={question.questionNumber}
+                  question={question.questionText}
+                  answer={question.answerTexts[question.correctAnswer - 1]}
+                  time={TIME[question.time]}
+                  powerUps={question.powerUps}
+                  activeIndex={activeQuestion}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="justify-center items-center h-16">
+            <button
+              className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={handleCreateQuestion}
+            >
+              Create Question
+            </button>
+          </div>
         </div>
-        <div className="bg-gray-300 w-screen flex flex-col border-gray-200 dark:bg-gray-500 px-6 py-6 gap-x-5">
+        
+        <div className="bg-gray-300 w-screen flex flex-col border-gray-200 dark:bg-gray-500 px-6 py-6 gap-x-5 items-center">
+         
           <QuestionInput
             questionValue={questionValue}
             handleQuestionChange={handleQuestionChange}
@@ -191,7 +223,7 @@ const QuizPage: React.FC = () => {
               <Toggle />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-8 col-span-full">
+          <div className="grid grid-cols-2 gap-8 col-span-full w-full">
             {questionData[activeQuestion].answerTexts.map(
               (answer, answerId) => (
                 <AnswerButton

@@ -14,7 +14,7 @@ import Layout from "../global_components/layout";
 
 const QuizDetailPage = () => {
   const [quiz, setQuiz] = useState({
-    image_url: "https://picsum.photos/200/300",
+    image_url: "https://picsum.photos/1000/1000",
     title: "What is the capital of France?",
     description: "Test your knowledge of the world with this quiz!",
     num_played: 100,

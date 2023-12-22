@@ -10,8 +10,9 @@ const questionInput = ({
   return (
     <textarea
       placeholder="Type here"
-      className="input input-bordered input-lg w-full text-2xl line-clamp-3 font-bold text-center px-4 py-4 "
+      className="block w-full text-2xl line-clamp-3 font-bold text-center px-4 py-4 rounded-xl overflow-y-auto"
       value={questionValue}
+      rows={2}
       onChange={handleQuestionChange}
       style={{ resize: "none" }}
     />

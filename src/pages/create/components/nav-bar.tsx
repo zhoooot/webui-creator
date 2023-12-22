@@ -12,16 +12,16 @@ const NavBar: React.FC<NavBarProps> = ({
 
     return (
         <header className="h-fit">
-            <nav className="bg-white grid grid-cols-12 gap-x-5 px-32 border-gray-200 py-2.5 dark:bg-gray-800">
-                <div className="col-span-4 relative grid grid-cols-4 gap-x-5">
-                    <a href="https://flowbite.com" className="absolute -left-12 -top-0">
+            <nav className="bg-white grid grid-cols-12 gap-x-5 px-6 border-gray-200 py-2.5 dark:bg-gray-800">
+                <div className="col-span-4 gap-x-5 flex flex-row">
+                    <a href="https://flowbite.com" className="">
                         <img
                             src="https://flowbite.com/docs/images/logo.svg"
-                            className="mr-3 h-6 sm:h-9"
+                            className="h-6 sm:h-9"
                             alt="Flowbite Logo"
                         />
                     </a>
-                    <form className="flex items-center col-span-3 -left-2 -top-0">
+                    <form className="flex items-center flex-1">
                         <label htmlFor="simple-search" className="sr-only">
                             Quiz Title
                         </label>

@@ -54,7 +54,7 @@ const Card: React.FC<CardProps> = (props) => {
     </div>
     <div className={`${active ? 'ring-primary-500 ring-4 bg-white' : 'bg-gray-100'} card rounded-md w-full`}>
       <div className="card-body p-3 ">
-        <p className="line-clamp-2">{props.question}</p>
+        <p className="line-clamp-2">{props.question == "" ? "<Missing>" : props.question}</p>
         <div className="bg-white px-2 rounded">
           <p className="line-clamp-1">{props.answer}</p>
         </div>
