@@ -15,7 +15,92 @@ interface Quiz {
 }
 
 const fetchQuizzes = () => {
-  return 
+  const quizzes = [
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of Vietnam?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: true,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: true,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+    {
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+    },
+  ];
+  return {
+    type: "FETCH_QUIZZES",
+    payload: quizzes,
+  };
   // (dispatch: (arg0: { type: string; quizzes: any; }) => any) => {
   //   fetch("https://api.jsonbin.io/b/5f9d5a1b65b18913fc5c1e8f")
   //     .then((response) => response.json())
@@ -29,17 +114,10 @@ const fetchQuizzes = () => {
 }
 
 const addFavoriteQuiz = (quizId: any) => {
-  return ([
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of Vietnam?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-    }
-  ]); 
+  return {
+    type: "ADD_FAVORITE_QUIZ",
+    payload: quizId,
+  };
   // (dispatch: (arg0: { type: string; quizId: any; }) => any) => {
   //   dispatch({
   //     type: "ADD_FAVORITE_QUIZ",
@@ -48,8 +126,9 @@ const addFavoriteQuiz = (quizId: any) => {
   // };
 }
 
-const MyLibrary = () => {
+const MyLibrary = ({ quizzes, fetchQuizzes, addFavoriteQuiz }: { quizzes: Array<Quiz>, fetchQuizzes: () => void, addFavoriteQuiz: (quizId: number) => void }) => {
   const [activeTab, setActiveTab] = useState("recent");
+  console.log("activeTab");
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -59,100 +138,11 @@ const MyLibrary = () => {
     fetchQuizzes();
   }, []);
 
-  const [quizes, setQuizes] = useState<Array<Quiz>>([
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of Vietnam?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: true,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: true,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-    },
-  ]);
-
-  const onFavoriteClick = (index: number) => {
-    console.log("Favorite Click " + index);
-    const newQuizes = [...quizes];
-    newQuizes[index].favorite = !newQuizes[index].favorite;
-    setQuizes(newQuizes);
+  const onFavoriteClick = (quizId: number) => {
+    addFavoriteQuiz(quizId);
   };
 
   const onDeleteClick = (index: number) => {
-    const newQuizes = [...quizes];
-    newQuizes.splice(index, 1);
-    setQuizes(newQuizes);
   };
 
   const onClickRename = (index: number) => {};
@@ -160,16 +150,14 @@ const MyLibrary = () => {
   const onClickShare = (index: number) => {};
 
   const onClickDuplicate = (index: number) => {
-    const newQuizes = [...quizes];
-    const duplicatedQuiz = { ...newQuizes[index] };
-    newQuizes.splice(index + 1, 0, duplicatedQuiz);
-    setQuizes(newQuizes);
   };
+
+  console.log("quizzes");
+  console.log(quizzes);
 
   const activeClass = "text-primary-500 border-b-primary-500 text-base";
   const inactiveClass =
     "text-gray-500 hover:text-gray-600 text-base hover:border-gray-300 dark:hover:text-gray-300";
-  const quiz = quizes[0];
   return (
     <Layout>
       <div className="w-full h-full p-4">
@@ -245,7 +233,7 @@ const MyLibrary = () => {
                 aria-labelledby="recent-tab"
               >
                 <div className="grid grid-cols-1 gap-4">
-                  {quizes
+                  {quizzes
                     .filter((quiz) => !quiz.favorite)
                     .map((quiz, index) => (
                       <QuizCard
@@ -293,7 +281,7 @@ const MyLibrary = () => {
                 aria-labelledby="favorites-tab"
               >
                 <div className="grid grid-cols-1 gap-4">
-                  {quizes
+                  {quizzes
                     .filter((quiz) => quiz.favorite)
                     .map((quiz, index) => (
                       <QuizCard
