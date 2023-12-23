@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import QuizCard from "./components/quiz-card";
 import Layout from "../global_components/layout";
 
@@ -14,40 +13,6 @@ interface Quiz {
   favorite: boolean;
 }
 
-const fetchQuizzes = () => {
-  return 
-  // (dispatch: (arg0: { type: string; quizzes: any; }) => any) => {
-  //   fetch("https://api.jsonbin.io/b/5f9d5a1b65b18913fc5c1e8f")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       dispatch({
-  //         type: "FETCH_QUIZZES",
-  //         quizzes: data,
-  //       });
-  //     });
-  // };
-}
-
-const addFavoriteQuiz = (quizId: any) => {
-  return ([
-    {
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of Vietnam?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-    }
-  ]); 
-  // (dispatch: (arg0: { type: string; quizId: any; }) => any) => {
-  //   dispatch({
-  //     type: "ADD_FAVORITE_QUIZ",
-  //     quizId: quizId,
-  //   });
-  // };
-}
-
 const MyLibrary = () => {
   const [activeTab, setActiveTab] = useState("recent");
 
@@ -56,7 +21,6 @@ const MyLibrary = () => {
   };
 
   useEffect(() => {
-    fetchQuizzes();
   }, []);
 
   const [quizes, setQuizes] = useState<Array<Quiz>>([
@@ -322,13 +286,4 @@ const MyLibrary = () => {
   );
 };
 
-const mapStateToProps = (state: { quizzes: any; }) => ({
-  quizzes: state.quizzes,
-});
-
-const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({
-  fetchQuizzes: () => dispatch(fetchQuizzes()),
-  addFavoriteQuiz: (quizId: any) => dispatch(addFavoriteQuiz(quizId)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyLibrary);
+export default MyLibrary;
