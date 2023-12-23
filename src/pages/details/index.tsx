@@ -9,7 +9,6 @@ import {
 import QuestionCard from "./components/question-card";
 import { Icon } from "@iconify/react";
 import Action from "./components/actions";
-import TopBar from "../global_components/topbar";
 import Layout from "../global_components/layout";
 
 const QuizDetailPage = () => {
