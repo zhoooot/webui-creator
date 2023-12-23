@@ -1,24 +1,27 @@
 import { useState } from "react";
 
 type CardProps = {
-  key: number;
-  onClick: () => void;
+  onClick: (arg0: number) => void;
   index: number;
   question: string;
   answer: string;
   time: number;
   powerUps: boolean;
   activeIndex: number;
+  duplicate: (arg0: number) => void;
+  delete: (arg0: number) => void;
 };
 
 const Card: React.FC<CardProps> = (props) => {
   const active = props.activeIndex == props.index;
+  // console.log("rebuilding")
+  // console.log(props.activeIndex);
   return (
-    <div className={`flex pr-2 py-2 w-full cursor-pointer ${active ? 'bg-primary-100' : '' }`} onClick={() => {props.onClick();}}>
+    <div className={`flex pr-2 py-2 w-full cursor-pointer ${active ? 'bg-primary-100' : '' }`} >
       <div className="flex flex-col w-6 content-center items-center justify-between">
         <p className="font-medium">{props.index}</p>
         <div className="justify-end">
-          <button className="min-h-0 btn btn-circle w-5 h-5 rounded-btn bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-700">
+          <button className="min-h-0 btn btn-circle w-5 h-5 rounded-btn bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => {props.duplicate(props.index);}}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -34,7 +37,7 @@ const Card: React.FC<CardProps> = (props) => {
             />
           </svg>
         </button>
-        <button className="min-h-0 btn btn-circle w-5 h-5 rounded-btn bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-700">
+        <button className="min-h-0 btn btn-circle w-5 h-5 rounded-btn bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => {props.delete(props.index);}}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -52,7 +55,7 @@ const Card: React.FC<CardProps> = (props) => {
         </button>
       </div>
     </div>
-    <div className={`${active ? 'ring-primary-500 ring-4 bg-white' : 'bg-gray-100'} card rounded-md w-full`}>
+    <div className={`${active ? 'ring-primary-500 ring-4 bg-white' : 'bg-gray-100'} card rounded-md w-full` } onClick={() => {props.onClick(props.index);}}>
       <div className="card-body p-3 ">
         <p className="line-clamp-2">{props.question == "" ? "<Missing>" : props.question}</p>
         <div className="bg-white px-2 rounded">

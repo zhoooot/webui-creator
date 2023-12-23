@@ -12,12 +12,14 @@
     "@headlessui/react": "^1.7.17",
     "@iconify/react": "^4.1.1",
     "@preline/dropdown": "^2.0.1",
+    "@reduxjs/toolkit": "^2.0.1",
     "flowbite-react": "^0.7.2",
     "next": "^14.0.1",
     "preline": "^2.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^4.12.0",
+    "react-redux": "^9.0.4",
     "rippleui": "^1.12.1"
   },
   "devDependencies": {
