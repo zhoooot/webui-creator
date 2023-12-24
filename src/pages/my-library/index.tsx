@@ -3,6 +3,7 @@ import QuizCard from "./components/quiz-card";
 import Layout from "../global_components/layout";
 
 interface Quiz {
+  id: number;
   image_url: string;
   title: string;
   description: string;
@@ -11,20 +12,31 @@ interface Quiz {
   published: boolean;
   author: string;
   favorite: boolean;
+  status: string;
 }
 
-const MyLibrary = () => {
+const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
+  
+  const [recentQuizzes, setRecentQuizzes] = useState<Array<Quiz>>([]);
+  const [draftQuizzes, setDraftQuizzes] = useState<Array<Quiz>>([]);
+  const [favoriteQuizzes, setFavoriteQuizzes] = useState<Array<Quiz>>([]);
 
-  const handleTabClick = (tabId: string) => {
-    setActiveTab(tabId);
-  };
-
-  useEffect(() => {
-  }, []);
-
-  const [quizes, setQuizes] = useState<Array<Quiz>>([
+  const [quizzes, setQuizzes] = useState<Array<Quiz>>([
     {
+      id: 0,
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of France?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: true,
+      author: "John Doe",
+      favorite: false,
+      status: "published",
+    },
+    {
+      id: 1,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of Vietnam?",
       description: "Test your knowledge of the world with this quiz!",
@@ -33,8 +45,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "published",
     },
     {
+      id: 2,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -43,8 +57,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: true,
+      status: "draft",
     },
     {
+      id: 3,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -53,8 +69,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: true,
+      status: "draft",
     },
     {
+      id: 4,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -63,8 +81,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "draft",
     },
     {
+      id: 5,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -73,8 +93,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "published",
     },
     {
+      id: 6,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -83,8 +105,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "published",
     },
     {
+      id: 7,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -93,8 +117,10 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "published",
     },
     {
+      id: 8,
       image_url: "https://picsum.photos/1000/1000",
       title: "What is the capital of France?",
       description: "Test your knowledge of the world with this quiz!",
@@ -103,20 +129,47 @@ const MyLibrary = () => {
       published: true,
       author: "John Doe",
       favorite: false,
+      status: "published",
     },
   ]);
 
-  const onFavoriteClick = (index: number) => {
-    console.log("Favorite Click " + index);
-    const newQuizes = [...quizes];
-    newQuizes[index].favorite = !newQuizes[index].favorite;
-    setQuizes(newQuizes);
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+  };
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      console.log("fetching quizzes");
+      const quizzes = recentQuizzes.concat(draftQuizzes, favoriteQuizzes);
+      const recentQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.published);
+      const draftQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.status === "draft");
+      const favoriteQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.favorite);
+      setRecentQuizzes(recentQuizzes);
+      setDraftQuizzes(draftQuizzes);
+      setFavoriteQuizzes(favoriteQuizzes);
+    };
+    fetchQuizzes();
+  }, [creatorId]);
+
+  const addQuizToFavorite = (quizId: number) => {
+    const quiz = quizzes[quizId];
+    const updatedQuiz = { ...quiz, favorite: !quiz.favorite };
+    const newQuizzes = [...quizzes];
+    newQuizzes[quizId] = updatedQuiz;
+    setQuizzes(newQuizzes);
+    return updatedQuiz;
+  };  
+
+  const onFavoriteClick = (quizId: number) => {
+    const updatedQuiz = addQuizToFavorite(quizId);
+    setFavoriteQuizzes([...favoriteQuizzes, updatedQuiz]);
   };
 
   const onDeleteClick = (index: number) => {
-    const newQuizes = [...quizes];
+    console.log("deleting quiz");
+    const newQuizes = [...quizzes];
     newQuizes.splice(index, 1);
-    setQuizes(newQuizes);
+    setQuizzes(newQuizes);
   };
 
   const onClickRename = (index: number) => {};
@@ -124,16 +177,16 @@ const MyLibrary = () => {
   const onClickShare = (index: number) => {};
 
   const onClickDuplicate = (index: number) => {
-    const newQuizes = [...quizes];
+    const newQuizes = [...quizzes];
     const duplicatedQuiz = { ...newQuizes[index] };
     newQuizes.splice(index + 1, 0, duplicatedQuiz);
-    setQuizes(newQuizes);
+    setQuizzes(newQuizes);
   };
 
   const activeClass = "text-primary-500 border-b-primary-500 text-base";
   const inactiveClass =
     "text-gray-500 hover:text-gray-600 text-base hover:border-gray-300 dark:hover:text-gray-300";
-  const quiz = quizes[0];
+  const quiz = quizzes[0];
   return (
     <Layout>
       <div className="w-full h-full p-4">
@@ -209,12 +262,12 @@ const MyLibrary = () => {
                 aria-labelledby="recent-tab"
               >
                 <div className="grid grid-cols-1 gap-4">
-                  {quizes
+                  {quizzes
                     .filter((quiz) => !quiz.favorite)
                     .map((quiz, index) => (
                       <QuizCard
                         key={index}
-                        id={index}
+                        id={quiz.id}
                         title={quiz.title}
                         image_url={quiz.image_url}
                         updated_at={quiz.updated_at}
@@ -257,12 +310,12 @@ const MyLibrary = () => {
                 aria-labelledby="favorites-tab"
               >
                 <div className="grid grid-cols-1 gap-4">
-                  {quizes
+                  {quizzes
                     .filter((quiz) => quiz.favorite)
                     .map((quiz, index) => (
                       <QuizCard
                         key={index}
-                        id={index}
+                        id={quiz.id}
                         title={quiz.title}
                         image_url={quiz.image_url}
                         updated_at={quiz.updated_at}
