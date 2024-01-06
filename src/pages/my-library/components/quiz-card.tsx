@@ -27,7 +27,6 @@ type CardProps = {
 
 const QuizCard: React.FC<CardProps> = (quiz) => {
   return (
-    <Link legacyBehavior href={`/details`} className="w-full h-full">
       <div className=" bg-white shadow-xl rounded-lg w-full h-40 flex flex-row ">
         <div className="min-w-0.5 overflow-clip">
           <QuizImage src={quiz.image_url} />
@@ -74,7 +73,6 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
           </div>
         </div>
       </div>
-    </Link>
   );
 };
 
