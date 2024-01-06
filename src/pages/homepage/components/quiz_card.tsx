@@ -18,11 +18,11 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
 
   return (
     <div className={`card shadow-md image-full h-full w-full max-w-5xl `}>
-      <figure className="w-full h-full">
+      <figure className="w-full h-48">
         <img
-          src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+          src="https://picsum.photos/1000/1000"
           alt="Shoes"
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-48"
         />
       </figure>
       <div className="card-body justify-between h-full w-full">

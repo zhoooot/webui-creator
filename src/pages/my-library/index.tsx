@@ -131,6 +131,18 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
       favorite: false,
       status: "published",
     },
+    {
+      id: 9,
+      image_url: "https://picsum.photos/1000/1000",
+      title: "What is the capital of Vietnam?",
+      description: "Test your knowledge of the world with this quiz!",
+      num_played: 100,
+      updated_at: "1 hour ago",
+      published: false,
+      author: "John Doe",
+      favorite: false,
+      status: "draft",
+    },
   ]);
 
   const handleTabClick = (tabId: string) => {
@@ -191,7 +203,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     <Layout>
       <div className="w-full h-full p-4">
         <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
-          <>
+         
             <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
               <ul
                 className="flex flex-wrap -mb-px text-sm font-medium text-center"
@@ -251,10 +263,10 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             </div>
             <div
               id="default-tab-content"
-              className="h-full w-full overflow-y-auto"
+              className="grow w-full overflow-y-auto"
             >
               <div
-                className={` p-4 rounded-lg ${
+                className={` p-4 rounded-lg h-10 w-full ${
                   activeTab === "recent" ? "" : "hidden"
                 }`}
                 id="recent"
@@ -332,7 +344,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 </div>
               </div>
             </div>
-          </>
+         
         </div>
       </div>
     </Layout>

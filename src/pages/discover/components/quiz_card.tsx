@@ -17,12 +17,12 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
   const optionClass = "dropdown-item text-black flex flex-row items-center text-base";
 
   return (
-    <div className={`card shadow-xl image-full h-full w-full max-w-5xl `}>
-      <figure className="w-full h-full">
+    <div className={`card shadow-xl image-full h-48 w-full object-full`}>
+      <figure className="w-full h-48">
         <img
-          src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+          src="https://picsum.photos/1000/1000"
           alt="Shoes"
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-48"
         />
       </figure>
       <div className="card-body justify-between h-full w-full">

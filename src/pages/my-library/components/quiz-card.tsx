@@ -8,6 +8,7 @@ import {
   QuizAuthor,
   QuizPublishedIcon,
 } from "./quizinfo";
+import Link from 'next/link'; 
 
 type CardProps = {
   id: number;
@@ -26,7 +27,7 @@ type CardProps = {
 
 const QuizCard: React.FC<CardProps> = (quiz) => {
   return (
-    <a href={`/details`} className="w-full h-full">
+    <Link legacyBehavior href={`/details`} className="w-full h-full">
       <div className=" bg-white shadow-xl rounded-lg w-full h-40 flex flex-row ">
         <div className="min-w-0.5 overflow-clip">
           <QuizImage src={quiz.image_url} />
@@ -73,7 +74,7 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 
