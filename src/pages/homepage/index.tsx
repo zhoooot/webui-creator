@@ -7,7 +7,7 @@ import PublicQuizzes from "./components/public_quizzes";
 const Homepage: React.FC = () => {
   return (
     <Layout> 
-      <div className="flex flex-col h-full w-full p-4">
+      <div className="flex flex-col h-full w-full p-4 overflow-y-auto ">
         <PrivateQuizzes />
         <div className="mt-4">
         <PublicQuizzes />
