@@ -1,78 +1,133 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const SignUpPanel = (): JSX.Element => {
+const SignUpPanel = (props: { next: any }): JSX.Element => {
+  const [seclevel, setSecLevel] = React.useState<number>(0);
+
+  const [password, setPassword] = React.useState<string>("");
+
+  const [passwordFocus, setPasswordFocus] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    let level = 0;
+    if (password.length >= 8) {
+      level += 20;
+    }
+    if (password.match(/[a-z]/)) {
+      level += 20;
+    }
+    if (password.match(/[A-Z]/)) {
+      level += 20;
+    }
+    if (password.match(/[0-9]/)) {
+      level += 20;
+    }
+    if (password.match(/[$@#&!]/)) {
+      level += 20;
+    }
+    setSecLevel(level);
+  }, [password]);
+
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
-      <div className="grid grid-cols-1">
+      <div className="grid grid-cols-1 gap-4">
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Email</span>
           </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+            />
+          </div>
         </div>
 
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={(e) => setPasswordFocus(true)}
+              onBlur={(e) => setPasswordFocus(false)}
+            />
+          </div>
         </div>
 
-        <progress
-          className="progress progress-secondary w-full"
-          value={10}
-          max="100"
-        ></progress>
+        <div className={`${seclevel && passwordFocus ? "visible" : "hidden"}`}>
+          <progress
+            className="progress progress-secondary w-full"
+            value={seclevel}
+            max="100"
+          ></progress>
 
-        <text>Weak</text>
+          <text>
+            {seclevel <= 20
+              ? "Super weak"
+              : seclevel <= 40
+              ? "Weak"
+              : seclevel <= 60
+              ? "Medium"
+              : seclevel <= 80
+              ? "Strong"
+              : seclevel <= 100
+              ? "Excellent"
+              : ""}
+          </text>
+        </div>
 
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Revalidate Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+            />
+          </div>
         </div>
 
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Your role</span>
           </label>
-          <select className="select select-bordered">
-            <option disabled selected>
-              Pick one
-            </option>
-            <option>Students</option>
-            <option>Educators</option>
-            <option>Others</option>
-          </select>
+          <div className="grow">
+            <select className="select select-bordered">
+              <option disabled selected>
+                Pick one
+              </option>
+              <option>Students</option>
+              <option>Educators</option>
+              <option>Others</option>
+            </select>
+          </div>
         </div>
 
-        <div className="form-control">
+        <div className="form-control w-full flex self-center">
           <label className="label cursor-pointer">
-            <input type="checkbox" className="checkbox checkbox-primary" />
-            <p className="label-text">
-              By creating your account, you agree to the{" "}
-              <a className="link link-primary">Terms of Services</a> and{" "}
-              <a className="link link-primary">Privacy Policy</a>
-            </p>
+            <div className="w-3/12">
+              <input type="checkbox" className="checkbox checkbox-primary" />
+            </div>
+            <div className="grow items-center">
+              <p className="label-text">
+                By creating your account, you agree to the{" "}
+                <a className="link link-primary">Terms of Services</a> and{" "}
+                <a className="link link-primary">Privacy Policy</a>
+              </p>
+            </div>
           </label>
         </div>
         <button className="btn btn-primary">Sign Up</button>
       </div>
-      <p>
-        Already have an account? <a className="link link-primary" href="/auth/">Log in!</a>
+      <p className="self-center" onClick={() => props.next("login")}>
+        Already have an account? <a className="link link-primary">Log in!</a>
       </p>
     </div>
   );
