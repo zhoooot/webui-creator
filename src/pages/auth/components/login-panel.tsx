@@ -87,7 +87,7 @@ console.log(!email||!password);
             />
           </div>
         </div>
-        <a className="link link-primary flex justify-center p-4">
+        <a className="link link-primary flex justify-center p-4" onClick={()=>props.next('forget')}>
           Forgot password?
         </a>
         <button className="btn btn-primary" onClick={handleOnClick}>Log In</button>
@@ -95,7 +95,7 @@ console.log(!email||!password);
           <p className="text-error text-center">{error}</p>
         ):null}
         <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
-          Haven't got an account?&nbsp;<a className="link link-primary">Sign Up</a>
+          Haven&apos;t got an account?&nbsp;<a className="link link-primary">Sign Up</a>
         </p>
       </div>
     </div>

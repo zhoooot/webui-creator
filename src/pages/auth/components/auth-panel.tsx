@@ -1,6 +1,10 @@
 import { useState } from "react";
 import LogInPanel from "./login-panel";
 import SignUpPanel from "./signup-panel";
+import ForgotPanelEmail from "./forget-panel-email";
+import ForgotPanelCheckEmail from "./forget-panel-check-email";
+import ForgotPanelVerifyOtp from "./forget-verify-otp";
+import ForgotPanelNewPassword from "./forget-panel-newpassword";
 
 const AuthPanel = () => {
   const [option, setOption] = useState<string>("login");
@@ -13,9 +17,11 @@ const AuthPanel = () => {
     <div>
       {option === "login" ? (
           <LogInPanel next={changeOption}></LogInPanel>
-      ) : (
-          <SignUpPanel next={changeOption}></SignUpPanel>
-      )}
+      ) : option === "signup" ? (<SignUpPanel next={changeOption}></SignUpPanel>):
+      option === "forget" ? (<ForgotPanelEmail next={changeOption}></ForgotPanelEmail>):
+      option === "checkemail" ? (<ForgotPanelCheckEmail next={changeOption}></ForgotPanelCheckEmail>): 
+      option === "otp" ? (<ForgotPanelVerifyOtp next={changeOption}></ForgotPanelVerifyOtp>): 
+      option ==='resetpassword' ? (<ForgotPanelNewPassword next={changeOption}></ForgotPanelNewPassword>):null}
     </div>
   );
 };
