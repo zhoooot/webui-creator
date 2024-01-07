@@ -4,6 +4,8 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
   const [seclevel, setSecLevel] = React.useState<number>(0);
 
   const [password, setPassword] = React.useState<string>("");
+  const [rePassword, setRePassword] = React.useState<string>("");
+  const [isSimilar, setIsSimilar] = React.useState<boolean>(true);
 
   const [passwordFocus, setPasswordFocus] = React.useState<boolean>(false);
 
@@ -90,10 +92,16 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
               type="password"
               placeholder="Type here"
               className="input input-bordered w-full"
+              onChange={(e) => {setRePassword(e.target.value)
+                if (e.target.value !== password) {
+                  setIsSimilar(false);
+                }
+              else {setIsSimilar(true)}}}
             />
+
           </div>
         </div>
-
+        {(!isSimilar && rePassword !== "" && password !== "") && <p className="text-error">The revalidate password does not match</p>}
         <div className="form-control w-full">
           <label className="label w-3/12">
             <span className="label-text">Your role</span>
@@ -124,7 +132,7 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
             </div>
           </label>
         </div>
-        <button className="btn btn-primary">Sign Up</button>
+        <button className="btn btn-primary" >Sign Up</button>
       </div>
       <p className="self-center" onClick={() => props.next("login")}>
         Already have an account? <a className="link link-primary">Log in!</a>
