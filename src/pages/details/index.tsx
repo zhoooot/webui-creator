@@ -12,6 +12,10 @@ import Action from "./components/actions";
 import Layout from "../global_components/layout";
 
 const QuizDetailPage = () => {
+  const user = {
+    id: 1001,
+    username: "John Doe",
+  }
   const [quiz, setQuiz] = useState({
     image_url: "https://picsum.photos/1000/1000",
     title: "What is the capital of France?",
@@ -20,7 +24,41 @@ const QuizDetailPage = () => {
     updated_at: "1 hour ago",
     published: true,
     author: "John Doe",
+    authorId: 1001,
     questions: [
+      {
+        question: "What is the capital of France?",
+        options: [
+          { text: "Paris", correct: true },
+          { text: "London", correct: false },
+          { text: "New York", correct: false },
+          { text: "Dublin", correct: false },
+        ],
+        time: 10,
+        powerUps: true,
+      },
+      {
+        question: "What is the capital of France?",
+        options: [
+          { text: "Paris", correct: true },
+          { text: "London", correct: false },
+          { text: "New York", correct: false },
+          { text: "Dublin", correct: false },
+        ],
+        time: 10,
+        powerUps: true,
+      },
+      {
+        question: "What is the capital of France?",
+        options: [
+          { text: "Paris", correct: true },
+          { text: "London", correct: false },
+          { text: "New York", correct: false },
+          { text: "Dublin", correct: false },
+        ],
+        time: 10,
+        powerUps: true,
+      },
       {
         question: "What is the capital of France?",
         options: [
@@ -87,13 +125,19 @@ const QuizDetailPage = () => {
                 </div>
               </div>
               <Action
-                author={true}
+                author={user.id === quiz.authorId}
                 favorite={false}
                 onClickDelete={() => {}}
                 onClickEdit={() => {}}
                 onClickFavorite={() => {}}
                 onClickRename={() => {}}
-                onClickReport={() => {}}
+                onClickReport={() => {
+                  console.log("report");
+                  const userResponse = window.confirm("Are you sure you want to report this quiz?");
+                  if (userResponse) {
+                    alert("Quiz reported!");
+                  }
+                }}
                 onClickShare={() => {}}
               />
             </div>

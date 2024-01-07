@@ -1,5 +1,6 @@
 import React from "react";
 import { HiEllipsisVertical, HiOutlineStar, HiOutlineShare, HiOutlineDocumentDuplicate, HiOutlineMegaphone } from "react-icons/hi2";
+import Link from "next/link"
 
 interface QuizCardProps {
   imageUrl: string;
@@ -17,6 +18,7 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
   const optionClass = "dropdown-item text-black flex flex-row items-center text-base";
 
   return (
+    <Link href={`/details`}>
     <div className={`card shadow-md image-full h-full w-full max-w-5xl `}>
       <figure className="w-full h-48">
         <img
@@ -40,6 +42,7 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
