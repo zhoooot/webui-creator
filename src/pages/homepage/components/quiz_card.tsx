@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { HiEllipsisVertical, HiOutlineStar, HiOutlineShare, HiOutlineDocumentDuplicate, HiOutlineMegaphone } from "react-icons/hi2";
 import Link from "next/link"
@@ -11,6 +12,12 @@ interface QuizCardProps {
 }
 
 // z-10 z-9 z-8 z-7 z-6 z-5 z-4 z-3 z-2 z-1
+
+const handlingReport = async (id: number) => {
+  console.log("Handling report", id);
+  const url = "/api/report";
+  await axios.post(url, { id: id });
+}
 
 
 const QuizCard: React.FC<QuizCardProps> = (props) => {

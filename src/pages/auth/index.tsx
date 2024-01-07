@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import LogInPanel from "./components/login-panel";
 import Advert from "./components/advert";
+import SignUpPanel from "./components/signup-panel";
+import AuthPanel from "./components/auth-panel";
 
 const AuthPage = (): JSX.Element => {
   return (

@@ -50,12 +50,11 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
     setSecLevel(level);
   }, [password]);
 
-const SignUpPanel = (): JSX.Element => {
   return (
     <div className="card card-compact w-full bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1 gap-4">
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Email</span>
           </label>
           <div className="grow">
@@ -69,7 +68,7 @@ const SignUpPanel = (): JSX.Element => {
         </div>
 
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Password</span>
           </label>
           <div className="grow">
@@ -82,54 +81,82 @@ const SignUpPanel = (): JSX.Element => {
           </div>
         </div>
 
-        <progress
-          className="progress progress-secondary w-full"
-          value={10}
-          max="100"
-        ></progress>
+        <div className={`${seclevel && passwordFocus ? "visible" : "hidden"}`}>
+          <progress
+            className="progress progress-secondary w-full"
+            value={seclevel}
+            max="100"
+          ></progress>
 
-        <text>Weak</text>
+          <text>
+            {seclevel <= 20
+              ? "Super weak"
+              : seclevel <= 40
+              ? "Weak"
+              : seclevel <= 60
+              ? "Medium"
+              : seclevel <= 80
+              ? "Strong"
+              : seclevel <= 100
+              ? "Excellent"
+              : ""}
+          </text>
+        </div>
 
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Revalidate Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
-        </div>
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => {setRePassword(e.target.value)
+                if (e.target.value !== password) {
+                  setIsSimilar(false);
+                }
+              else {setIsSimilar(true)}}}
+            />
 
+          </div>
+        </div>
+        {(!isSimilar && rePassword !== "" && password !== "") && <p className="text-error">The revalidate password does not match</p>}
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Your role</span>
           </label>
-          <select className="select select-bordered">
-            <option disabled selected>
-              Pick one
-            </option>
-            <option>Students</option>
-            <option>Educators</option>
-            <option>Others</option>
-          </select>
+          <div className="grow">
+            <select className="select select-bordered">
+              <option disabled selected>
+                Pick one
+              </option>
+              <option>Students</option>
+              <option>Educators</option>
+              <option>Others</option>
+            </select>
+          </div>
         </div>
 
-        <div className="form-control">
+        <div className="form-control w-full flex self-center">
           <label className="label cursor-pointer">
-            <input type="checkbox" className="checkbox checkbox-primary" />
-            <p className="label-text">
-              By creating your account, you agree to the{" "}
-              <a className="link link-primary">Terms of Services</a> and{" "}
-              <a className="link link-primary">Privacy Policy</a>
-            </p>
+            <div className="w-3/12">
+              <input type="checkbox" className="checkbox checkbox-primary" />
+            </div>
+            <div className="grow items-center">
+              <p className="label-text">
+                By creating your account, you agree to the{" "}
+                <a className="link link-primary">Terms of Services</a> and{" "}
+                <a className="link link-primary">Privacy Policy</a>
+              </p>
+            </div>
           </label>
         </div>
         <button className="btn btn-primary" >Sign Up</button>
         <button className="btn btn-primary" onClick={RequestSignUp}>Sign Up</button>
       </div>
-      <p>
-        Already have an account? <a className="link link-primary" href="/auth/">Log in!</a>
+      <p className="self-center" onClick={() => props.next("login")}>
+        Already have an account? <a className="link link-primary">Log in!</a>
       </p>
     </div>
   );

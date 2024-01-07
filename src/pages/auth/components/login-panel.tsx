@@ -2,8 +2,49 @@
 import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
 import { AUTH_URL } from "@/config";
 import axios from "axios";
+
+import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
+import { AUTH_URL } from "@/config";
+import axios from "axios";
 import React from "react";
 
+const LogInPanel = (props : {next: any}) : JSX.Element => {
+  const [state, setState] = React.useState(0);
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [error, setError] = React.useState("");
+  
+  const handleOnClick = () => {
+console.log(!email||!password);  
+    if (!email||!password)
+    {
+      if (!email && !password)
+        setError("Please enter your email and password")
+      else if (!email)
+        setError("Please enter your email")
+      else
+        setError("Please enter your password")
+    } else setError("");
+    console.log(error);
+  };
+
+  const requestLogIn = async () => {
+    console.log("Log in");
+    const url = AUTH_URL + "/auth/login";
+    const data = {
+      email: email,
+      password: password,
+    };
+    try {
+      console.log("Try to log in", data);
+      await axios.post(url, data);
+      console.log('Logged in');
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+  
 const LogInPanel = (props : {next: any}) : JSX.Element => {
   const [state, setState] = React.useState(0);
   const [password, setPassword] = React.useState("");
@@ -80,28 +121,34 @@ console.log(!email||!password);
         <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
           Or
         </div>
-        
+
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Email</span>
           </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
         </div>
-        <div className="form-control w-full">
-          <label className="label">
+        <div className="form-control w-full mt-4">
+          <label className="label w-3/12">
             <span className="label-text">Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
         </div>
-        <a className="link link-primary flex justify-center p-2">
+        <a className="link link-primary flex justify-center p-4" onClick={()=>props.next('forget')}>
           Forgot password?
         </a>
         <button className="btn btn-primary" onClick={handleOnClick}>Log In</button>

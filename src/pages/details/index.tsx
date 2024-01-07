@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   QuizImage,
   QuizTitle,
@@ -10,6 +10,8 @@ import QuestionCard from "./components/question-card";
 import { Icon } from "@iconify/react";
 import Action from "./components/actions";
 import Layout from "../global_components/layout";
+import axios from "axios";
+import { IQuizDetail } from "@/interface/IQuizDetail";
 
 const QuizDetailPage = () => {
   const user = {
@@ -105,6 +107,16 @@ const QuizDetailPage = () => {
       },
     ],
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = "/api/quiz";
+      const tag = "discover";
+      const result : IQuizDetail = await axios.get(url);
+      setQuiz(result);
+    }
+    fetchData();
+  }, [])
 
   return (
     <Layout>
