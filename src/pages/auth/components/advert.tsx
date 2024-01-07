@@ -4,7 +4,7 @@ const Advert = (): JSX.Element => {
   return (
     <main>
       <text className="w-full flex justify-center p-4 text-3xl">
-        Welcome to&nbsp;
+        Welcome to{" "}
         <text className="bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text font-bold">
           Zhoot
         </text>

@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from "react";
 import QuizCard from "./components/quiz-card";
 import Layout from "../global_components/layout";
-import axios from "axios";
-import {ILibraryQuiz} from "@/interface/ILibraryQuiz";
 
+interface Quiz {
+  id: number;
+  image_url: string;
+  title: string;
+  description: string;
+  num_played: number;
+  updated_at: string;
+  published: boolean;
+  author: string;
+  favorite: boolean;
+  status: string;
+}
 
 const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
   
-  const [recentQuizzes, setRecentQuizzes] = useState<Array<ILibraryQuiz>>([]);
-  const [draftQuizzes, setDraftQuizzes] = useState<Array<ILibraryQuiz>>([]);
-  const [favoriteQuizzes, setFavoriteQuizzes] = useState<Array<ILibraryQuiz>>([]);
+  const [recentQuizzes, setRecentQuizzes] = useState<Array<Quiz>>([]);
+  const [draftQuizzes, setDraftQuizzes] = useState<Array<Quiz>>([]);
+  const [favoriteQuizzes, setFavoriteQuizzes] = useState<Array<Quiz>>([]);
 
-  const [quizzes, setQuizzes] = useState<Array<ILibraryQuiz>>([
+  const [quizzes, setQuizzes] = useState<Array<Quiz>>([
     {
       id: 0,
       image_url: "https://picsum.photos/1000/1000",
@@ -135,7 +145,6 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     },
   ]);
 
-
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
   };
@@ -143,14 +152,10 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       console.log("fetching quizzes");
-      
-      const url = "/api/quiz";
-      const result = await axios.get(url);
-
       const quizzes = recentQuizzes.concat(draftQuizzes, favoriteQuizzes);
-      const recentQuizzesUpdated = quizzes.filter((quiz: ILibraryQuiz) => quiz.published);
-      const draftQuizzesUpdated = quizzes.filter((quiz: ILibraryQuiz) => quiz.status === "draft");
-      const favoriteQuizzesUpdated = quizzes.filter((quiz: ILibraryQuiz) => quiz.favorite);
+      const recentQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.published);
+      const draftQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.status === "draft");
+      const favoriteQuizzesUpdated = quizzes.filter((quiz: Quiz) => quiz.favorite);
       setRecentQuizzes(recentQuizzes);
       setDraftQuizzes(draftQuizzes);
       setFavoriteQuizzes(favoriteQuizzes);

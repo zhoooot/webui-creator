@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   QuizImage,
   QuizTitle,
@@ -10,12 +10,9 @@ import QuestionCard from "./components/question-card";
 import { Icon } from "@iconify/react";
 import Action from "./components/actions";
 import Layout from "../global_components/layout";
-import axios from "axios";
-import { IQuizDetail } from "@/interface/IQuizDetail";
 
 const QuizDetailPage = () => {
-
-  const [quiz, setQuiz] = useState<IQuizDetail>({
+  const [quiz, setQuiz] = useState({
     image_url: "https://picsum.photos/1000/1000",
     title: "What is the capital of France?",
     description: "Test your knowledge of the world with this quiz!",
@@ -89,16 +86,6 @@ const QuizDetailPage = () => {
       },
     ],
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result : IQuizDetail = await axios.get(url);
-      setQuiz(result);
-    }
-    fetchData();
-  }, [])
 
   return (
     <Layout>

@@ -1,23 +1,7 @@
-import { useEffect, useState } from "react";
 import Layout from "../../global_components/layout";
 import QuizCard from "./quiz_card";
-import axios from "axios";
-import IQuizData from "@/interface/IQuizData";
 
 const PublicQuizzes: React.FC = () => {
-
-  const [data, setData] = useState<IQuizData[] | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result = await axios.get(url);
-      setData(result.data);
-    }
-    fetchData();
-  }, [])
-
   const publicQuizzes = [
     {
       id: 1,
