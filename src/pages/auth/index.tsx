@@ -6,11 +6,11 @@ import AuthPanel from "./components/auth-panel";
 
 const AuthPage = (): JSX.Element => {
   return (
-    <div className="h-full grid grid-cols-12 mr-12 ml-12">
-      <div className="col-span-9 mr-12 self-center">
+    <div className="h-full grid grid-cols-12 w-screen">
+      <div className="col-span-9 self-center p-12">
         <Advert></Advert>
       </div>
-      <div className="mt-4 mb-12 self-center">
+      <div className="col-span-3 self-center flex justify-center">
         <AuthPanel></AuthPanel>
       </div>
     </div>
