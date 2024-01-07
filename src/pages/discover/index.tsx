@@ -3,6 +3,7 @@ import Layout from "../global_components/layout";
 import QuizCard from "./components/quiz_card";
 import axios from "axios";
 import IQuizData from "@/interface/IQuizData";
+import { QUIZ_URL } from "@/config";
 
 const Discover: React.FC = () => {
 
@@ -10,9 +11,8 @@ const Discover: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result = await axios.get(url);
+      const endpoint = QUIZ_URL + "/quiz/"
+      const result = await axios.get(QUIZ_URL);
       setData(result.data);
     }
     fetchData();

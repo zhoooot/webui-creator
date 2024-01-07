@@ -2,22 +2,18 @@ import { AUTH_URL } from "@/config";
 import axios from "axios";
 import React from "react";
 
-const LogInPanel = (props : {next: any}) : JSX.Element => {
+const LogInPanel = (props: { next: any }): JSX.Element => {
   const [state, setState] = React.useState(0);
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [error, setError] = React.useState("");
-  
+
   const handleOnClick = () => {
-console.log(!email||!password);  
-    if (!email||!password)
-    {
-      if (!email && !password)
-        setError("Please enter your email and password")
-      else if (!email)
-        setError("Please enter your email")
-      else
-        setError("Please enter your password")
+    console.log(!email || !password);
+    if (!email || !password) {
+      if (!email && !password) setError("Please enter your email and password");
+      else if (!email) setError("Please enter your email");
+      else setError("Please enter your password");
     } else setError("");
     console.log(error);
   };
@@ -32,13 +28,12 @@ console.log(!email||!password);
     try {
       console.log("Try to log in", data);
       await axios.post(url, data);
-      console.log('Logged in');
-    }
-    catch (e) {
+      console.log("Logged in");
+    } catch (e) {
       console.log(e);
     }
-  }
-  
+  };
+
   return (
     <div className="card card-compact w-full bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -105,16 +100,25 @@ console.log(!email||!password);
             />
           </div>
         </div>
-        <a className="link link-primary flex justify-center p-4" onClick={()=>props.next('forget')}>
+        <a
+          className="link link-primary flex justify-center p-4"
+          onClick={() => props.next("forget")}
+        >
           Forgot password?
         </a>
-        <button className="btn btn-primary" onClick={handleOnClick}>Log In</button>
-        {(error)?(
-          <p className="text-error text-center">{error}</p>
-        ):null}
-        {/* <button className="btn btn-primary" onClick={requestLogIn}>Log In</button> */}
-        <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
-          Haven&apos;t got an account?&nbsp;<a className="link link-primary">Sign Up</a>
+        <button className="btn btn-primary" onClick={() => {
+          handleOnClick();
+          requestLogIn();
+        }}>
+          Log In
+        </button>
+        {error ? <p className="text-error text-center">{error}</p> : null}
+        <p
+          className="flex justify-center pt-4"
+          onClick={() => props.next("signup")}
+        >
+          Haven&apos;t got an account?&nbsp;
+          <a className="link link-primary">Sign Up</a>
         </p>
       </div>
     </div>
