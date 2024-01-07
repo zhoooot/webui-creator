@@ -1,7 +1,22 @@
+import { useEffect, useState } from "react";
 import Layout from "../global_components/layout";
 import QuizCard from "./components/quiz_card";
+import axios from "axios";
 
 const Discover: React.FC = () => {
+
+  const [data, setData] = useState<IQuizData[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = "/api/quiz";
+      const tag = "discover";
+      const result = await axios.get(url);
+      setData(result.data);
+    }
+    fetchData();
+  }, [])
+
   const quizData = [
     {
       id: 1,

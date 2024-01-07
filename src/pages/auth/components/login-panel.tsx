@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const LogInPanel = (): JSX.Element => {
+const LogInPanel = (props : {next: any}) : JSX.Element => {
+  const [state, setState] = React.useState(0);
+
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -40,34 +43,37 @@ const LogInPanel = (): JSX.Element => {
         <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
           Or
         </div>
-        
+
         <div className="form-control w-full">
-          <label className="label">
+          <label className="label w-3/12">
             <span className="label-text">Email</span>
           </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+            />
+          </div>
         </div>
-        <div className="form-control w-full">
-          <label className="label">
+        <div className="form-control w-full mt-4">
+          <label className="label w-3/12">
             <span className="label-text">Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+            />
+          </div>
         </div>
-        <a className="link link-primary flex justify-center p-2">
+        <a className="link link-primary flex justify-center p-4">
           Forgot password?
         </a>
         <button className="btn btn-primary">Log In</button>
-        <p className="flex justify-center p-2">
-          Haven't got an account?{" "}
-          <a className="link link-primary">Sign up here!</a>
+        <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
+          Haven't got an account?&nbsp;<a className="link link-primary">Sign Up</a>
         </p>
       </div>
     </div>
