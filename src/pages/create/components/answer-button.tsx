@@ -1,9 +1,13 @@
+import { useState } from "react";
+
 type AnswerProps = {
   key: number;
   onChange: (text: string) => void;
   svg_icon: string;
   color: string;
   value: string;
+  onSelected: (key: number) => void;
+  isSelected: boolean;
 };
 
 // bg-red-500 bg-green-500 bg-blue-500 bg-yellow-500 bg-red-500 bg-green-500 bg-blue-500 bg-yellow-500 ring-red-500 ring-green-500 ring-blue-500 ring-yellow-500 stroke-red-500 stroke-green-500 stroke-blue-500 stroke-yellow-500
@@ -36,6 +40,9 @@ const AnswerButton: React.FC<AnswerProps> = (props) => {
             type="radio"
             name="hs-default-radio"
             className=" accent-white border-white border-4 checked:ring-4 checked:ring-transparent radio-accent radio shrink-0 mt-0.5 w-6 h-6 checked:border-white rounded-full"
+            onClick={() => {
+              props.onSelected(props.key);
+            }}
           />
         </div>
       </div>

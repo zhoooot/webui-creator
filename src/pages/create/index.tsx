@@ -273,6 +273,14 @@ const QuizPage: React.FC = () => {
     });
   };
 
+  const handleCorrectAnswerChange = (id: number) => {
+    setQuestionData((prev) => {
+      const newQuestionData = [...prev];
+      newQuestionData[activeQuestion].correctAnswer = id;
+      return newQuestionData;
+    });
+  }
+
   const handleSaveQuiz = () => {
     console.log("handleSaveQuiz");
   }
@@ -370,6 +378,8 @@ const QuizPage: React.FC = () => {
                   svg_icon={answerData[answerId].icon}
                   color={answerData[answerId].color}
                   onChange={(text) => handleAnswerChange(answerId, text)}
+                  onSelected={(key) => handleCorrectAnswerChange(key)}
+                  isSelected={questionData[activeQuestion].correctAnswer === answerId + 1}
                 />
               )
             )}
