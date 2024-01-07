@@ -263,7 +263,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             </div>
             <div
               id="default-tab-content"
-              className="grow flex flex-col"
+              className="grow overflow-y-auto"
             >
               <div
                 className={`p-4 rounded-lg w-full ${
@@ -273,7 +273,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 role="tabpanel"
                 aria-labelledby="recent-tab"
               >
-                <div className="grid grid-cols-1 gap-4 w-full overflow-y-auto">
+                <div className="grid grid-cols-1 gap-4 w-full h-full overflow-hidden">
                   {quizzes
                     .filter((quiz) => !quiz.favorite)
                     .map((quiz, index) => (
