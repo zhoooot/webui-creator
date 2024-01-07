@@ -1,5 +1,7 @@
 import Layout from "../global_components/layout";
 import QuizCard from "./components/quiz_card";
+import axios from "axios";
+import IQuizData from "@/interface/IQuizData";
 
 const Discover: React.FC = () => {
   const quizData = [

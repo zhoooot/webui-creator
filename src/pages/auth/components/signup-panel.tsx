@@ -1,29 +1,85 @@
-import React from "react";
+import { AUTH_URL } from "@/config";
+import axios from "axios";
+import React, { useEffect } from "react";
+
+const SignUpPanel = (props: { next: any }): JSX.Element => {
+
+  const [seclevel, setSecLevel] = React.useState<number>(0);
+
+  const [email, setEmail] = React.useState<string>("");
+
+  const [password, setPassword] = React.useState<string>("");
+  const [rePassword, setRePassword] = React.useState<string>("");
+  const [isSimilar, setIsSimilar] = React.useState<boolean>(true);
+
+  const [passwordFocus, setPasswordFocus] = React.useState<boolean>(true);
+
+  const RequestSignUp = async () => {
+    const url = AUTH_URL + "/auth/register";
+    const data = {
+      email: email,
+      password: password,
+    };
+    try {
+      console.log("Try to sign up", data);
+      await axios.post(url, data);
+      console.log('Sign up');
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    let level = 0;
+    if (password.length >= 8) {
+      level += 20;
+    }
+    if (password.match(/[a-z]/)) {
+      level += 20;
+    }
+    if (password.match(/[A-Z]/)) {
+      level += 20;
+    }
+    if (password.match(/[0-9]/)) {
+      level += 20;
+    }
+    if (password.match(/[$@#&!]/)) {
+      level += 20;
+    }
+    setSecLevel(level);
+  }, [password]);
 
 const SignUpPanel = (): JSX.Element => {
   return (
-    <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
-      <div className="grid grid-cols-1">
+    <div className="card card-compact w-full bg-base-100 shadow-xl p-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="Type here"
-            className="input input-bordered w-full"
-          />
+          <div className="grow">
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
         </div>
 
         <progress
@@ -69,7 +125,8 @@ const SignUpPanel = (): JSX.Element => {
             </p>
           </label>
         </div>
-        <button className="btn btn-primary">Sign Up</button>
+        <button className="btn btn-primary" >Sign Up</button>
+        <button className="btn btn-primary" onClick={RequestSignUp}>Sign Up</button>
       </div>
       <p>
         Already have an account? <a className="link link-primary" href="/auth/">Log in!</a>
