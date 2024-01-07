@@ -14,6 +14,7 @@ type AnswerProps = {
 // focus:bg-red-500 focus:bg-green-500 focus:bg-blue-500 focus:bg-yellow-500 focus:ring-red-500 focus:ring-green-500 focus:ring-blue-500 focus:ring-yellow-500 focus:stroke-red-500 focus:stroke-green-500 focus:stroke-blue-500 focus:stroke-yellow-500
 
 const AnswerButton: React.FC<AnswerProps> = (props) => {
+  console.log(props);
   return (
     <div className={`col-span-1 bg-transparent w-full`}>
       <div className={`relative flex rounded ring-8  ring-white w-full`}>
@@ -43,6 +44,7 @@ const AnswerButton: React.FC<AnswerProps> = (props) => {
             onClick={() => {
               props.onSelected(props.key);
             }}
+            {...(props.isSelected ? { checked: true } : {}) }
           />
         </div>
       </div>

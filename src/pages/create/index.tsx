@@ -274,6 +274,7 @@ const QuizPage: React.FC = () => {
   };
 
   const handleCorrectAnswerChange = (id: number) => {
+    console.log("correct answer: " + id);
     setQuestionData((prev) => {
       const newQuestionData = [...prev];
       newQuestionData[activeQuestion].correctAnswer = id;
