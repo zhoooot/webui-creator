@@ -3,6 +3,7 @@ import Layout from "../../global_components/layout";
 import QuizCard from "./quiz_card";
 import axios from "axios";
 import IQuizData from "@/interface/IQuizData";
+import Link from "next/link";
 
 const PublicQuizzes: React.FC = () => {
 
@@ -156,7 +157,7 @@ const PublicQuizzes: React.FC = () => {
           type="button"
           className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          <a href="/discover">Discover more</a>
+          <Link href="/discover">Discover more</Link>
         </button>
       </div>
       <div className="grid grid-cols-3 gap-4 grow w-full">

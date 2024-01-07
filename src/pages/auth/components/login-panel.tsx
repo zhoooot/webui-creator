@@ -1,4 +1,7 @@
+
 import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
+import { AUTH_URL } from "@/config";
+import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -7,7 +10,7 @@ const LogInPanel = (props : {next: any}) : JSX.Element => {
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [error, setError] = React.useState("");
-
+  
   const handleOnClick = () => {
 console.log(!email||!password);  
     if (!email||!password)
@@ -21,8 +24,26 @@ console.log(!email||!password);
     } else setError("");
     console.log(error);
   };
+
+  const requestLogIn = async () => {
+    console.log("Log in");
+    const url = AUTH_URL + "/auth/login";
+    const data = {
+      email: email,
+      password: password,
+    };
+    try {
+      console.log("Try to log in", data);
+      await axios.post(url, data);
+      console.log('Logged in');
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+  
   return (
-    <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
+    <div className="card card-compact w-full bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
         <button className="btn text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mb-2">
           <svg
@@ -94,6 +115,7 @@ console.log(!email||!password);
         {(error)?(
           <p className="text-error text-center">{error}</p>
         ):null}
+        <button className="btn btn-primary" onClick={requestLogIn}>Log In</button>
         <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
           Haven&apos;t got an account?&nbsp;<a className="link link-primary">Sign Up</a>
         </p>
