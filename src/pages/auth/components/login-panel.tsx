@@ -1,9 +1,26 @@
+import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
 import React from "react";
 import { Link } from "react-router-dom";
 
 const LogInPanel = (props : {next: any}) : JSX.Element => {
   const [state, setState] = React.useState(0);
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [error, setError] = React.useState("");
 
+  const handleOnClick = () => {
+console.log(!email||!password);  
+    if (!email||!password)
+    {
+      if (!email && !password)
+        setError("Please enter your email and password")
+      else if (!email)
+        setError("Please enter your email")
+      else
+        setError("Please enter your password")
+    } else setError("");
+    console.log(error);
+  };
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -53,6 +70,7 @@ const LogInPanel = (props : {next: any}) : JSX.Element => {
               type="text"
               placeholder="Type here"
               className="input input-bordered w-full"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
@@ -65,13 +83,17 @@ const LogInPanel = (props : {next: any}) : JSX.Element => {
               type="password"
               placeholder="Type here"
               className="input input-bordered w-full"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
         </div>
         <a className="link link-primary flex justify-center p-4">
           Forgot password?
         </a>
-        <button className="btn btn-primary">Log In</button>
+        <button className="btn btn-primary" onClick={handleOnClick}>Log In</button>
+        {(error)?(
+          <p className="text-error text-center">{error}</p>
+        ):null}
         <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
           Haven't got an account?&nbsp;<a className="link link-primary">Sign Up</a>
         </p>
