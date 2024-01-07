@@ -1,9 +1,6 @@
-
-import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
 import { AUTH_URL } from "@/config";
 import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
 
 const LogInPanel = (props : {next: any}) : JSX.Element => {
   const [state, setState] = React.useState(0);

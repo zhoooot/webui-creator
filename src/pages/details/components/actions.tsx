@@ -1,4 +1,7 @@
 import { Icon } from "@iconify/react";
+import { on } from "events";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 type ActionProps = {
   author: boolean;
@@ -12,6 +15,7 @@ type ActionProps = {
 };
 
 const Action: React.FC<ActionProps> = (props) => {
+  const router = useRouter();
   const buttonClass =
     "h-full border-0 font-medium rounded-full text-sm p-0 text-center inline-flex items-center p-1";
   const iconClass = "w-full h-full fill-current stroke-current";
@@ -26,6 +30,12 @@ const Action: React.FC<ActionProps> = (props) => {
         className={`${
           props.author ? "text-inherit" : "text-gray-300"
         } hover:text-primary-400 ${buttonClass}`}
+        onClick={() => {
+          router.push("/create");
+          props.onClickEdit();
+        }
+        }
+        disabled={!props.author}
       >
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />
         <span className="sr-only">Icon description</span>
@@ -82,7 +92,7 @@ const Action: React.FC<ActionProps> = (props) => {
               Rename
             </a>
           ) : (
-            <a className={optionClass}>
+            <a className={optionClass} onClick={props.onClickReport}>
               <Icon icon="lucide:flag" className={`${subiconClass}`} />
               Report
             </a>
