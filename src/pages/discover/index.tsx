@@ -147,7 +147,7 @@ const Discover: React.FC = () => {
     },
   ];
   return (
-    <Layout>
+    <Layout show_search={true}>
     <div className="w-full h-full p-4">
       <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
         <h1 className="text-3xl font-bold pb-4">DISCOVER</h1>
