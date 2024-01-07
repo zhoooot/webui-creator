@@ -7,7 +7,7 @@ import AnswerButton from "./components/answer-button";
 import Navbar from "./components/nav-bar";
 import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
-import {TIME} from "./components/time-input";
+import { TIME } from "./components/time-input";
 import { handleSaveQuiz } from "../tmp/redux/actions";
 
 interface Question {
@@ -43,6 +43,7 @@ const QuizPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [quizImage, setQuizImage] = useState("");
+  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] = useState(false);
 
   const handleQuizDetailChange = (title: string, description: string, visibility: string, quizImage: string) => {
     console.log("handleQuizDetailChange");
@@ -92,7 +93,7 @@ const QuizPage: React.FC = () => {
       correctAnswer: -1,
       time: 0,
       powerUps: true,
-    },  
+    },
     {
       questionNumber: 3,
       questionText: "What is the famous quote from the movie The Dark Knight?",
@@ -237,7 +238,7 @@ const QuizPage: React.FC = () => {
     let check = true;
     if (activeQuestion != questionNumber) {
       check = false;
-    } 
+    }
     if (activeQuestion > questionNumber) {
       setActiveQuestion(activeQuestion - 1);
     } else if ((questionNumber === questionData.length - 1) && (activeQuestion === questionNumber)) {
@@ -261,8 +262,15 @@ const QuizPage: React.FC = () => {
   };
 
   const handleQuestionCardClick = (clickedQuestionIndex: number) => {
-    setActiveQuestion(clickedQuestionIndex);
-    setQuestionValue(questionData[clickedQuestionIndex].questionText);
+    if (questionData[activeQuestion].correctAnswer === -1) {
+      setShowMissingCorrectAnswerPopover(true);
+    } else {
+      if (questionData[activeQuestion].questionText.trim() === "") {
+        return;
+      }
+      setActiveQuestion(clickedQuestionIndex);
+      setQuestionValue(questionData[clickedQuestionIndex].questionText);
+    }
   };
 
   const handleAnswerChange = (id: number, text: string) => {
@@ -275,6 +283,7 @@ const QuizPage: React.FC = () => {
 
   const handleCorrectAnswerChange = (id: number) => {
     console.log("correct answer: " + id);
+    setShowMissingCorrectAnswerPopover(false);
     setQuestionData((prev) => {
       const newQuestionData = [...prev];
       newQuestionData[activeQuestion].correctAnswer = id;
@@ -288,6 +297,16 @@ const QuizPage: React.FC = () => {
 
   const handleExitQuiz = () => {
     console.log("handleExitQuiz");
+
+
+
+    const handleBlur = () => {
+      if (questionData[activeQuestion].correctAnswer === -1) {
+        setShowMissingCorrectAnswerPopover(true);
+      } else {
+        setShowMissingCorrectAnswerPopover(false);
+      }
+    };
   }
 
   return (
@@ -314,12 +333,13 @@ const QuizPage: React.FC = () => {
                   }
                   index={index}
                   question={question.questionText}
-                  answer={question.answerTexts[question.correctAnswer]}
+                  answer={question.correctAnswer === -1 ? "<missing>" : question.answerTexts[question.correctAnswer]}
                   time={TIME[question.time]}
                   powerUps={question.powerUps}
                   activeIndex={activeQuestion}
                   duplicate={handeDuplicateQuestion}
                   delete={handleDeleteQuestion}
+                  missingCorrectAnswer={question.correctAnswer === -1}
                 />
               ))}
             </div>
@@ -339,6 +359,7 @@ const QuizPage: React.FC = () => {
             questionValue={questionValue}
             handleQuestionChange={handleQuestionChange}
           />
+
           <div className="grid grid-cols-12 grow gap-5 justify-center items-center mb-10 mt-8 col-span-full">
             <div className="flex justify-center items-center col-span-3">
               <div className="w-24">
@@ -370,6 +391,21 @@ const QuizPage: React.FC = () => {
               }} />
             </div>
           </div>
+
+          <div className="flex flex-row justify-center w-full relative">
+          {showMissingCorrectAnswerPopover && (
+            <div className="flex flex-col items-center w-full absolute -top-12">
+              <div className="self-center items-center flex flex-col justify-center ">
+                <div
+                  className="popover bg-primary-500 px-2 py-1 rounded-md text-white"
+                >
+                  <p>You haven't selected at least one right answer.</p>
+                </div>
+                <svg  className="rotate-180 self-center scale-105 text-primary-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 2"><path fill="currentColor" d="M1 21h22L12 2" /></svg>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-8 col-span-full w-full">
             {questionData[activeQuestion].answerTexts.map(
               (answer: string, answerId: number) => (
@@ -384,6 +420,7 @@ const QuizPage: React.FC = () => {
                 />
               )
             )}
+          </div>
           </div>
         </div>
       </div>
