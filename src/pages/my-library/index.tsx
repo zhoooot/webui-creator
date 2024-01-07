@@ -258,17 +258,17 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             </div>
             <div
               id="default-tab-content"
-              className="grow w-full overflow-y-auto"
+              className="grow overflow-y-auto"
             >
               <div
-                className={` p-4 rounded-lg h-10 w-full ${
+                className={`p-4 rounded-lg w-full ${
                   activeTab === "recent" ? "" : "hidden"
                 }`}
                 id="recent"
                 role="tabpanel"
                 aria-labelledby="recent-tab"
               >
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4 w-full h-full overflow-hidden">
                   {quizzes
                     .filter((quiz) => !quiz.favorite)
                     .map((quiz, index) => (

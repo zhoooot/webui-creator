@@ -10,6 +10,7 @@ type CardProps = {
   activeIndex: number;
   duplicate: (arg0: number) => void;
   delete: (arg0: number) => void;
+  missingCorrectAnswer: boolean;
 };
 
 const Card: React.FC<CardProps> = (props) => {
@@ -19,7 +20,7 @@ const Card: React.FC<CardProps> = (props) => {
   return (
     <div className={`flex pr-2 py-2 w-full cursor-pointer ${active ? 'bg-primary-100' : '' }`} >
       <div className="flex flex-col w-6 content-center items-center justify-between">
-        <p className="font-medium">{props.index}</p>
+        <p className="font-medium">{props.index + 1}</p>
         <div className="justify-end">
           <button className="min-h-0 btn btn-circle w-5 h-5 rounded-btn bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => {props.duplicate(props.index);}}>
             <svg
@@ -59,7 +60,7 @@ const Card: React.FC<CardProps> = (props) => {
       <div className="card-body p-3 ">
         <p className="line-clamp-2">{props.question == "" ? "<Missing>" : props.question}</p>
         <div className="bg-white px-2 rounded">
-          <p className="line-clamp-1">{props.answer}</p>
+          <p className={`line-clamp-1 ${props.missingCorrectAnswer ? "text-red-600" : ""}`}>{props.answer}</p>
         </div>
         <div className="flex justify-between mt-2">
           <div className="flex items-center">

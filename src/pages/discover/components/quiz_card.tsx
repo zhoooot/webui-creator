@@ -36,40 +36,6 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
           <div className="badge badge-accent h-full rounded-xl">
             {props.number} PLAYS
           </div>
-          <div className="dropdown h-full min-h-0">
-            <label className="btn btn-neutral w-full min-h-0" tabIndex={0}> 
-              <HiEllipsisVertical
-                className="w-6 h-6"
-              />
-            </label>
-            <div className="dropdown-menu dropdown-menu-bottom-left z-50"
-                tabIndex={-1}>
-              <a className={optionClass}>
-              <HiOutlineStar
-                className={`${iconClass} `}
-              />
-                Favorites
-              </a>
-              <a className={optionClass}>
-              <HiOutlineShare
-                className={iconClass}
-              />
-                Share
-              </a>
-              <a className={optionClass}>
-              <HiOutlineDocumentDuplicate
-                className={iconClass}
-              />{/* //tabIndex={-1} */}
-                Duplicate
-              </a>
-              <a className={optionClass}>
-              <HiOutlineMegaphone
-                className={iconClass}
-              />{/* //tabIndex={-1} */}
-                Report
-              </a>
-            </div>
-          </div>
         </div>
         <div className="mb-4">
           <h2 className="card-title h-full w-full overflow-hidden mb-0 leading-3">{props.name}</h2>

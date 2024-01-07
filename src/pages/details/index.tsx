@@ -32,60 +32,41 @@ const QuizDetailPage = () => {
           { text: "New York", correct: false },
           { text: "Dublin", correct: false },
         ],
+        time: 10,
+        powerUps: true,
       },
       {
-        question: "What is the capital of Ireland?",
+        question: "What is the capital of France?",
         options: [
-          { text: "Paris", correct: false },
+          { text: "Paris", correct: true },
           { text: "London", correct: false },
           { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
+          { text: "Dublin", correct: false },
         ],
+        time: 10,
+        powerUps: true,
       },
       {
-        question: "What is the capital of Ireland?",
+        question: "What is the capital of France?",
         options: [
-          { text: "Paris", correct: false },
+          { text: "Paris", correct: true },
           { text: "London", correct: false },
           { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
+          { text: "Dublin", correct: false },
         ],
+        time: 10,
+        powerUps: true,
       },
       {
-        question: "What is the capital of Ireland?",
+        question: "What is the capital of France?",
         options: [
-          { text: "Paris", correct: false },
+          { text: "Paris", correct: true },
           { text: "London", correct: false },
           { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
+          { text: "Dublin", correct: false },
         ],
-      },
-      {
-        question: "What is the capital of Ireland?",
-        options: [
-          { text: "Paris", correct: false },
-          { text: "London", correct: false },
-          { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
-        ],
-      },
-      {
-        question: "What is the capital of Ireland?",
-        options: [
-          { text: "Paris", correct: false },
-          { text: "London", correct: false },
-          { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
-        ],
-      },
-      {
-        question: "What is the capital of Ireland?",
-        options: [
-          { text: "Paris", correct: false },
-          { text: "London", correct: false },
-          { text: "New York", correct: false },
-          { text: "Dublin", correct: true },
-        ],
+        time: 10,
+        powerUps: true,
       },
     ],
   });
@@ -145,8 +126,8 @@ const QuizDetailPage = () => {
               questionNumber={index + 1}
               questionText={question.question}
               answerText={question.options[0].text}
-              time={20}
-              powerUps={true}
+              time={question.time}
+              powerUps={question.powerUps}
             />
           ))}
         </div>

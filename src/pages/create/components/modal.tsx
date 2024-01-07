@@ -67,10 +67,11 @@ export default function Modal(props: ModalProps) {
                       >
                         Quiz Detail
                       </Dialog.Title>
-                      <form>
+                      <form className="mt-8 space-y-6" action="#" method="POST">
                         <div className="space-y-12 w-full">
                           <div className="mt-10 flex flex-row gap-x-6 gap-y-8 w-full">
                             <div className="flex flex-col gap-y-4 w-full flex-1">
+                              <fieldset>
                               <div className="col-span-1">
                                 <label
                                   htmlFor="title"
@@ -79,7 +80,7 @@ export default function Modal(props: ModalProps) {
                                   Title
                                 </label>
                                 <div className="mt-2">
-                                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                                  <div className="flex rounded-md shadow-sm px-2 ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                     <input
                                       type="text"
                                       name="title"
@@ -89,11 +90,13 @@ export default function Modal(props: ModalProps) {
                                       placeholder="Enter quiz title"
                                       value={title}
                                       onChange={(e) => setTitle(e.target.value)}
+                                      required
                                     />
                                   </div>
                                 </div>
                               </div>
-
+                              </fieldset>
+                              <fieldset>
                               <div className="col-span-1">
                                 <label
                                   htmlFor="description"
@@ -112,9 +115,11 @@ export default function Modal(props: ModalProps) {
                                     onChange={(e) =>
                                       setDescription(e.target.value)
                                     }
+                                    required
                                   />
                                 </div>
                               </div>
+                              </fieldset>
 
                               <fieldset>
                                 <label
@@ -159,7 +164,7 @@ export default function Modal(props: ModalProps) {
                                 </div>
                               </fieldset>
                             </div>
-
+                            
                             <div className="flex-1">
                               <label
                                 htmlFor="cover-image"
@@ -212,8 +217,7 @@ export default function Modal(props: ModalProps) {
                           <button
                             type="submit"
                             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            onClick={() => {
-                              setOpen(false);
+                            onSubmit={() => {
                               props.handleSaveModal(
                                 title,
                                 description,
@@ -221,6 +225,7 @@ export default function Modal(props: ModalProps) {
                                 imageUrl
                               );
                               props.handleCloseModal();
+                              setOpen(false);
                             }}
                           >
                             Save
