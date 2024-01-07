@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type AnswerProps = {
-  key: number;
+  answerId: number;
   onChange: (text: string) => void;
   svg_icon: string;
   color: string;
@@ -14,7 +14,7 @@ type AnswerProps = {
 // focus:bg-red-500 focus:bg-green-500 focus:bg-blue-500 focus:bg-yellow-500 focus:ring-red-500 focus:ring-green-500 focus:ring-blue-500 focus:ring-yellow-500 focus:stroke-red-500 focus:stroke-green-500 focus:stroke-blue-500 focus:stroke-yellow-500
 
 const AnswerButton: React.FC<AnswerProps> = (props) => {
-  console.log(props);
+  console.log(props.answerId);
   return (
     <div className={`col-span-1 bg-transparent w-full`}>
       <div className={`relative flex rounded ring-8  ring-white w-full`}>
@@ -27,7 +27,7 @@ const AnswerButton: React.FC<AnswerProps> = (props) => {
         </div>
         <div className="w-full h-full">
           <textarea
-            id={String(props.key)}
+            id={String(props.answerId)}
             rows={3}
             className={`block algin-center p-2 pr-6 pl-8 w-full text-xl rounded font-medium focus:outline-transparent focus:bg-${props.color}-500 focus:placeholder-white focus:text-white focus:ring-8 focus:ring-${props.color}-500 ${props.value != "" ? `text-white ring-8 ring-${props.color}-500 bg-${props.color}-500` : ''}`}
             placeholder="Add answer"
@@ -41,9 +41,7 @@ const AnswerButton: React.FC<AnswerProps> = (props) => {
             type="radio"
             name="hs-default-radio"
             className=" accent-white border-white border-4 checked:ring-4 checked:ring-transparent radio-accent radio shrink-0 mt-0.5 w-6 h-6 checked:border-white rounded-full"
-            onClick={() => {
-              props.onSelected(props.key);
-            }}
+            onChange={() => props.onSelected(props.answerId)}
             {...(props.isSelected ? { checked: true } : {}) }
           />
         </div>

@@ -63,7 +63,7 @@ const QuizPage: React.FC = () => {
         "To make laws",
         "To declare laws unconstitutional",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -76,7 +76,7 @@ const QuizPage: React.FC = () => {
         "I'll be waiting",
         "I'll be watching",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -89,7 +89,7 @@ const QuizPage: React.FC = () => {
         "You mustn't be afraid to dream a little bigger, baby",
         "You mustn't be afraid to dream a little bigger, sweetheart",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },  
@@ -102,7 +102,7 @@ const QuizPage: React.FC = () => {
         "Why so sad?",
         "Why so mad?",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -115,7 +115,7 @@ const QuizPage: React.FC = () => {
         "I'm going to make him an offer he can't resist",
         "I'm going to make him an offer he can't reject",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -128,7 +128,7 @@ const QuizPage: React.FC = () => {
         "You shall not leave!",
         "You shall not escape!",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -141,7 +141,7 @@ const QuizPage: React.FC = () => {
         "May the Force be with them",
         "May the Force be with him",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -154,7 +154,7 @@ const QuizPage: React.FC = () => {
         "Here's Jack!",
         "Here's James!",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -167,7 +167,7 @@ const QuizPage: React.FC = () => {
         "Life is like a box of sweets",
         "Life is like a box of treats",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -180,7 +180,7 @@ const QuizPage: React.FC = () => {
         "There is no fork",
         "There is no spork",
       ],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     },
@@ -212,7 +212,7 @@ const QuizPage: React.FC = () => {
       questionNumber: questionData.length,
       questionText: "",
       answerTexts: ["", "", "", ""],
-      correctAnswer: 1,
+      correctAnswer: -1,
       time: 0,
       powerUps: true,
     };
@@ -314,7 +314,7 @@ const QuizPage: React.FC = () => {
                   }
                   index={index}
                   question={question.questionText}
-                  answer={question.answerTexts[question.correctAnswer - 1]}
+                  answer={question.answerTexts[question.correctAnswer]}
                   time={TIME[question.time]}
                   powerUps={question.powerUps}
                   activeIndex={activeQuestion}
@@ -372,15 +372,15 @@ const QuizPage: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 gap-8 col-span-full w-full">
             {questionData[activeQuestion].answerTexts.map(
-              (answer, answerId) => (
+              (answer: string, answerId: number) => (
                 <AnswerButton
-                  key={answerId}
+                  answerId={answerId}
                   value={answer}
                   svg_icon={answerData[answerId].icon}
                   color={answerData[answerId].color}
                   onChange={(text) => handleAnswerChange(answerId, text)}
                   onSelected={(key) => handleCorrectAnswerChange(key)}
-                  isSelected={questionData[activeQuestion].correctAnswer === answerId + 1}
+                  isSelected={questionData[activeQuestion].correctAnswer === answerId}
                 />
               )
             )}

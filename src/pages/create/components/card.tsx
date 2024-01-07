@@ -59,7 +59,7 @@ const Card: React.FC<CardProps> = (props) => {
       <div className="card-body p-3 ">
         <p className="line-clamp-2">{props.question == "" ? "<Missing>" : props.question}</p>
         <div className="bg-white px-2 rounded">
-          <p className="line-clamp-1">{props.answer}</p>
+          <p className={`line-clamp-1 ${props.answer == "" ? "text-red-600" : ""}`}>{props.answer == "" ? "<Missing>" : props.answer}</p>
         </div>
         <div className="flex justify-between mt-2">
           <div className="flex items-center">
