@@ -115,7 +115,7 @@ console.log(!email||!password);
         {(error)?(
           <p className="text-error text-center">{error}</p>
         ):null}
-        <button className="btn btn-primary" onClick={requestLogIn}>Log In</button>
+        {/* <button className="btn btn-primary" onClick={requestLogIn}>Log In</button> */}
         <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
           Haven&apos;t got an account?&nbsp;<a className="link link-primary">Sign Up</a>
         </p>
