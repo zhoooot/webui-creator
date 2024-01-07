@@ -152,7 +152,6 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
             </div>
           </label>
         </div>
-        <button className="btn btn-primary" >Sign Up</button>
         <button className="btn btn-primary" onClick={RequestSignUp}>Sign Up</button>
       </div>
       <p className="self-center" onClick={() => props.next("login")}>
