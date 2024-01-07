@@ -1,50 +1,7 @@
-
-import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
-import { AUTH_URL } from "@/config";
-import axios from "axios";
-
-import { handleQuestionCardClick } from "@/pages/tmp/redux/actions";
 import { AUTH_URL } from "@/config";
 import axios from "axios";
 import React from "react";
 
-const LogInPanel = (props : {next: any}) : JSX.Element => {
-  const [state, setState] = React.useState(0);
-  const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [error, setError] = React.useState("");
-  
-  const handleOnClick = () => {
-console.log(!email||!password);  
-    if (!email||!password)
-    {
-      if (!email && !password)
-        setError("Please enter your email and password")
-      else if (!email)
-        setError("Please enter your email")
-      else
-        setError("Please enter your password")
-    } else setError("");
-    console.log(error);
-  };
-
-  const requestLogIn = async () => {
-    console.log("Log in");
-    const url = AUTH_URL + "/auth/login";
-    const data = {
-      email: email,
-      password: password,
-    };
-    try {
-      console.log("Try to log in", data);
-      await axios.post(url, data);
-      console.log('Logged in');
-    }
-    catch (e) {
-      console.log(e);
-    }
-  }
-  
 const LogInPanel = (props : {next: any}) : JSX.Element => {
   const [state, setState] = React.useState(0);
   const [password, setPassword] = React.useState("");
