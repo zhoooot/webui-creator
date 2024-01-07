@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Modal from "./profile_modal";
 
 type TopBarProps = {
   name: string;
+  show_search: boolean;
 };
 
 const TimeIcon = (): JSX.Element => {
@@ -69,54 +71,51 @@ const TimeIcon = (): JSX.Element => {
   return <div>{getIcon()}</div>;
 };
 
-const TopBar: React.FC<TopBarProps> = (props) => {
+const TopBar: React.FC<TopBarProps> = (props) => { 
+  const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+  const handleUpdateModal = () => {
+    setUpdateModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setUpdateModalVisible(false);
+  };
 
   return (
     <header className="antialiased w-full">
+      {isUpdateModalVisible && <Modal handleCloseModal={handleCloseModal} />}
       <nav className="bg-primary border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800 w-full">
         <div className="flex flex-wrap w-full items-center">
           <div className="flex justify-center grow">
+            {props.show_search ? (
             <form
               action="#"
               method="GET"
-              className="hidden lg:block justify-center lg:pl-2 items-center"
+              className="hidden basis-1/2 lg:block justify-center lg:pl-2 items-center"
             >
-              <label htmlFor="topbar-search" className="sr-only">
-                Search
-              </label>
-              <div className="relative mt-1 lg:w-96">
-                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    {" "}
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />{" "}
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  name="email"
-                  id="topbar-search"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Quiz, categories, or friends"
-                />
+              
+            <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
               </div>
-            </form>
+              <input type="search" id="search" className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required />
+              <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+            </div>
+          </form>
+            ) : null}
           </div>
+
           <div className="flex lg:order-2 flex-row">
-            <div className="text-gray-500 text-sm lg:block justify-items-end items-end ">
+            <div className="text-gray-500 text-sm flex flex-col justify-items-end items-end">
               <TimeIcon />
-              <p className="text-white text-2xl text-right font-bold mt-1">{props.name == null ? "Taylor Swift" : props.name}</p>
+              <button className="text-white text-2xl text-right font-bold mt-1 hover:underline cursor-pointer"
+                onClick={handleUpdateModal}
+              >
+                {props.name == null ? "Taylor Swift" : props.name}
+              </button>
             </div>
            
           </div>

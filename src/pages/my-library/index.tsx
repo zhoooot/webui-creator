@@ -143,9 +143,13 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       console.log("fetching quizzes");
-      
-      const url = "/api/quiz";
-      const result = await axios.get(url);
+      try {
+        const url = "/api/quiz";
+        const result = await axios.get(url);
+      }
+      catch (e) {
+        console.log(e);
+      }
 
       const quizzes = recentQuizzes.concat(draftQuizzes, favoriteQuizzes);
       const recentQuizzesUpdated = quizzes.filter((quiz: ILibraryQuiz) => quiz.published);

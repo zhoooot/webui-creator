@@ -12,10 +12,14 @@ const PrivateQuizzes: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result = await axios.get(url);
-      setData(result.data);
+      try {
+        const url = "/api/quiz";
+        const tag = "discover";
+        const result = await axios.get(url);
+        setData(result.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
     fetchData();
   }, [])
