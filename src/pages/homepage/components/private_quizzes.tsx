@@ -1,8 +1,25 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Layout from "../../global_components/layout";
 import QuizCard from "./quiz_card";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import IQuizData from "@/interface/IQuizData";
+import Link from "next/link";
 
 const PrivateQuizzes: React.FC = () => {
+
+  const [data, setData] = useState<IQuizData[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = "/api/quiz";
+      const tag = "discover";
+      const result = await axios.get(url);
+      setData(result.data);
+    }
+    fetchData();
+  }, [])
+
   const privateQuizzes = [
     {
       id: 1,
@@ -137,7 +154,7 @@ const PrivateQuizzes: React.FC = () => {
     <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
       <div className="flex flex-row justify-between items-center w-full pb-4">
         <h1 className="text-xl font-bold">MY ZHOOTS</h1>
-        <a href="/create">
+        <Link href="/create">
           <button
             type="button"
             className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -145,7 +162,7 @@ const PrivateQuizzes: React.FC = () => {
             <Icon icon="akar-icons:plus" className="w-4 h-4 mr-1" />
             Create
           </button>
-        </a>
+        </Link>
       </div>
       <div className="grid grid-cols-3 gap-4 grow w-full">
         {privateQuizzes.map((quiz) => (
@@ -163,7 +180,7 @@ const PrivateQuizzes: React.FC = () => {
         type="button"
         className="w-fit self-end py-3 px-4 mt-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-2xl border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
       >
-        <a href="/my-library">See all</a>
+        <Link href="/my-library">See all</Link>
       </button>
     </div>
   );
