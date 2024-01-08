@@ -108,7 +108,6 @@ const TimeIcon = (): JSX.Element => {
 };
 
 const TopBar: React.FC<TopBarProps> = (props) => {
-const TopBar: React.FC<TopBarProps> = (props) => {
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
   const [keyword, setKeyword] = useState("");
   const handleUpdateModal = () => {
