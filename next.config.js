@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     AUTH_URL: process.env.AUTH_URL,
     QUIZ_URL: process.env.QUIZ_URL,
