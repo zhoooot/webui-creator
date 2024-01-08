@@ -22,12 +22,12 @@ const LogInPanel = (props: { next: any }): JSX.Element => {
   };
 
   const requestLogIn = async () => {
-    console.log("Log in");
     const url = AUTH_URL + "/auth/login";
     const data = {
       email: email,
       password: password,
     };
+    console.log("Trying to log in with data: ", data, "by sending request to: ", url);
     try {
       const response = await axios.post(url, data);
       const jwt = response.data.token;

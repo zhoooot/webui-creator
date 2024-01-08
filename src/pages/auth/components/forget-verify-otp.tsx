@@ -1,4 +1,4 @@
-import { AUTH_URL, OTP_LOCAL_STORAGE_KEY } from "@/config";
+import { AUTH_URL, EMAIL_LOCAL_STORAGE_KEY, OTP_LOCAL_STORAGE_KEY } from "@/config";
 import { otpValidation } from "@/helper/otp_validation";
 import axios, { AxiosError } from "axios";
 import React from "react";
@@ -17,7 +17,7 @@ const ForgotPanelVerifyOtp = (props: { next: any }): JSX.Element => {
       if (!otpValidation(otp)) throw new Error("Invalid otp");
       const url = AUTH_URL + "/auth/verify-otp";
       const data = {
-        email: localStorage.getItem("email"),
+        email: localStorage.getItem(EMAIL_LOCAL_STORAGE_KEY),
         otp: otp,
       };
       console.log("Sending request with data: ", data);

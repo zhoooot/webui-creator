@@ -20,7 +20,6 @@ export const instituteList = [
   "University of Windsor",
   "University of Lethbridge",
   "Memorial University of Newfoundland",
-  "University of Northern British Columbia",
   "Lakehead University",
   "Ryerson University",
   "Acadia University",

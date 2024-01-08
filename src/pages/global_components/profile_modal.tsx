@@ -1,10 +1,15 @@
-import  {Fragment, useEffect, useRef, useState } from "react";
-import {Dialog, Transition} from "@headlessui/react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import { instituteList } from "@/interface/InstitutionData";
-import { CREATOR_URL, INFO_LOCAL_STORAGE_KEY, JWT_LOCAL_STORAGE_KEY } from "@/config";
+import {
+  CREATOR_URL,
+  INFO_LOCAL_STORAGE_KEY,
+  JWT_LOCAL_STORAGE_KEY,
+} from "@/config";
 import { ICreatorData } from "@/interface/ICreatorData";
 import { decode } from "@/helper/decode_jwt";
 import axios from "axios";
+import router from "next/router";
 
 interface ModalProps {
   handleCloseModal: () => void;
@@ -19,26 +24,64 @@ const ProfileModal = (props: ModalProps) => {
   const [institute, setInstitute] = useState("Institute");
   const [phone, setPhone] = useState("09090909");
 
-  useEffect(() => {
+  const changeInfo = async (props: {name: string, institute: string, phone: string}) => {
+    console.log("Changing info");
+    const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+    if (!jwt) {
+      window.location.href = "/auth";
+    } else {
+      try {
+        const decoded = decode(jwt);
+        const url = CREATOR_URL + "/creator/" + decoded.sub;
+        if (!decoded.sub) {
+          throw new Error("User not found");
+        }
+        const data = {
+          fullname: props.name,
+          institution: props.institute,
+          phone: props.phone,
+        };
+        console.log("Sending request with data: ", data);
+        const response = await axios.put(url, data);
+        if (response.status !== 200) {
+          throw new Error("Something went wrong");
+        }
+        console.log("Successfully changed info", response);
+        const info: ICreatorData = {
+          id: decoded.sub,
+          name: props.name,
+          phone: props.phone,
+          institute: props.institute,
+        };
+        if (typeof window !== "undefined") {
+          localStorage.removeItem(INFO_LOCAL_STORAGE_KEY);
+          localStorage.setItem(INFO_LOCAL_STORAGE_KEY, JSON.stringify(info));
+        }
+      } catch (e: any) {
+        alert(e.message);
+      }
+    }
+  };
 
+  useEffect(() => {
     const fetchInfo = async (jwt: string) => {
       const decoded = decode(jwt);
       const url = CREATOR_URL + "/creator/" + decoded.sub;
       console.log(url);
-    //   const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
-    //   const info: ICreatorData = {
-    //     id: response.data.id,
-    //     name: response.data.fullname,
-    //     phone: response.data.phone,
-    //     institute: response.data.institution,
-    //   };
-    //   if (response.status !== 200) {
-    //     throw new Error("Something went wrong");
-    //   }
-    //   if (typeof window !== "undefined") {
-    //     localStorage.removeItem(INFO_LOCAL_STORAGE_KEY);
-    //     localStorage.setItem(INFO_LOCAL_STORAGE_KEY, JSON.stringify(info));
-    //   }
+      const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
+      const info: ICreatorData = {
+        id: response.data.id,
+        name: response.data.fullname,
+        phone: response.data.phone,
+        institute: response.data.institution,
+      };
+      if (response.status !== 200) {
+        throw new Error("Something went wrong");
+      }
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(INFO_LOCAL_STORAGE_KEY);
+        localStorage.setItem(INFO_LOCAL_STORAGE_KEY, JSON.stringify(info));
+      }
     };
 
     if (typeof window === "undefined") throw new Error("Window is undefined");
@@ -46,29 +89,30 @@ const ProfileModal = (props: ModalProps) => {
     if (info) {
       const data = JSON.parse(info);
       if (data.name !== undefined && data.name !== null) setName(data.name);
-      if (data.institute !== undefined && data.institute !== null) setInstitute(data.institute);
+      if (data.institute !== undefined && data.institute !== null)
+        setInstitute(data.institute);
       if (data.phone !== undefined && data.phone !== null) setPhone(data.phone);
-     }
-    else {
+    } else {
       const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
       if (!jwt) {
         window.location.href = "/auth";
-      } 
-      else {
+      } else {
         try {
           fetchInfo(jwt);
           const info = localStorage.getItem(INFO_LOCAL_STORAGE_KEY);
           const data = JSON.parse(info!);
-          console.log(data.name, data.institute, data.phone)
+          console.log(data.name, data.institute, data.phone);
           if (data.name !== undefined && data.name !== null) setName(data.name);
-          if (data.institute !== undefined && data.institute !== null) setInstitute(data.institute);
-          if (data.phone !== undefined && data.phone !== null)setPhone(data.phone);
+          if (data.institute !== undefined && data.institute !== null)
+            setInstitute(data.institute);
+          if (data.phone !== undefined && data.phone !== null)
+            setPhone(data.phone);
         } catch (e: any) {
           alert(e.message);
         }
       }
     }
-  }, []); 
+  }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -111,7 +155,7 @@ const ProfileModal = (props: ModalProps) => {
                       >
                         User Information
                       </Dialog.Title>
-                      <form className="mt-8 space-y-6" action="#" method="POST">
+                      <form className="mt-8 space-y-6">
                         <div className="space-y-12 w-full">
                           <div className="mt-10 flex flex-row gap-x-6 gap-y-8 w-full">
                             <div className="flex flex-col gap-y-4 w-full flex-1">
@@ -133,7 +177,9 @@ const ProfileModal = (props: ModalProps) => {
                                         className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                         placeholder="Type in your name"
                                         value={name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) =>
+                                          setName(e.target.value)
+                                        }
                                         required
                                       />
                                     </div>
@@ -153,9 +199,15 @@ const ProfileModal = (props: ModalProps) => {
                                       id="countries"
                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                       value={institute}
+                                      onChange={(e) =>
+                                        setInstitute(e.target.value)
+                                      }
                                     >
                                       {instituteList.map((institute_it) => (
-                                        <option key={institute_it} value={institute_it}>
+                                        <option
+                                          key={institute_it}
+                                          value={institute_it}
+                                        >
                                           {institute_it}
                                         </option>
                                       ))}
@@ -168,7 +220,10 @@ const ProfileModal = (props: ModalProps) => {
                                 <div className="col-span-1">
                                   <fieldset>
                                     <div className="col-span-1">
-                                      <label htmlFor="phone-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                      <label
+                                        htmlFor="phone-input"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                      >
                                         Phone number:
                                       </label>
                                       <div className="relative">
@@ -192,17 +247,17 @@ const ProfileModal = (props: ModalProps) => {
                                           placeholder="123-456-7890"
                                           required
                                           value={phone}
+                                          onChange={(e) =>
+                                            setPhone(e.target.value)
+                                          }
                                         />
                                       </div>
                                     </div>
                                   </fieldset>
                                 </div>
                               </fieldset>
-
-
                             </div>
                           </div>
-
                         </div>
 
                         <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -220,7 +275,8 @@ const ProfileModal = (props: ModalProps) => {
                           <button
                             type="submit"
                             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            onSubmit={() => {
+                            onClick={async () => {
+                              await changeInfo({name, institute, phone});
                               props.handleCloseModal();
                               setOpen(false);
                             }}
@@ -239,6 +295,6 @@ const ProfileModal = (props: ModalProps) => {
       </Dialog>
     </Transition.Root>
   );
-}
+};
 
 export default ProfileModal;

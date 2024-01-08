@@ -9,6 +9,7 @@ import {
   JWT_LOCAL_STORAGE_KEY,
 } from "@/config";
 import { ICreatorData } from "@/interface/ICreatorData";
+import { handleAxiosError } from "@/helper/handleAxiosError";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = (props) => {
+
   const [name, setName] = React.useState<string>("");
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
       const url = CREATOR_URL + "/creator/" + decoded.sub;
       console.log(url);
       const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
+      //handleAxiosError(response);
       const info: ICreatorData = {
         id: response.data.id,
         name: response.data.fullname,
@@ -37,6 +40,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
         localStorage.removeItem(INFO_LOCAL_STORAGE_KEY);
         localStorage.setItem(INFO_LOCAL_STORAGE_KEY, JSON.stringify(info));
       }
+      console.log("Setting name to ", info.name);
       setName(info.name);
     };
     if (typeof window === "undefined") return;
@@ -58,6 +62,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
       <div className="flex-none">
         <TopBar
           name={name}
+          set={setName}
           show_search={props.show_search === null ? false : props.show_search!}
         />
       </div>
