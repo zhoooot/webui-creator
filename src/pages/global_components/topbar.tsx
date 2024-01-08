@@ -44,11 +44,45 @@ const TimeIcon = (): JSX.Element => {
           <p className="text-white text-sm ml-1">
             {hours < 12 ? "Good morning" : "Good afternoon"}
           </p>
+          <svg
+            className="w-5 h-5 dark:text-gray-800 text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 3V1m0 18v-2M5.05 5.05 3.636 3.636m12.728 12.728L14.95 14.95M3 10H1m18 0h-2M5.05 14.95l-1.414 1.414M16.364 3.636 14.95 5.05M14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+            />
+          </svg>
+          <p className="text-white text-sm ml-1">
+            {hours < 12 ? "Good morning" : "Good afternoon"}
+          </p>
         </div>
       );
     } else {
       return (
         <div className="flex items-center">
+          <svg
+            className="w-5 h-5 dard:text-gray-800 text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 18 20"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M8.509 5.75c0-1.493.394-2.96 1.144-4.25h-.081a8.5 8.5 0 1 0 7.356 12.746A8.5 8.5 0 0 1 8.509 5.75Z"
+            />
+          </svg>
+          <p className="text-white text-sm ml-1">Good evening</p>
           <svg
             className="w-5 h-5 dard:text-gray-800 text-white"
             aria-hidden="true"
@@ -74,8 +108,9 @@ const TimeIcon = (): JSX.Element => {
 };
 
 const TopBar: React.FC<TopBarProps> = (props) => {
+const TopBar: React.FC<TopBarProps> = (props) => {
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
-
+  const [keyword, setKeyword] = useState("");
   const handleUpdateModal = () => {
     if (props.name == "") {
       alert("You must sign in first!");
@@ -103,8 +138,8 @@ const TopBar: React.FC<TopBarProps> = (props) => {
           <div className="flex justify-center grow">
             {props.show_search ? (
               <form
-                action="#"
-                method="GET"
+                action={`/search-result?keyword=${keyword}`}
+                method="POST"
                 className="hidden basis-1/2 lg:block justify-center lg:pl-2 items-center"
               >
                 <label
@@ -137,6 +172,8 @@ const TopBar: React.FC<TopBarProps> = (props) => {
                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Search"
                     required
+                    onChange={(e) => setKeyword(e.target.value)}
+                    value={keyword}
                   />
                   <button
                     type="submit"
