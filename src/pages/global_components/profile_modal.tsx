@@ -1,12 +1,16 @@
-import { Fragment, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { Icon } from "@iconify/react";
+import  {Fragment, useEffect, useRef, useState } from "react";
+import {Dialog, Transition} from "@headlessui/react";
+import { instituteList } from "@/interface/InstitutionData";
+import { CREATOR_URL, INFO_LOCAL_STORAGE_KEY, JWT_LOCAL_STORAGE_KEY } from "@/config";
+import { ICreatorData } from "@/interface/ICreatorData";
+import { decode } from "@/helper/decode_jwt";
+import axios from "axios";
 
 interface ModalProps {
   handleCloseModal: () => void;
 }
 
-export default function Modal(props: ModalProps) {
+const ProfileModal = (props: ModalProps) => {
   const [open, setOpen] = useState(true);
 
   const cancelButtonRef = useRef(null);
@@ -15,54 +19,56 @@ export default function Modal(props: ModalProps) {
   const [institute, setInstitute] = useState("Institute");
   const [phone, setPhone] = useState("09090909");
 
-  const instituteList = [
-    "University of Toronto",
-    "University of Waterloo",
-    "University of British Columbia",
-    "McGill University",
-    "University of Alberta",
-    "University of Calgary",
-    "Western University",
-    "Queen's University",
-    "University of Ottawa",
-    "University of Manitoba",
-    "Dalhousie University",
-    "Simon Fraser University",
-    "University of Victoria",
-    "York University",
-    "University of Saskatchewan",
-    "University of Guelph",
-    "Carleton University",
-    "University of Regina",
-    "University of Windsor",
-    "University of Lethbridge",
-    "Memorial University of Newfoundland",
-    "University of Northern British Columbia",
-    "Lakehead University",
-    "Ryerson University",
-    "Acadia University",
-    "University of New Brunswick",
-    "University of Prince Edward Island",
-    "Brock University",
-    "University of Ontario Institute of Technology",
-    "Wilfrid Laurier University",
-    "University of the Fraser Valley",
-    "University of Winnipeg",
-    "Mount Allison University",
-    "University of Northern British Columbia",
-    "Ho Chi Minh City University of Technology",
-    "Ho Chi Minh City University of Science",
-    "Ho Chi Minh City University of Social Sciences and Humanities",
-    "Ho Chi Minh City University of Economics",
-    "Ho Chi Minh City University of Law",
-    "Ho Chi Minh City University of Foreign Languages and Information Technology",
-    "Ho Chi Minh City University of Pedagogy",
-    "Ho Chi Minh City University of Architecture",
-    "Ho Chi Minh City University of Agriculture and Forestry",
-    "Ho Chi Minh City University of Transport",
-    "Ho Chi Minh City University of Technical Education",
-    "Ho Chi Minh City University of Industry",
-  ];
+  useEffect(() => {
+
+    const fetchInfo = async (jwt: string) => {
+      const decoded = decode(jwt);
+      const url = CREATOR_URL + "/creator/" + decoded.sub;
+      console.log(url);
+    //   const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
+    //   const info: ICreatorData = {
+    //     id: response.data.id,
+    //     name: response.data.fullname,
+    //     phone: response.data.phone,
+    //     institute: response.data.institution,
+    //   };
+    //   if (response.status !== 200) {
+    //     throw new Error("Something went wrong");
+    //   }
+    //   if (typeof window !== "undefined") {
+    //     localStorage.removeItem(INFO_LOCAL_STORAGE_KEY);
+    //     localStorage.setItem(INFO_LOCAL_STORAGE_KEY, JSON.stringify(info));
+    //   }
+    };
+
+    if (typeof window === "undefined") throw new Error("Window is undefined");
+    const info = localStorage.getItem(INFO_LOCAL_STORAGE_KEY);
+    if (info) {
+      const data = JSON.parse(info);
+      if (data.name !== undefined && data.name !== null) setName(data.name);
+      if (data.institute !== undefined && data.institute !== null) setInstitute(data.institute);
+      if (data.phone !== undefined && data.phone !== null) setPhone(data.phone);
+     }
+    else {
+      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+      if (!jwt) {
+        window.location.href = "/auth";
+      } 
+      else {
+        try {
+          fetchInfo(jwt);
+          const info = localStorage.getItem(INFO_LOCAL_STORAGE_KEY);
+          const data = JSON.parse(info!);
+          console.log(data.name, data.institute, data.phone)
+          if (data.name !== undefined && data.name !== null) setName(data.name);
+          if (data.institute !== undefined && data.institute !== null) setInstitute(data.institute);
+          if (data.phone !== undefined && data.phone !== null)setPhone(data.phone);
+        } catch (e: any) {
+          alert(e.message);
+        }
+      }
+    }
+  }, []); 
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -146,10 +152,11 @@ export default function Modal(props: ModalProps) {
                                     <select
                                       id="countries"
                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                      value={institute}
                                     >
-                                      {instituteList.map((institute) => (
-                                        <option key={institute} value={institute}>
-                                          {institute}
+                                      {instituteList.map((institute_it) => (
+                                        <option key={institute_it} value={institute_it}>
+                                          {institute_it}
                                         </option>
                                       ))}
                                     </select>
@@ -184,6 +191,7 @@ export default function Modal(props: ModalProps) {
                                           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                                           placeholder="123-456-7890"
                                           required
+                                          value={phone}
                                         />
                                       </div>
                                     </div>
@@ -232,3 +240,5 @@ export default function Modal(props: ModalProps) {
     </Transition.Root>
   );
 }
+
+export default ProfileModal;
