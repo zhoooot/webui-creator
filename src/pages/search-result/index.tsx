@@ -3,20 +3,25 @@ import Layout from "../global_components/layout";
 import QuizCard from "./components/quiz-card";
 import axios from "axios";
 import IQuizData from "@/interface/IQuizData";
+import { useSearchParams } from 'next/navigation'
 
 const Discover: React.FC = () => {
 
   const [data, setData] = useState<IQuizData[] | null>(null);
+  const searchParams = useSearchParams()
+ 
+  const keyword = searchParams.get('keyword')
+  console.log("Keyword is: ", keyword)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result = await axios.get(url);
-      setData(result.data);
-    }
-    fetchData();
-  }, [])
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url = "/api/quiz";
+  //     const tag = "discover";
+  //     const result = await axios.get(url);
+  //     setData(result.data);
+  //   }
+  //   fetchData();
+  // }, [])
 
   const quizData = [
     {
