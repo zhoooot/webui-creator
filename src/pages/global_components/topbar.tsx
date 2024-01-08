@@ -76,9 +76,11 @@ const TimeIcon = (): JSX.Element => {
 const TopBar: React.FC<TopBarProps> = (props) => {
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
 
-  console.log("Again, setting name to ", props.name);
-
   const handleUpdateModal = () => {
+    if (props.name == "") {
+      alert("You must sign in first!");
+      return;
+    }
     setUpdateModalVisible(true);
   };
 
@@ -154,7 +156,7 @@ const TopBar: React.FC<TopBarProps> = (props) => {
                 className="text-white text-2xl text-right font-bold mt-1 hover:underline cursor-pointer"
                 onClick={handleUpdateModal}
               >
-                {props.name}
+                {props.name == "" ? "Guest" : props.name}
               </button>
             </div>
           </div>

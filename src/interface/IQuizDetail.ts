@@ -1,4 +1,5 @@
 export interface IQuizDetail {
+  id: string;
   image_url: string;
   title: string;
   description: string;
@@ -6,8 +7,12 @@ export interface IQuizDetail {
   updated_at: string;
   published: boolean;
   author: string;
+  authorId: string;
+  is_reported: boolean;
   questions: {
     question: string;
-    options: { text: string; correct: boolean }[];
+    options: { id: number, text: string; correct: boolean }[];
+    time: number;
+    powerUps: boolean;
   }[];
 }

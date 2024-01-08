@@ -1,11 +1,11 @@
 export class IQuizData {
-  id: number;
+  id: string;
   imageUrl: string;
   number: number;
   name: string;
   questionCount: number;
 
-  constructor(id: number, imageUrl: string, number: number, name: string, questionCount: number) {
+  constructor(id: string, imageUrl: string, number: number, name: string, questionCount: number) {
     this.id = id;
     this.imageUrl = imageUrl;
     this.number = number;
