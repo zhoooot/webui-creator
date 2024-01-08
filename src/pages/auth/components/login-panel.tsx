@@ -1,6 +1,9 @@
-import { AUTH_URL } from "@/config";
+import { AUTH_URL, JWT_LOCAL_STORAGE_KEY } from "@/config";
+import { decode } from "@/helper/decode_jwt";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
+import  { AxiosError } from 'axios';
+import router from "next/router";
 
 const LogInPanel = (props: { next: any }): JSX.Element => {
   const [state, setState] = React.useState(0);
@@ -26,11 +29,25 @@ const LogInPanel = (props: { next: any }): JSX.Element => {
       password: password,
     };
     try {
-      console.log("Try to log in", data);
-      await axios.post(url, data);
-      console.log("Logged in");
-    } catch (e) {
+      const response = await axios.post(url, data);
+      const jwt = response.data.token;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(JWT_LOCAL_STORAGE_KEY, jwt);
+      }
+      router.replace("/");
+    } catch (e: any) {
       console.log(e);
+      const error = e as AxiosError;
+      switch(error.response?.status) {
+        case 401:
+          setError("Email or password is incorrect");
+          break;
+        case 404:
+          setError("User not found");
+          break;
+        default:
+          setError("Something went wrong");
+      }
     }
   };
 
