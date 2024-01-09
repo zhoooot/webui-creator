@@ -12,18 +12,19 @@ import Action from "./components/actions";
 import Layout from "../global_components/layout";
 import axios from "axios";
 import { IQuizDetail } from "@/interface/IQuizDetail";
-import { useRouter } from 'next/router'
-import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
+import { useRouter } from "next/router";
+import { ADMIN_URL, JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { parseQuiz } from "@/helper/parse_quiz";
+import swal from "sweetalert2";
 
 const QuizDetailPage = () => {
   const user = {
-    id: "7070afde-f8b5-487e-a288-f2be9d162b0b",
+    id: "7070afde-f8b5-487e-a288-f2be9d162b0bx",
     username: "John Doe",
-  }
+  };
 
   const router = useRouter();
-  
+
   console.log("Getting detail of", router.query.qid);
 
   useEffect(() => {
@@ -34,20 +35,25 @@ const QuizDetailPage = () => {
     if (qid == "") {
       router.replace("/404");
     }
-    
+
     const fetchDetails = async () => {
       const url = QUIZ_URL + `quiz/${qid}`;
-      const response = await axios.get(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
-      const result : IQuizDetail = await parseQuiz(response.data);
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            JWT_LOCAL_STORAGE_KEY
+          )}`,
+        },
+      });
+      const result: IQuizDetail = await parseQuiz(response.data);
       console.log(response.data);
       console.log("Receive the quiz detail: ", result);
       setQuiz(result);
-    }
-    
+    };
+
     if (router.isReady) {
       fetchDetails();
     }
-
   }, [router.isReady, router]);
 
   const [quiz, setQuiz] = useState<IQuizDetail>();
@@ -56,7 +62,7 @@ const QuizDetailPage = () => {
     console.log("Handling appeal");
     // const url = "/api/appeal";
     // await axios.post(url, { id: quiz.id });
-  }
+  };
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -90,7 +96,8 @@ const QuizDetailPage = () => {
               <div className="flex flex-row justify-between items-center h-10 mb-4">
                 <div className="flex flex-col shrink-0">
                   <div className="text-gray-500">
-                    {quiz.num_played} plays • Updated {new Date(quiz.updated_at).toLocaleDateString()}
+                    {quiz.num_played} plays • Updated{" "}
+                    {new Date(quiz.updated_at).toLocaleDateString()}
                   </div>
                   <div className="flex flex-row gap-2">
                     <QuizPublishedIcon published={quiz.published} />
@@ -101,15 +108,79 @@ const QuizDetailPage = () => {
                   author={user.id === quiz.authorId}
                   favorite={false}
                   onClickDelete={() => {}}
-                  onClickEdit={() => {router.replace(`/create/${router.query.qid}`)}}
+                  onClickEdit={() => {
+                    router.replace(`/create/${router.query.qid}`);
+                  }}
                   onClickFavorite={() => {}}
                   onClickRename={() => {}}
                   onClickReport={() => {
                     console.log("report");
-                    const userResponse = window.confirm("Are you sure you want to report this quiz?");
-                    if (userResponse) {
-                      alert("Quiz reported!");
-                    }
+                    swal
+                      .fire({
+                        title: "Report this quiz?",
+                        text: "Tell us what is wrong with this quiz:",
+                        icon: "warning",
+                        input: "text",
+                        inputAttributes: {
+                          autocapitalize: "off",
+                        },
+                        showLoaderOnConfirm: true,
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Report",
+                        cancelButtonText: "Cancel",
+                        preConfirm: async (reason) => {
+                          const jwt = localStorage.getItem(
+                            JWT_LOCAL_STORAGE_KEY
+                          );
+                          if (!jwt) {
+                            router.replace("/auth");
+                          }
+
+                          const url = ADMIN_URL + `violation/create`;
+                          console.log(
+                            "Posting to",
+                            url,
+                            " with reason ",
+                            reason,
+                            " quiz id ",
+                            quiz.id,
+                            " auth id ",
+                            quiz.authorId,
+                            " report by ",
+                            user.id
+                          );
+                          const result = await axios.post(
+                            url,
+                            {
+                              detail: reason,
+                              quiz_id: quiz.id,
+                              auth_id: quiz.authorId,
+                              report_by: user.id,
+                            },
+                            {
+                              headers: {
+                                Authorization: `Bearer ${jwt}`,
+                              },
+                            }
+                          );
+
+                          console.log("Result is ", result.data);
+                        },
+                        allowOutsideClick: () => !swal.isLoading(),
+                      })
+                      .then((result) => {
+                        if (result.isConfirmed) {
+                          swal.fire({
+                            title: "Reported!",
+                            text: "Your quiz has been reported. We will review it soon.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "OK",
+                          });
+                        }
+                      });
                   }}
                   onClickShare={() => {}}
                 />
@@ -122,10 +193,13 @@ const QuizDetailPage = () => {
               </button>
               <div className="flex flex-row justify-between items-center h-10"></div>
             </div>
-            {(quiz.is_reported) ? (
-            <div className="w-full bg-red-500 flex flex-row items-center justify-center">
-              <div className="font-bold text-white text-lg p-4 text-center "> Your quiz was reported!</div>
-              {/* <button className="btn btn-active"
+            {quiz.is_reported ? (
+              <div className="w-full bg-red-500 flex flex-row items-center justify-center">
+                <div className="font-bold text-white text-lg p-4 text-center ">
+                  {" "}
+                  Your quiz was reported!
+                </div>
+                {/* <button className="btn btn-active"
                 onClick={() => {
                   const userResponse = window.confirm("Are you sure you want to appeal this report?");
                   if (userResponse)
@@ -135,7 +209,7 @@ const QuizDetailPage = () => {
               >
                 Appeal Now
               </button> */}
-            </div>
+              </div>
             ) : (
               <></>
             )}
