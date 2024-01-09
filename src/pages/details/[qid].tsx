@@ -34,7 +34,7 @@ const QuizDetailPage = () => {
     const fetchDetails = async () => {
       const url = QUIZ_URL + `/quiz/${qid}`;
       const response = await axios.get(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
-      const result : IQuizDetail = parseQuiz(response.data);
+      const result : IQuizDetail = await parseQuiz(response.data);
       console.log(response.data);
       console.log("Receive the quiz detail: ", result);
       setQuiz(result);

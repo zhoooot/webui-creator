@@ -4,22 +4,44 @@ import QuizCard from "./quiz_card";
 import axios from "axios";
 import IQuizData from "@/interface/IQuizData";
 import Link from "next/link";
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
+import router from "next/router";
 
 const PublicQuizzes: React.FC = () => {
   const [data, setData] = useState<IQuizData[] | null>(null);
 
   useEffect(() => {
+    console.log("Fetching data for discover quiz");
     const fetchData = async () => {
-      try {
-        const url = "";
-        const tag = "discover";
-        const result = await axios.get(url);
-        setData(result.data);
-      } catch (e: any) {
-        console.log("Error fetching data");
+      if (typeof window === "undefined") return;
+      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+      if (!jwt) {
+        router.replace("/auth");
       }
+      const endpoint = QUIZ_URL + "/quiz/public?limit=9";
+      console.log(endpoint);
+      const result = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${jwt}`}});
+      console.log(result.data);
+      const quizzesData: IQuizData[] = [];
+      for (let i = 0; i < result.data.length; i++) {
+        const quiz = result.data[i];
+        const quizData: IQuizData = {
+          id: quiz.quiz_id,
+          number: quiz.num_play_times,
+          name: quiz.title,
+          questionCount: quiz.num_questions,
+          imageUrl: quiz.image_url,
+        };
+        console.log("There is a quiz with data: ", quizData);
+        quizzesData.push(quizData);
+      }
+      setData(result.data);
     };
+
+    if (typeof window === "undefined") return;
     fetchData();
+    
   }, []);
 
   const publicQuizzes = [
@@ -164,7 +186,7 @@ const PublicQuizzes: React.FC = () => {
         </button>
       </div>
       <div className="grid grid-cols-3 gap-4 grow w-full">
-        {publicQuizzes.map((quiz) => (
+        {data && data.map((quiz) => (
           <QuizCard
             key={quiz.id}
             imageUrl={quiz.imageUrl}

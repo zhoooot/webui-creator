@@ -305,9 +305,24 @@
 } 
 */
 
+import { CREATOR_URL } from "@/config"
 import { IQuizDetail } from "@/interface/IQuizDetail"
+import axios from "axios";
 
-export const parseQuiz = (quiz: any) => {
+const getAuthorName = async (auth_id: string) => {
+    try {
+        const res = await axios.get(CREATOR_URL + "/api/creator/" + auth_id);
+        if (res.data.error) {
+            return "Anonymous";
+        }
+        return res.data.name;
+    }
+    catch (err) {
+        return "Anonymous";
+    }
+}
+
+export const parseQuiz = async (quiz: any) => {
   const quizDetail: IQuizDetail = {
     id: quiz.quiz_id,
     image_url: quiz.image,
@@ -316,7 +331,7 @@ export const parseQuiz = (quiz: any) => {
     num_played: quiz.num_play_times,
     updated_at: quiz.created_at,
     published: quiz.is_public,
-    author: "",
+    author: await getAuthorName(quiz.auth_id),
     authorId: quiz.auth_id,
     is_reported: false,
     questions: quiz.questions.map((question: any) => {

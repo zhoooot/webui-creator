@@ -5,24 +5,47 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import IQuizData from "@/interface/IQuizData";
 import Link from "next/link";
+import router from "next/router";
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 
 const PrivateQuizzes: React.FC = () => {
 
   const [data, setData] = useState<IQuizData[] | null>(null);
 
   useEffect(() => {
+    console.log("Fetching data for discover quiz");
     const fetchData = async () => {
-      try {
-        const url = "";
-        const tag = "discover";
-        const result = await axios.get(url);
-        setData(result.data);
-      } catch (error: any) {
-        console.log(error);
+      if (typeof window === "undefined") return;
+      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+      if (!jwt) {
+        router.replace("/auth");
       }
-    }
+      const endpoint = QUIZ_URL + "/quiz?limit=9";
+      console.log(endpoint);
+      const result = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${jwt}`}});
+      console.log(result.data);
+      const quizzesData: IQuizData[] = [];
+      for (let i = 0; i < result.data.length; i++) {
+        const quiz = result.data[i];
+        const quizData: IQuizData = {
+          id: quiz.quiz_id,
+          number: quiz.num_play_times,
+          name: quiz.title,
+          questionCount: quiz.num_questions,
+          imageUrl: quiz.image_url,
+        };
+        console.log("There is a quiz with data: ", quizData);
+        quizzesData.push(quizData);
+      }
+      setData(result.data);
+      console.log("All the private quizzes are: ", quizzesData);
+    };
+
+    if (typeof window === "undefined") return;
     fetchData();
-  }, [])
+    
+  }, []);
 
   const privateQuizzes = [
     {
@@ -169,7 +192,7 @@ const PrivateQuizzes: React.FC = () => {
         </Link>
       </div>
       <div className="grid grid-cols-3 gap-4 grow w-full">
-        {privateQuizzes.map((quiz) => (
+        {data && data.map((quiz) => (
           <QuizCard
             key={quiz.id}
             imageUrl={quiz.imageUrl}

@@ -185,15 +185,10 @@ const QuizPage: React.FC = () => {
     setUpdateModalVisible(false);
   };
 
-<<<<<<< Updated upstream
   const handleCreateQuestion = () => {
     if (!handleMessageErrors()) {
       return;
     }
-=======
-  const handleCreateQuestion = async () => {
-    await handleSaveQuiz();
->>>>>>> Stashed changes
     const newQuestion: Question = {
       questionNumber: questionData?.length,
       questionText: "",
@@ -284,17 +279,12 @@ const QuizPage: React.FC = () => {
     });
   };
 
-<<<<<<< Updated upstream
-  const handleSaveQuiz = () => {
-    if (!handleMessageErrors()) {
-      return;
-    }
-    // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
-    router.push('/my-library', { scroll: false })
-  }
-=======
   const handleSaveQuiz = async () => {
     console.log("handleSaveQuiz");
+    if (!isDraft) {
+      console.log("Nothing changed");
+      return;
+    }
     try {
       if (typeof window === "undefined") return;
       if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null) throw Error("JWT not found");
@@ -335,7 +325,6 @@ const QuizPage: React.FC = () => {
       console.log(e);
     }
   };
->>>>>>> Stashed changes
 
   const handleExitQuiz = () => {
     if (!handleMessageErrors()) {
@@ -446,7 +435,7 @@ const QuizPage: React.FC = () => {
             <div
               className="popover bg-primary-500 px-2 py-1 rounded-md text-white"
             >
-              <p>You haven't added a question.</p>
+              <p>You haven&apos;t added a question.</p>
             </div>
           </div>
         </div>

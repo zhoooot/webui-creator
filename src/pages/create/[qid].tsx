@@ -84,7 +84,7 @@ const QuizPage: React.FC = () => {
         if (response.status !== 200) {
           throw new Error("Something went wrong");
         }
-        const result: IQuizDetail = parseQuiz(response.data);
+        const result: IQuizDetail = await parseQuiz(response.data);
         console.log("Receive the quiz detail: ", result);
         const { questions } = result;
         const questionsData: Question[] = [];

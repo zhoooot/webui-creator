@@ -14,7 +14,7 @@ interface QuizCardProps {
   number: number;
   name: string;
   questionCount: number;
-  id: number;
+  id: string;
 }
 
 // z-10 z-9 z-8 z-7 z-6 z-5 z-4 z-3 z-2 z-1
@@ -34,8 +34,10 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
   const optionClass =
     "dropdown-item text-black flex flex-row items-center text-base";
 
+  console.log("The props is: ", props);
+
   return (
-    <Link href={`/details`}>
+    <Link href={`/details/${props.id}`}>
       <div className={`card shadow-md image-full h-full w-full max-w-5xl `}>
         <figure className="w-full h-48">
           <img
