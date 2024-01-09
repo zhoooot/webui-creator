@@ -9,7 +9,7 @@ import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
 import { TIME } from "./components/time-input";
 import { useRouter } from "next/router";
-import { CreateDumpData } from "@/data_dump/CreateDumpData";
+// import { CreateDumpData } from "@/data_dump/CreateDumpData";
 import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { decode } from "@/helper/decode_jwt";
 import axios from "axios";
@@ -55,11 +55,23 @@ const QuizPage: React.FC = () => {
   const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
   const [questionData, setQuestionData] =
-    useState<Array<Question>>(CreateDumpData);
+    useState<Array<Question>>([
+      {
+        questionNumber: 0,
+        questionText: "",
+        answerTexts: ["", "", "", ""],
+        correctAnswer: -1,
+        time: 0,
+        powerUps: false,
+      },
+
+    ]);
   const [questionValue, setQuestionValue] = useState(
     questionData[0].questionText
   );
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const { qid } = router.query;
@@ -111,6 +123,8 @@ const QuizPage: React.FC = () => {
         setQuizImage(result.image_url);
         setQuestionData(questionsData);
         setQuestionValue(questionsData[0].questionText);
+
+        setLoading(false);
       } catch (e) {
         console.log(e);
       }
@@ -118,13 +132,13 @@ const QuizPage: React.FC = () => {
     action();
   }, [qid, router]);
 
-  // if (qid === null) {
-  //   return (
-  //     <div className="flex flex-col justify-center items-center h-full">
-  //       <div className="text-3xl text-white font-bold">Loading...</div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-full">
+        <div className="text-3xl text-black font-bold">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen relative">
@@ -211,7 +225,7 @@ const QuizPage: React.FC = () => {
                   question={question.questionText}
                   answer={
                     question.correctAnswer === -1
-                      ? "<missing>"
+                      ? "Correct answer"
                       : question.answerTexts[question.correctAnswer]
                   }
                   time={TIME[question.time]}

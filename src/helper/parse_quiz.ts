@@ -349,6 +349,7 @@ export const parseQuiz = async (quiz: any) => {
       }
     }),
   }
+  
   return quizDetail;
 }
     

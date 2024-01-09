@@ -1,4 +1,6 @@
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { Icon } from "@iconify/react";
+import axios from "axios";
 import { on } from "events";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,6 +15,12 @@ type ActionProps = {
   onClickRename: () => void;
   onClickReport: () => void;
 };
+
+const duplicateQuiz = async () => {
+  const url = QUIZ_URL + ``;
+  const response = await axios.post(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
+  console.log(response.data);
+}
 
 const Action: React.FC<ActionProps> = (props) => {
   const router = useRouter();

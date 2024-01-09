@@ -21,7 +21,6 @@ export const handleExitQuiz = (
     dangerMode: true,
   }).then((response) => {
     if (response) {
-      if (!response) {
         // Save to draft
         if (typeof window === "undefined") return;
         if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null)
@@ -65,7 +64,7 @@ export const handleExitQuiz = (
       }
 
 
-    } else {
+    else {
       swal(
         {
           title: "Are you sure?",

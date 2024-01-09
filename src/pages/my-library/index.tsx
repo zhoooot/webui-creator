@@ -5,6 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { ILibraryQuiz } from "@/interface/ILibraryQuiz";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { QUIZ_URL } from "@/config";
 
 const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
@@ -15,128 +16,9 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     []
   );
 
-  const [quizzes, setQuizzes] = useState<Array<ILibraryQuiz>>([
-    {
-      id: 0,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 1,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of Vietnam?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 2,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: true,
-      status: "draft",
-    },
-    {
-      id: 3,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: true,
-      status: "draft",
-    },
-    {
-      id: 4,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "draft",
-    },
-    {
-      id: 5,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 6,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 7,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 8,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of France?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: true,
-      author: "John Doe",
-      favorite: false,
-      status: "published",
-    },
-    {
-      id: 9,
-      image_url: "https://picsum.photos/1000/1000",
-      title: "What is the capital of Vietnam?",
-      description: "Test your knowledge of the world with this quiz!",
-      num_played: 100,
-      updated_at: "1 hour ago",
-      published: false,
-      author: "John Doe",
-      favorite: false,
-      status: "draft",
-    },
-  ]);
+  const [loading, setLoading] = useState<boolean>(true);  
+
+  const [quizzes, setQuizzes] = useState<Array<ILibraryQuiz>>([]);
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -146,11 +28,22 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     const fetchQuizzes = async () => {
       console.log("fetching quizzes");
       try {
-        const url = "/api/quiz";
-        const result = await axios.get(url);
+        const recentData = await axios.get(QUIZ_URL + `quiz?limit=9`,
+          { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
+        );
+
+        const draftData = await axios.get(QUIZ_URL + `draft?limit=9`,
+          { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
+        );
+
+        console.log("Recent data ", recentData.data);
+        console.log("Draft data ", draftData.data);
+
       } catch (e) {
         console.log(e);
       }
+
+      
 
       const quizzes = recentQuizzes.concat(draftQuizzes, favoriteQuizzes);
       const recentQuizzesUpdated = quizzes.filter(
@@ -166,6 +59,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
       setDraftQuizzes(draftQuizzes);
       setFavoriteQuizzes(favoriteQuizzes);
     };
+    
     fetchQuizzes();
   }, [creatorId]);
 
@@ -249,7 +143,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                   Draft
                 </button>
               </li>
-              <li className="me-2" role="presentation">
+              {/* <li className="me-2" role="presentation">
                 <button
                   className={`inline-block p-4 border-b-2 rounded-t-lg ${
                     activeTab === "favorites" ? activeClass : inactiveClass
@@ -264,7 +158,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 >
                   Favorites
                 </button>
-              </li>
+              </li> */}
             </ul>
             <Link href="/create">
               <button

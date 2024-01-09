@@ -90,7 +90,7 @@ const QuizDetailPage = () => {
               <div className="flex flex-row justify-between items-center h-10 mb-4">
                 <div className="flex flex-col shrink-0">
                   <div className="text-gray-500">
-                    {quiz.num_played} plays • Updated {quiz.updated_at}
+                    {quiz.num_played} plays • Updated {new Date(quiz.updated_at).toLocaleDateString()}
                   </div>
                   <div className="flex flex-row gap-2">
                     <QuizPublishedIcon published={quiz.published} />

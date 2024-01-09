@@ -9,7 +9,6 @@ import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
 import { TIME } from "./components/time-input";
 import { useRouter } from "next/router";
-import { CreateDumpData } from "@/data_dump/CreateDumpData";
 import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { decode } from "@/helper/decode_jwt";
 import axios from "axios";
@@ -55,7 +54,16 @@ const QuizPage: React.FC = () => {
   const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
   const [questionData, setQuestionData] =
-    useState<Array<Question>>(CreateDumpData);
+    useState<Array<Question>>([
+      {
+        questionNumber: 1,
+        questionText: "",
+        answerTexts: ["", "", "", ""],
+        correctAnswer: -1,
+        time: 0,
+        powerUps: false,
+      },
+    ]);
   const [questionValue, setQuestionValue] = useState(
     questionData[0].questionText
   );
@@ -148,7 +156,7 @@ const QuizPage: React.FC = () => {
                   question={question.questionText}
                   answer={
                     question.correctAnswer === -1
-                      ? "<missing>"
+                      ? "Correct answer"
                       : question.answerTexts[question.correctAnswer]
                   }
                   time={TIME[question.time]}
