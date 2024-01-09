@@ -1,5 +1,6 @@
-import { AUTH_URL } from "@/config";
+import { AUTH_URL, JWT_LOCAL_STORAGE_KEY } from "@/config";
 import axios from "axios";
+import router from "next/router";
 import React, { useEffect } from "react";
 
 const SignUpPanel = (props: { next: any }): JSX.Element => {
@@ -15,15 +16,22 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
   const [passwordFocus, setPasswordFocus] = React.useState<boolean>(true);
 
   const RequestSignUp = async () => {
+    if (!email || !password || !rePassword) {
+      alert("Please enter your email and password");
+      return;
+    }
     const url = AUTH_URL + "/auth/register";
     const data = {
       email: email,
       password: password,
     };
     try {
-      console.log("Try to sign up", data);
       await axios.post(url, data);
-      console.log('Sign up');
+      const response = await axios.post(AUTH_URL + "/auth/login", data);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
+      }
+      router.replace("/");
     }
     catch (e) {
       console.log(e);
@@ -152,7 +160,6 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
             </div>
           </label>
         </div>
-        <button className="btn btn-primary" >Sign Up</button>
         <button className="btn btn-primary" onClick={RequestSignUp}>Sign Up</button>
       </div>
       <p className="self-center" onClick={() => props.next("login")}>

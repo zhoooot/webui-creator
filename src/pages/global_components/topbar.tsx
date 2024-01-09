@@ -3,6 +3,7 @@ import Modal from "./profile_modal";
 
 type TopBarProps = {
   name: string;
+  set: any;
   show_search: boolean;
 };
 
@@ -76,11 +77,22 @@ const TopBar: React.FC<TopBarProps> = (props) => {
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
   const [keyword, setKeyword] = useState("");
   const handleUpdateModal = () => {
+    if (props.name == "") {
+      alert("You must sign in first!");
+      return;
+    }
     setUpdateModalVisible(true);
   };
 
   const handleCloseModal = () => {
     setUpdateModalVisible(false);
+    if (typeof window !== "undefined") {
+      const info = localStorage.getItem("info");
+      if (info) {
+        const data = JSON.parse(info);
+        props.set(data.name);
+      }
+    }
   };
 
   return (
@@ -146,7 +158,7 @@ const TopBar: React.FC<TopBarProps> = (props) => {
                 className="text-white text-2xl text-right font-bold mt-1 hover:underline cursor-pointer"
                 onClick={handleUpdateModal}
               >
-                {props.name == null ? "Taylor Swift" : props.name}
+                {props.name == "" ? "Guest" : props.name}
               </button>
             </div>
           </div>

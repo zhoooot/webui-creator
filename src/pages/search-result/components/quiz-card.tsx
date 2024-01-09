@@ -10,7 +10,7 @@ import {
 import Link from 'next/link'; 
 
 type CardProps = {
-  id: number;
+  id: string;
   title: string;
   image_url: string;
   updated_at: string;

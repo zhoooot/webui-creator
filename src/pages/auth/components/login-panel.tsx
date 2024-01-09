@@ -1,44 +1,56 @@
-import { AUTH_URL } from "@/config";
+import { AUTH_URL, JWT_LOCAL_STORAGE_KEY } from "@/config";
+import { decode } from "@/helper/decode_jwt";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
+import  { AxiosError } from 'axios';
+import router from "next/router";
 
-const LogInPanel = (props : {next: any}) : JSX.Element => {
+const LogInPanel = (props: { next: any }): JSX.Element => {
   const [state, setState] = React.useState(0);
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [error, setError] = React.useState("");
-  
+
   const handleOnClick = () => {
-console.log(!email||!password);  
-    if (!email||!password)
-    {
-      if (!email && !password)
-        setError("Please enter your email and password")
-      else if (!email)
-        setError("Please enter your email")
-      else
-        setError("Please enter your password")
+    console.log(!email || !password);
+    if (!email || !password) {
+      if (!email && !password) setError("Please enter your email and password");
+      else if (!email) setError("Please enter your email");
+      else setError("Please enter your password");
     } else setError("");
     console.log(error);
   };
 
   const requestLogIn = async () => {
-    console.log("Log in");
     const url = AUTH_URL + "/auth/login";
     const data = {
       email: email,
       password: password,
     };
+    console.log("Trying to log in with data: ", data, "by sending request to: ", url);
     try {
-      console.log("Try to log in", data);
-      await axios.post(url, data);
-      console.log('Logged in');
-    }
-    catch (e) {
+      const response = await axios.post(url, data);
+      const jwt = response.data.token;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(JWT_LOCAL_STORAGE_KEY, jwt);
+      }
+      router.replace("/");
+    } catch (e: any) {
       console.log(e);
+      const error = e as AxiosError;
+      switch(error.response?.status) {
+        case 401:
+          setError("Email or password is incorrect");
+          break;
+        case 404:
+          setError("User not found");
+          break;
+        default:
+          setError("Something went wrong");
+      }
     }
-  }
-  
+  };
+
   return (
     <div className="card card-compact w-full bg-base-100 shadow-xl p-4">
       <div className="grid grid-cols-1">
@@ -105,16 +117,25 @@ console.log(!email||!password);
             />
           </div>
         </div>
-        <a className="link link-primary flex justify-center p-4" onClick={()=>props.next('forget')}>
+        <a
+          className="link link-primary flex justify-center p-4"
+          onClick={() => props.next("forget")}
+        >
           Forgot password?
         </a>
-        <button className="btn btn-primary" onClick={handleOnClick}>Log In</button>
-        {(error)?(
-          <p className="text-error text-center">{error}</p>
-        ):null}
-        <button className="btn btn-primary" onClick={requestLogIn}>Log In</button>
-        <p className="flex justify-center pt-4" onClick={() => props.next('signup')}>
-          Haven&apos;t got an account?&nbsp;<a className="link link-primary">Sign Up</a>
+        <button className="btn btn-primary" onClick={() => {
+          handleOnClick();
+          requestLogIn();
+        }}>
+          Log In
+        </button>
+        {error ? <p className="text-error text-center">{error}</p> : null}
+        <p
+          className="flex justify-center pt-4"
+          onClick={() => props.next("signup")}
+        >
+          Haven&apos;t got an account?&nbsp;
+          <a className="link link-primary">Sign Up</a>
         </p>
       </div>
     </div>

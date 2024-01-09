@@ -1,9 +1,20 @@
 import { Alert } from "flowbite-react";
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { JWT_LOCAL_STORAGE_KEY } from "@/config";
+import router from "next/router";
 
 const SideBar = (): JSX.Element => {
 
   const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const handleSigningOut = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
+      router.replace("/auth")
+    }
+  }
 
   return (
     <div className="bg-primary-500">
@@ -18,10 +29,12 @@ const SideBar = (): JSX.Element => {
             href="#"
             className="flex items-center ps-2.5 mb-5"
           >
-            <img
+            <Image
               src="https://flowbite.com/docs/images/logo.svg"
               className="h-6 me-3 sm:h-7"
               alt="Flowbite Logo"
+              width="28"
+              height="28"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               Zhoot
@@ -29,7 +42,7 @@ const SideBar = (): JSX.Element => {
           </a>
           <ul className="space-y-2 font-medium">
             <li>
-              <a
+              <Link
                 href="/homepage/"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
@@ -47,7 +60,7 @@ const SideBar = (): JSX.Element => {
               </a>
             </li>
             <li>
-              <a
+              <Link
                 href="/discover/"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
@@ -64,7 +77,7 @@ const SideBar = (): JSX.Element => {
               </a>
             </li>
             <li>
-              <a
+              <Link
                 href="/my-library/"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
@@ -80,9 +93,9 @@ const SideBar = (): JSX.Element => {
                 <span className="flex-1 ms-3 whitespace-nowrap text-white group-hover:text-gray-900" onClick={() => console.log("OK!")}>
                   Library
                 </span>
-              </a>
+              </Link>
             </li>
-            <li>
+            <li onClick={handleSigningOut}>
               <a
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"

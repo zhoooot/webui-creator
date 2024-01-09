@@ -6,18 +6,21 @@ import IQuizData from "@/interface/IQuizData";
 import Link from "next/link";
 
 const PublicQuizzes: React.FC = () => {
-
   const [data, setData] = useState<IQuizData[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = "/api/quiz";
-      const tag = "discover";
-      const result = await axios.get(url);
-      setData(result.data);
-    }
+      try {
+        const url = "";
+        const tag = "discover";
+        const result = await axios.get(url);
+        setData(result.data);
+      } catch (e: any) {
+        console.log("Error fetching data");
+      }
+    };
     fetchData();
-  }, [])
+  }, []);
 
   const publicQuizzes = [
     {
