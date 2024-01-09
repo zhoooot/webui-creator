@@ -13,6 +13,7 @@ export const handleSaveQuiz = async (
   visibility: string,
   questionData: Question[],
   quizImage: string,
+  qid: string | undefined,
   router: any
 ) => {
   console.log("handleSaveQuizNew");
@@ -29,10 +30,11 @@ export const handleSaveQuiz = async (
     if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null)
       throw Error("JWT not found");
     const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
-    const data = {
+    let data = {
       auth_id: decode(jwt!).sub,
       title: quizTitle || "Untitled Quiz",
       description: description,
+      quiz_id: qid,
       num_play_times: 0,
       is_public: visibility === "public",
       created_at: new Date().toISOString(),

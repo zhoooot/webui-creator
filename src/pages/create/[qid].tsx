@@ -183,6 +183,7 @@ const QuizPage: React.FC = () => {
           visibility,
           questionData,
           quizImage,
+          qid!.toString(),
           router
         )}
           
