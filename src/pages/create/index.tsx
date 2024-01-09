@@ -295,7 +295,7 @@ const QuizPage: React.FC = () => {
       const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
       const data = {
         auth_id: decode(jwt!).sub,
-        title: quizTitle,
+        title: quizTitle || 'Untitled Quiz',
         description: description,
         num_play_times: 0,
         is_public: visibility === "public",
@@ -314,7 +314,7 @@ const QuizPage: React.FC = () => {
                 is_correct: question.correctAnswer === index,
               };
             }),
-            time: question.time,
+            time_limit: TIME[question.time] * 1000,
             power_ups: question.powerUps,
           };
         }),
@@ -334,15 +334,48 @@ const QuizPage: React.FC = () => {
   };
 
   const handleExitQuiz = () => {
-    if (!handleMessageErrors()) {
-      return;
-    }
-    
+      window.alert('Quiz saved succesfully!')
+      router.push('/my-library', { scroll: false })
     const response = window.confirm("You have unsaved changes. Do you want to save it to draft?");
     if (response) {
       // Save to draft
+      if (typeof window === "undefined") return;
+      if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null) throw Error("JWT not found");
+      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+      const data = {
+        auth_id: decode(jwt!).sub,
+        title: quizTitle || 'Untitled Quiz',
+        description: description,
+        num_play_times: 0,
+        is_public: visibility === "public",
+        num_questions: questionData.length,
+        has_draft: true,
+        image: quizImage,
+        questions: questionData.map((question, index) => {
+          return {
+            index: index,
+            question: question.questionText,
+            answers: question.answerTexts.map((answer, index) => {
+              return {
+                index: index,
+                answer: answer,
+                is_correct: question.correctAnswer === index,
+              };
+            }),
+            time_limit: TIME[question.time] * 1000,
+            allow_powerups: question.powerUps,
+          };
+        }),
+      };
+      console.log(data);
+    
+      // const url = QUIZ_URL + "/draft/";
+      // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
+      // console.log(response);
+      // router.push("/create/" + response.data.quiz_id);
       window.alert('Draft saved succesfully!')
     }
+
     // Exit quiz, navigate to home
     router.push('/my-library', { scroll: false })
   }

@@ -38,7 +38,7 @@ const PrivateQuizzes: React.FC = () => {
         console.log("There is a quiz with data: ", quizData);
         quizzesData.push(quizData);
       }
-      setData(result.data);
+      setData(quizzesData);
       console.log("All the private quizzes are: ", quizzesData);
     };
 

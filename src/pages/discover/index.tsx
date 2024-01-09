@@ -18,7 +18,7 @@ const Discover: React.FC = () => {
       if (!jwt) {
         router.replace("/auth");
       }
-      const endpoint = QUIZ_URL + `/quiz/public`;
+      const endpoint = QUIZ_URL + `quiz/public`;
       console.log(endpoint);
       const result = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${jwt}` },

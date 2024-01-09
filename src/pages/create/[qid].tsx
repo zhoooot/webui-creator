@@ -63,6 +63,8 @@ const QuizPage: React.FC = () => {
   const router = useRouter();
   const { qid } = router.query;
 
+  console.log("Detail edit quiz ", qid);
+
   useEffect(() => {
     const action = async () => {
       try {

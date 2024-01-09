@@ -23,14 +23,18 @@ const QuizDetailPage = () => {
   }
 
   const router = useRouter();
-  const qid = router.query.qid;
-  console.log(qid);
+  
+  console.log("Getting detail of", router.query.qid);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const { qid } = router.query;
+
     if (qid == "") {
       router.replace("/404");
     }
+    
     const fetchDetails = async () => {
       const url = QUIZ_URL + `quiz/${qid}`;
       const response = await axios.get(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
@@ -39,8 +43,12 @@ const QuizDetailPage = () => {
       console.log("Receive the quiz detail: ", result);
       setQuiz(result);
     }
-    fetchDetails();
-  }, [qid, router]);
+    
+    if (router.isReady) {
+      fetchDetails();
+    }
+
+  }, [router.isReady, router]);
 
   const [quiz, setQuiz] = useState<IQuizDetail>({
     id: "c22fb2a5-ccb9-493a-9c16-68848ef76345",
@@ -174,7 +182,7 @@ const QuizDetailPage = () => {
                   author={user.id === quiz.authorId}
                   favorite={false}
                   onClickDelete={() => {}}
-                  onClickEdit={() => {router.replace(`/create/${qid}`)}}
+                  onClickEdit={() => {router.replace(`/create/${router.query.qid}`)}}
                   onClickFavorite={() => {}}
                   onClickRename={() => {}}
                   onClickReport={() => {
