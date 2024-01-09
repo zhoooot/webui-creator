@@ -10,5 +10,5 @@ export { handleDeleteQuestion } from "./questionDelete"
 export { handleSaveQuiz } from "./saveQuiz"
 export { handleQuizDetailChange } from "./quizDetailChange"
 export { handeDuplicateQuestion } from "./questionDuplicate"
-
+export { handleMessageErrors } from "./handleErrors"
 

@@ -50,98 +50,7 @@ const QuizDetailPage = () => {
 
   }, [router.isReady, router]);
 
-  const [quiz, setQuiz] = useState<IQuizDetail>({
-    id: "c22fb2a5-ccb9-493a-9c16-68848ef76345",
-    image_url: "https://picsum.photos/1000/1000",
-    title: "What is the capital of France?",
-    description: "Test your knowledge of the world with this quiz!",
-    num_played: 100,
-    updated_at: "1 hour ago",
-    published: true,
-    author: "John Doe",
-    authorId: "7070afde-f8b5-487e-a288-f2be9d162b0b",
-    is_reported: false,
-    questions: [
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-      {
-        question: "What is the capital of France?",
-        options: [
-          { id: 0, text: "Paris", correct: true },
-          { id: 1, text: "London", correct: false },
-          { id: 2, text: "New York", correct: false },
-          { id: 3, text: "Dublin", correct: false },
-        ],
-        time: 10,
-        powerUps: true,
-      },
-    ],
-   
-  });
+  const [quiz, setQuiz] = useState<IQuizDetail>();
 
   const handleAppeal = async () => {
     console.log("Handling appeal");
@@ -158,6 +67,16 @@ const QuizDetailPage = () => {
   //   }
   //   fetchData();
   // }, [])
+
+  if (!quiz) {
+    return (
+      <Layout>
+        <div className="flex flex-col justify-center items-center h-full">
+          <div className="text-3xl text-white font-bold">Loading...</div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

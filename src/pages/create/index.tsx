@@ -8,12 +8,14 @@ import Navbar from "./components/nav-bar";
 import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
 import { TIME } from "./components/time-input";
-import { handleSaveQuiz } from "../tmp/redux/actions";
-import { useRouter } from 'next/navigation'
-import router, { Router } from "next/router";
-import axios from "axios";
+import { useRouter } from "next/router";
+import { CreateDumpData } from "@/data_dump/CreateDumpData";
 import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { decode } from "@/helper/decode_jwt";
+import axios from "axios";
+import { parseQuiz } from "@/helper/parse_quiz";
+import { IQuizDetail } from "@/interface/IQuizDetail";
+import * as logic from "./logic/logic";
 
 interface Question {
   questionNumber: number;
@@ -43,410 +45,132 @@ const answerData = [
   },
 ];
 
-const EmptyQuiz = {
-  title: "",
-  description: "",
-  visibility: "private",
-  quizImage: "",
-  questions: [
-    {
-      questionNumber: 1,
-      questionText: "",
-      answerTexts: ["", "", "", ""],
-      correctAnswer: -1,
-      time: 5,
-      powerUps: true,
-    },
-  ],
-};
-
 const QuizPage: React.FC = () => {
   const [quizTitle, setQuizTitle] = useState("");
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [quizImage, setQuizImage] = useState("");
-
-  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] = useState(false);
+  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] =
+    useState(false);
   const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState<number>(0);
+  const [questionData, setQuestionData] =
+    useState<Array<Question>>(CreateDumpData);
+  const [questionValue, setQuestionValue] = useState(
+    questionData[0].questionText
+  );
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
 
   const router = useRouter();
-
-  const [isDraft, setIsDraft] = useState(false);
-
-  const [activeQuestion, setActiveQuestion] = useState<number>(0);
-
-  const [questionData, setQuestionData] = useState<Array<Question>>([{
-    questionNumber: 0,
-    questionText: "",
-    answerTexts: ["", "", "", ""],
-    correctAnswer: -1,
-    time: 0,
-    powerUps: true,
-  }
-  ]);
-
-  
-  const [questionValue, setQuestionValue] = useState(questionData[0].questionText);
-
-  useEffect(() => {
-    console.log("useEffect");
-    if (quizTitle.trim() !== "") {
-      setIsDraft(true);
-      return;
-    }
-    if (description.trim() !== "") {
-      setIsDraft(true);
-      return;
-    }
-    if (quizImage.trim() !== "") {
-      setIsDraft(true);
-      return;
-    }
-    if (visibility.trim() !== "private") {
-      setIsDraft(true);
-      return;
-    }
-    if (questionData.length !== 1) {
-      setIsDraft(true);
-      return;
-    } else {
-      try {
-        const only_question = questionData[0];
-        if (only_question.questionText.trim() !== "") {
-          setIsDraft(true);
-          return;
-        }
-        for (let i = 0; i < only_question.answerTexts.length; i++) {
-          if (only_question.answerTexts[i].trim() !== "") {
-            setIsDraft(true);
-            return;
-          }
-        }
-        if (only_question.correctAnswer !== -1) {
-          setIsDraft(true);
-          return;
-        }
-        if (only_question.time !== 0) {
-          setIsDraft(true);
-          return;
-        }
-        if (only_question.powerUps !== true) {
-          setIsDraft(true);
-          return;
-        }
-      } catch (e: any) {
-        console.log(e);
-      }
-    }
-  }, [quizTitle, description, visibility, quizImage, questionData]);
-
-  useEffect(() => {
-    function beforeUnload(e: BeforeUnloadEvent) {
-      if (!isDraft) return;
-      e.preventDefault();
-    }
-
-    window.addEventListener("beforeunload", beforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", beforeUnload);
-    };
-  }, [isDraft]);
-
-  const handleQuizDetailChange = (
-    title: string,
-    description: string,
-    visibility: string,
-    quizImage: string
-  ) => {
-    console.log("handleQuizDetailChange");
-    setQuizTitle(title);
-    setDescription(description);
-    setVisibility(visibility);
-    setQuizImage(quizImage);
-  };
-
-  const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newQuestionValue = e.target.value;
-    setQuestionValue(newQuestionValue);
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData[activeQuestion].questionText = newQuestionValue;
-      return newQuestionData;
-    });
-  };
-
-  const handleUpdateModal = () => {
-    setUpdateModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setUpdateModalVisible(false);
-  };
-
-  const handleCreateQuestion = async () => {
-    if (!handleMessageErrors()) {
-      return;
-    }
-    await handleSaveQuiz();
-    const newQuestion: Question = {
-      questionNumber: questionData?.length,
-      questionText: "",
-      answerTexts: ["", "", "", ""],
-      correctAnswer: -1,
-      time: 5,
-      powerUps: true,
-    };
-    setQuestionData([...questionData, newQuestion]);
-    setActiveQuestion(questionData?.length);
-    setQuestionValue("");
-  };
-
-  const handeDuplicateQuestion = (questionNumber: number) => {
-    const newQuestion: Question = {
-      questionNumber: questionData?.length,
-      questionText: questionData[questionNumber]?.questionText,
-      answerTexts: questionData[questionNumber]?.answerTexts,
-      correctAnswer: questionData[questionNumber]?.correctAnswer,
-      time: questionData[questionNumber]?.time,
-      powerUps: questionData[questionNumber]?.powerUps,
-    };
-    setQuestionData([...questionData, newQuestion]);
-  };
-
-  const handleDeleteQuestion = (questionNumber: number) => {
-    if (questionData.length === 1) {
-      window.alert("Your quiz must have at least a question.");
-      return;
-    }
-
-    let check = true;
-    if (activeQuestion != questionNumber) {
-      check = false;
-    }
-    if (activeQuestion > questionNumber) {
-      setActiveQuestion(activeQuestion - 1);
-    } else if (
-      questionNumber === questionData?.length - 1 &&
-      activeQuestion === questionNumber
-    ) {
-      setActiveQuestion(activeQuestion - 1);
-    }
-    console.log("deleted question: " + questionNumber);
-    console.log(activeQuestion);
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData.splice(questionNumber, 1);
-      return newQuestionData;
-    });
-
-    if (check) {
-      if (activeQuestion >= questionData?.length - 1) {
-        setQuestionValue(questionData[activeQuestion - 1]?.questionText);
-      } else {
-        // if (activeQuestion)
-        setQuestionValue(questionData[activeQuestion + 1]?.questionText);
-      }
-    }
-  };
-
-  const handleQuestionCardClick = (clickedQuestionIndex: number) => {
-    if (clickedQuestionIndex !== activeQuestion) {
-      if (!handleMessageErrors()) {
-        return;
-      }
-
-    }
-    setActiveQuestion(clickedQuestionIndex);
-    setQuestionValue(questionData[clickedQuestionIndex].questionText);
-  };
-
-  const handleAnswerChange = (id: number, text: string) => {
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData[activeQuestion].answerTexts[id] = text;
-      return newQuestionData;
-    });
-  };
-
-  const handleCorrectAnswerChange = (id: number) => {
-    console.log("correct answer: " + id);
-    setShowMissingCorrectAnswerPopover(false);
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData[activeQuestion].correctAnswer = id;
-      return newQuestionData;
-    });
-  };
-
-  const handleSaveQuiz = () => {
-    if (!handleMessageErrors()) {
-      return;
-    }
-    console.log("handleSaveQuiz");
-    if (!isDraft) {
-      console.log("Nothing changed");
-      return;
-    }
-    try {
-      if (typeof window === "undefined") return;
-      if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null) throw Error("JWT not found");
-      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
-      const data = {
-        auth_id: decode(jwt!).sub,
-        title: quizTitle || 'Untitled Quiz',
-        description: description,
-        num_play_times: 0,
-        is_public: visibility === "public",
-        created_at: new Date().toISOString(),
-        num_questions: questionData.length,
-        has_draft: true,
-        image_url: quizImage,
-        questions: questionData.map((question, index) => {
-          return {
-            index: index,
-            question: question.questionText,
-            answers: question.answerTexts.map((answer, index) => {
-              return {
-                index: index,
-                answer: answer,
-                is_correct: question.correctAnswer === index,
-              };
-            }),
-            time_limit: TIME[question.time] * 1000,
-            power_ups: question.powerUps,
-          };
-        }),
-      };
-      console.log(data);
-      // const url = QUIZ_URL + "/draft/";
-      // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
-      // console.log(response);
-      // router.push("/create/" + response.data.quiz_id);
-      // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
-      window.alert('Quiz saved succesfully!')
-      router.push('/my-library', { scroll: false })
-    }
-    catch (e: any) {
-      console.log(e);
-    }
-  };
-
-  const handleExitQuiz = () => {
-      window.alert('Quiz saved succesfully!')
-      router.push('/my-library', { scroll: false })
-    const response = window.confirm("You have unsaved changes. Do you want to save it to draft?");
-    if (response) {
-      // Save to draft
-      if (typeof window === "undefined") return;
-      if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null) throw Error("JWT not found");
-      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
-      const data = {
-        auth_id: decode(jwt!).sub,
-        title: quizTitle || 'Untitled Quiz',
-        description: description,
-        num_play_times: 0,
-        is_public: visibility === "public",
-        num_questions: questionData.length,
-        has_draft: true,
-        image: quizImage,
-        questions: questionData.map((question, index) => {
-          return {
-            index: index,
-            question: question.questionText,
-            answers: question.answerTexts.map((answer, index) => {
-              return {
-                index: index,
-                answer: answer,
-                is_correct: question.correctAnswer === index,
-              };
-            }),
-            time_limit: TIME[question.time] * 1000,
-            allow_powerups: question.powerUps,
-          };
-        }),
-      };
-      console.log(data);
-    
-      // const url = QUIZ_URL + "/draft/";
-      // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
-      // console.log(response);
-      // router.push("/create/" + response.data.quiz_id);
-      window.alert('Draft saved succesfully!')
-    }
-
-    // Exit quiz, navigate to home
-    router.push('/my-library', { scroll: false })
-  }
-
-  const handleMessageErrors = () => {
-    if (handleMissingCorrectAnswer() || handleMissingQuestion()) {
-      return false;
-    }
-    return true;
-  };
-
-  const handleMissingQuestion = () => {
-    if (questionValue.trim() === "") {
-      setShowMissingQuestionPopover(true);
-      return true;
-    } else {
-      setShowMissingQuestionPopover(false);
-      return false;
-    }
-  };
-
-  const handleMissingCorrectAnswer = () => {
-    if (questionData[activeQuestion].correctAnswer === -1) {
-      setShowMissingCorrectAnswerPopover(true);
-      return true;
-    } else {
-      setShowMissingCorrectAnswerPopover(false);
-      return false;
-    }
-  };
 
   return (
     <div className="flex flex-col h-screen relative">
       {/* Update Modal */}
       {isUpdateModalVisible && (
         <Modal
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={() => logic.handleCloseModal(setUpdateModalVisible)}
           title={quizTitle}
           description={description}
           visibility={visibility}
           imageUrl={quizImage}
-          handleSaveModal={handleQuizDetailChange}
+          handleSaveModal={() =>
+            logic.handleQuizDetailChange(
+              quizTitle,
+              description,
+              visibility,
+              quizImage,
+              setQuizTitle,
+              setDescription,
+              setVisibility,
+              setQuizImage
+            )
+          }
         />
       )}
       {/* Navbar */}
       <Navbar
         title={quizTitle}
         setQuizTitle={setQuizTitle}
-        handleUpdateModal={handleUpdateModal}
-        handleSaveQuiz={handleSaveQuiz}
-        handleExitQuiz={handleExitQuiz}
+        handleUpdateModal={() => logic.handleUpdateModal(setUpdateModalVisible)}
+        handleSaveQuiz={() => logic.handleSaveQuiz(
+          logic.handleMessageErrors(
+            questionValue,
+            questionData,
+            activeQuestion,
+            setShowMissingQuestionPopover,
+            setShowMissingCorrectAnswerPopover
+          ),
+          false,
+          quizTitle,
+          description,
+          visibility,
+          questionData,
+          quizImage,
+          router
+        )}
+          
+        handleExitQuiz={() =>
+          logic.handleExitQuiz(
+            quizTitle,
+            description,
+            visibility,
+            quizImage,
+            questionData,
+            router
+          )
+        }
       />
 
       <div className="bg-white flex flex-row grow border-gray-200 dark:bg-gray-800 overflow-y-auto">
         <div className="flex flex-col justify-center items-center">
           <div className="bg-white grow w-64 h-full border-gray-200 dark:bg-gray-500 overflow-y-auto">
             <div className="flex flex-col flex-1 ">
-              {questionData?.map((question, index) => (
+              {questionData.map((question, index) => (
                 <Card
                   key={index}
                   onClick={(questionIndex) =>
-                    handleQuestionCardClick(questionIndex)
+                    logic.handleQuestionCardClick(
+                      questionIndex,
+                      questionData,
+                      activeQuestion,
+                      setActiveQuestion,
+                      setQuestionValue,
+                      logic.handleMessageErrors(
+                        questionValue,
+                        questionData,
+                        activeQuestion,
+                        setShowMissingQuestionPopover,
+                        setShowMissingCorrectAnswerPopover
+                      ),
+                    )
                   }
                   index={index}
                   question={question.questionText}
-                  answer={question.correctAnswer === -1 ? "Correct answer" : question.answerTexts[question.correctAnswer]}
+                  answer={
+                    question.correctAnswer === -1
+                      ? "<missing>"
+                      : question.answerTexts[question.correctAnswer]
+                  }
                   time={TIME[question.time]}
                   powerUps={question.powerUps}
                   activeIndex={activeQuestion}
-                  duplicate={handeDuplicateQuestion}
-                  delete={handleDeleteQuestion}
+                  duplicate={() =>
+                    logic.handeDuplicateQuestion(
+                      questionData[activeQuestion].questionNumber,
+                      questionData,
+                      setQuestionData
+                    )
+                  }
+                  delete={() =>
+                    logic.handleDeleteQuestion(
+                      questionData[activeQuestion].questionNumber,
+                      activeQuestion,
+                      questionData,
+                      setActiveQuestion,
+                      setQuestionData,
+                      setQuestionValue
+                    )
+                  }
                   missingCorrectAnswer={question.correctAnswer === -1}
                 />
               ))}
@@ -455,7 +179,14 @@ const QuizPage: React.FC = () => {
           <div className="justify-center items-center h-16">
             <button
               className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={handleCreateQuestion}
+              onClick={() =>
+                logic.handleCreateQuestion(
+                  questionData,
+                  setQuestionData,
+                  setActiveQuestion,
+                  setQuestionValue
+                )
+              }
             >
               Create Question
             </button>
@@ -463,31 +194,23 @@ const QuizPage: React.FC = () => {
         </div>
 
         <div className="bg-gray-300 w-screen flex flex-col border-gray-200 dark:bg-gray-500 px-6 py-6 gap-x-5 items-center">
-          
-    <div className="relative w-full items-center">
           <QuestionInput
             questionValue={questionValue}
-            handleQuestionChange={handleQuestionChange}
+            handleQuestionChange={(e) =>
+              logic.handleQuestionChange(
+                e,
+                setQuestionValue,
+                setQuestionData,
+                activeQuestion
+              )
+            }
           />
-          {showMissingQuestionPopover && (
-        <div className="flex flex-col items-center w-full absolute -bottom-12">
-          <div className="self-center items-center flex flex-col justify-center ">
-            <svg className="self-center scale-105 text-primary-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 2"><path fill="currentColor" d="M1 21h22L12 2"/></svg>
-            <div
-              className="popover bg-primary-500 px-2 py-1 rounded-md text-white"
-            >
-              <p>You haven&apos;t added a question.</p>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
 
           <div className="grid grid-cols-12 grow gap-5 justify-center items-center mb-10 mt-8 col-span-full">
             <div className="flex justify-center items-center col-span-3">
               <div className="w-24">
                 <TimeInput
-                  timeValue={questionData[activeQuestion]?.time}
+                  timeValue={questionData[activeQuestion].time}
                   handleTimeChange={(
                     event: React.ChangeEvent<HTMLSelectElement>
                   ) => {
@@ -506,7 +229,7 @@ const QuizPage: React.FC = () => {
             </div>
             <div className="col-start-11 col-end-12">
               <Toggle
-                checked={questionData[activeQuestion]?.powerUps}
+                checked={questionData[activeQuestion].powerUps}
                 onChange={(value) => {
                   setQuestionData((prev) => {
                     const newQuestionData = [...prev];
@@ -540,7 +263,7 @@ const QuizPage: React.FC = () => {
             )}
 
             <div className="grid grid-cols-2 gap-8 col-span-full w-full">
-              {questionData[activeQuestion]?.answerTexts.map(
+              {questionData[activeQuestion].answerTexts.map(
                 (answer: string, answerId: number) => (
                   <AnswerButton
                     key={answerId}
@@ -548,10 +271,24 @@ const QuizPage: React.FC = () => {
                     value={answer}
                     svg_icon={answerData[answerId].icon}
                     color={answerData[answerId].color}
-                    onChange={(text) => handleAnswerChange(answerId, text)}
-                    onSelected={(key) => handleCorrectAnswerChange(key)}
+                    onChange={(text) =>
+                      logic.handleAnswerChange(
+                        answerId,
+                        text,
+                        activeQuestion,
+                        setQuestionData
+                      )
+                    }
+                    onSelected={(key) =>
+                      logic.handleCorrectAnswerChange(
+                        key,
+                        activeQuestion,
+                        setShowMissingCorrectAnswerPopover,
+                        setQuestionData
+                      )
+                    }
                     isSelected={
-                      questionData[activeQuestion]?.correctAnswer === answerId
+                      questionData[activeQuestion].correctAnswer === answerId
                     }
                   />
                 )

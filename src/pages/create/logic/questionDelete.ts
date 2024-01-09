@@ -1,4 +1,9 @@
 export const handleDeleteQuestion = (questionNumber: number, activeQuestion: any, questionData: any, setActiveQuestion: (data: any) => void, setQuestionData: (data: any) => void, setQuestionValue: (data: any) => void) => {
+  if (questionData.length === 1) {
+    window.alert("Your quiz must have at least a question.");
+    return;
+  }
+
   let check = true;
   if (activeQuestion != questionNumber) {
     check = false;

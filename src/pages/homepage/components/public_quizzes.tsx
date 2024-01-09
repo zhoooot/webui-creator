@@ -31,12 +31,12 @@ const PublicQuizzes: React.FC = () => {
           number: quiz.num_play_times,
           name: quiz.title,
           questionCount: quiz.num_questions,
-          imageUrl: quiz.image_url,
+          imageUrl: quiz.image,
         };
         console.log("There is a quiz with data: ", quizData);
         quizzesData.push(quizData);
       }
-      setData(result.data);
+      setData(quizzesData);
     };
 
     if (typeof window === "undefined") return;
@@ -186,9 +186,9 @@ const PublicQuizzes: React.FC = () => {
         </button>
       </div>
       <div className="grid grid-cols-3 gap-4 grow w-full">
-        {data && data.map((quiz) => (
+        {data && data.map((quiz, index) => (
           <QuizCard
-            key={quiz.id}
+            key={index}
             imageUrl={quiz.imageUrl}
             number={quiz.number}
             name={quiz.name}

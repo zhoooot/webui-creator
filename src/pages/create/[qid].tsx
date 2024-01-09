@@ -52,6 +52,7 @@ const QuizPage: React.FC = () => {
   const [quizImage, setQuizImage] = useState("");
   const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] =
     useState(false);
+  const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
   const [questionData, setQuestionData] =
     useState<Array<Question>>(CreateDumpData);
@@ -117,6 +118,14 @@ const QuizPage: React.FC = () => {
     action();
   }, [qid, router]);
 
+  // if (qid === null) {
+  //   return (
+  //     <div className="flex flex-col justify-center items-center h-full">
+  //       <div className="text-3xl text-white font-bold">Loading...</div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <div className="flex flex-col h-screen relative">
       {/* Update Modal */}
@@ -146,12 +155,31 @@ const QuizPage: React.FC = () => {
         title={quizTitle}
         setQuizTitle={setQuizTitle}
         handleUpdateModal={() => logic.handleUpdateModal(setUpdateModalVisible)}
-        handleSaveQuiz={() => logic.handleSaveQuiz()}
-        handleExitQuiz={() =>
-          logic.handleExitQuiz(
+        handleSaveQuiz={() => logic.handleSaveQuiz(
+          logic.handleMessageErrors(
+            questionValue,
             questionData,
             activeQuestion,
+            setShowMissingQuestionPopover,
             setShowMissingCorrectAnswerPopover
+          ),
+          false,
+          quizTitle,
+          description,
+          visibility,
+          questionData,
+          quizImage,
+          router
+        )}
+          
+        handleExitQuiz={() =>
+          logic.handleExitQuiz(
+            quizTitle,
+            description,
+            visibility,
+            quizImage,
+            questionData,
+            router
           )
         }
       />
@@ -168,9 +196,15 @@ const QuizPage: React.FC = () => {
                       questionIndex,
                       questionData,
                       activeQuestion,
-                      setShowMissingCorrectAnswerPopover,
                       setActiveQuestion,
-                      setQuestionValue
+                      setQuestionValue,
+                      logic.handleMessageErrors(
+                        questionValue,
+                        questionData,
+                        activeQuestion,
+                        setShowMissingQuestionPopover,
+                        setShowMissingCorrectAnswerPopover
+                      ),
                     )
                   }
                   index={index}
