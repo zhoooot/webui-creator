@@ -308,6 +308,7 @@
 import { CREATOR_URL } from "@/config"
 import { IQuizDetail } from "@/interface/IQuizDetail"
 import axios from "axios";
+import {TIME} from "@/pages/create/components/time-input";
 
 const getAuthorName = async (auth_id: string) => {
     try {
@@ -337,6 +338,11 @@ export const parseQuiz = async (quiz: any) => {
     has_draft: quiz.has_draft,
     favorite: quiz.favorite,
     questions: quiz.questions.map((question: any) => {
+    const questionTime = question.time_limit / 1000;
+    let time = TIME.find((val, id) => val === questionTime);
+    if (time === undefined) {
+        time = 0;
+    }
       return {
         question: question.question,
         options: question.answers.map((answer: any) => {
@@ -346,7 +352,7 @@ export const parseQuiz = async (quiz: any) => {
             correct: answer.is_correct,
           }
         }),
-        time: question.time_limit / 1000,
+        time: time,
         powerUps: question.allow_powerups,
       }
     }),
