@@ -33,7 +33,7 @@ const ForgotPanelNewPassword = (props: { next: any }): JSX.Element => {
       if (localStorage.getItem(OTP_LOCAL_STORAGE_KEY) === null) {
         throw new Error("OTP not found");
       }
-      const url = AUTH_URL + "/auth/change-password-with-otp";
+      const url = AUTH_URL + "auth/change-password-with-otp";
       const data = {
         email: localStorage.getItem(EMAIL_LOCAL_STORAGE_KEY),
         otp: localStorage.getItem(OTP_LOCAL_STORAGE_KEY),

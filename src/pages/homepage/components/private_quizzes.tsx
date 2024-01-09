@@ -20,7 +20,7 @@ const PrivateQuizzes: React.FC = () => {
       if (!jwt) {
         router.replace("/auth");
       }
-      const endpoint = QUIZ_URL + "/quiz?limit=9";
+      const endpoint = QUIZ_URL + "quiz?limit=9";
       console.log(endpoint);
       const result = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${jwt}`}});

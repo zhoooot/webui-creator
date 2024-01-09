@@ -23,9 +23,9 @@ const Layout: React.FC<LayoutProps> = (props) => {
   useEffect(() => {
     const fetchInfo = async (jwt: string) => {
       const decoded = decode(jwt);
-      const url = CREATOR_URL + "/creator/" + decoded.sub;
+      const url = CREATOR_URL + "creator/" + decoded.sub;
       console.log(url);
-      const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
+      const response = await axios.get(CREATOR_URL + "creator/" + decoded.sub);
       //handleAxiosError(response);
       const info: ICreatorData = {
         id: response.data.id,

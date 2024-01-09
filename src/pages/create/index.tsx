@@ -325,6 +325,7 @@ const QuizPage: React.FC = () => {
       // console.log(response);
       // router.push("/create/" + response.data.quiz_id);
       // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
+      window.alert('Quiz saved succesfully!')
       router.push('/my-library', { scroll: false })
     }
     catch (e: any) {
@@ -340,6 +341,7 @@ const QuizPage: React.FC = () => {
     const response = window.confirm("You have unsaved changes. Do you want to save it to draft?");
     if (response) {
       // Save to draft
+      window.alert('Draft saved succesfully!')
     }
     // Exit quiz, navigate to home
     router.push('/my-library', { scroll: false })

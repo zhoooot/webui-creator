@@ -32,7 +32,7 @@ const QuizDetailPage = () => {
       router.replace("/404");
     }
     const fetchDetails = async () => {
-      const url = QUIZ_URL + `/quiz/${qid}`;
+      const url = QUIZ_URL + `quiz/${qid}`;
       const response = await axios.get(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
       const result : IQuizDetail = await parseQuiz(response.data);
       console.log(response.data);

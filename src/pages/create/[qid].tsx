@@ -77,7 +77,7 @@ const QuizPage: React.FC = () => {
           router.replace("/auth");
           return;
         }
-        const url = QUIZ_URL + `/quiz/${qid}`;
+        const url = QUIZ_URL + `quiz/${qid}`;
         const response = await axios.get(url, {
           headers: { Authorization: `Bearer ${jwt}` },
         });

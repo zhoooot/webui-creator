@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 
 interface NavBarProps {
     title: string;
@@ -17,7 +18,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
             <nav className="bg-white grid grid-cols-12 gap-x-5 px-6 border-gray-200 py-2.5 dark:bg-gray-800">
                 <div className="col-span-4 gap-x-5 flex flex-row">
                     <a href="https://flowbite.com" className="">
-                        <img
+                        <Image
                             src="https://flowbite.com/docs/images/logo.svg"
                             className="h-6 sm:h-9"
                             alt="Flowbite Logo"

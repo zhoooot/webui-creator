@@ -32,7 +32,7 @@ const ProfileModal = (props: ModalProps) => {
     } else {
       try {
         const decoded = decode(jwt);
-        const url = CREATOR_URL + "/creator/" + decoded.sub;
+        const url = CREATOR_URL + "creator/" + decoded.sub;
         if (!decoded.sub) {
           throw new Error("User not found");
         }
@@ -66,9 +66,9 @@ const ProfileModal = (props: ModalProps) => {
   useEffect(() => {
     const fetchInfo = async (jwt: string) => {
       const decoded = decode(jwt);
-      const url = CREATOR_URL + "/creator/" + decoded.sub;
+      const url = CREATOR_URL + "creator/" + decoded.sub;
       console.log(url);
-      const response = await axios.get(CREATOR_URL + "/creator/" + decoded.sub);
+      const response = await axios.get(CREATOR_URL + "creator/" + decoded.sub);
       const info: ICreatorData = {
         id: response.data.id,
         name: response.data.fullname,

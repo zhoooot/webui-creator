@@ -15,7 +15,7 @@ const ForgotPanelEmail = (props: { next: any }): JSX.Element => {
     }
     try {
       if (!EmailValidation(email)) throw new Error("Invalid email");
-      const url = AUTH_URL + "/auth/forgot-password";
+      const url = AUTH_URL + "auth/forgot-password";
       const data = {
         email: email,
       };

@@ -20,14 +20,14 @@ const SignUpPanel = (props: { next: any }): JSX.Element => {
       alert("Please enter your email and password");
       return;
     }
-    const url = AUTH_URL + "/auth/register";
+    const url = AUTH_URL + "auth/register";
     const data = {
       email: email,
       password: password,
     };
     try {
       await axios.post(url, data);
-      const response = await axios.post(AUTH_URL + "/auth/login", data);
+      const response = await axios.post(AUTH_URL + "auth/login", data);
       if (typeof window !== "undefined") {
         localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
       }

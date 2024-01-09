@@ -15,7 +15,7 @@ const ForgotPanelVerifyOtp = (props: { next: any }): JSX.Element => {
     }
     try {
       if (!otpValidation(otp)) throw new Error("Invalid otp");
-      const url = AUTH_URL + "/auth/verify-otp";
+      const url = AUTH_URL + "auth/verify-otp";
       const data = {
         email: localStorage.getItem(EMAIL_LOCAL_STORAGE_KEY),
         otp: otp,

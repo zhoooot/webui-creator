@@ -1,4 +1,3 @@
-import 'dotenv/config';
 export const AUTH_URL: string = process.env.AUTH_URL || 'http://localhost:3000';
 export const QUIZ_URL: string = process.env.QUIZ_URL || 'http://localhost:3001';
 export const CREATOR_URL: string = process.env.CREATOR_URL || 'http://localhost:3002';
