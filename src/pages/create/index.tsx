@@ -11,6 +11,9 @@ import { TIME } from "./components/time-input";
 import { handleSaveQuiz } from "../tmp/redux/actions";
 import { useRouter } from 'next/navigation'
 import router, { Router } from "next/router";
+import axios from "axios";
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
+import { decode } from "@/helper/decode_jwt";
 
 interface Question {
   questionNumber: number;
@@ -182,10 +185,15 @@ const QuizPage: React.FC = () => {
     setUpdateModalVisible(false);
   };
 
+<<<<<<< Updated upstream
   const handleCreateQuestion = () => {
     if (!handleMessageErrors()) {
       return;
     }
+=======
+  const handleCreateQuestion = async () => {
+    await handleSaveQuiz();
+>>>>>>> Stashed changes
     const newQuestion: Question = {
       questionNumber: questionData?.length,
       questionText: "",
@@ -276,6 +284,7 @@ const QuizPage: React.FC = () => {
     });
   };
 
+<<<<<<< Updated upstream
   const handleSaveQuiz = () => {
     if (!handleMessageErrors()) {
       return;
@@ -283,6 +292,50 @@ const QuizPage: React.FC = () => {
     // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
     router.push('/my-library', { scroll: false })
   }
+=======
+  const handleSaveQuiz = async () => {
+    console.log("handleSaveQuiz");
+    try {
+      if (typeof window === "undefined") return;
+      if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null) throw Error("JWT not found");
+      const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
+      const data = {
+        auth_id: decode(jwt!).sub,
+        title: quizTitle,
+        description: description,
+        num_play_times: 0,
+        is_public: visibility === "public",
+        created_at: new Date().toISOString(),
+        num_questions: questionData.length,
+        has_draft: true,
+        image_url: quizImage,
+        questions: questionData.map((question, index) => {
+          return {
+            index: index,
+            question: question.questionText,
+            answers: question.answerTexts.map((answer, index) => {
+              return {
+                index: index,
+                answer: answer,
+                is_correct: question.correctAnswer === index,
+              };
+            }),
+            time: question.time,
+            power_ups: question.powerUps,
+          };
+        }),
+      };
+      console.log(data);
+      // const url = QUIZ_URL + "/draft/";
+      // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
+      // console.log(response);
+      // router.push("/create/" + response.data.quiz_id);
+    }
+    catch (e: any) {
+      console.log(e);
+    }
+  };
+>>>>>>> Stashed changes
 
   const handleExitQuiz = () => {
     if (!handleMessageErrors()) {
