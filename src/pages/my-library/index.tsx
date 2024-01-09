@@ -6,19 +6,21 @@ import axios from "axios";
 import { ILibraryQuiz } from "@/interface/ILibraryQuiz";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { QUIZ_URL } from "@/config";
+import { IQuizDetail } from "@/interface/IQuizDetail";
+import { parseQuiz } from "@/helper/parse_quiz";
 
 const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
 
-  const [recentQuizzes, setRecentQuizzes] = useState<Array<ILibraryQuiz>>([]);
-  const [draftQuizzes, setDraftQuizzes] = useState<Array<ILibraryQuiz>>([]);
-  const [favoriteQuizzes, setFavoriteQuizzes] = useState<Array<ILibraryQuiz>>(
+  const [recentQuizzes, setRecentQuizzes] = useState<Array<IQuizDetail>>([]);
+  const [draftQuizzes, setDraftQuizzes] = useState<Array<IQuizDetail>>([]);
+  const [favoriteQuizzes, setFavoriteQuizzes] = useState<Array<IQuizDetail>>(
     []
   );
 
   const [loading, setLoading] = useState<boolean>(true);  
 
-  const [quizzes, setQuizzes] = useState<Array<ILibraryQuiz>>([]);
+  const [quizzes, setQuizzes] = useState<Array<IQuizDetail>>([]);
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -28,36 +30,34 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     const fetchQuizzes = async () => {
       console.log("fetching quizzes");
       try {
-        const recentData = await axios.get(QUIZ_URL + `quiz?limit=9`,
+        const response = await axios.get(QUIZ_URL + `quiz`,
           { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
         );
+        const tmpRecentQuizzes: Array<IQuizDetail> = [];
+        const tmpDraftQuizzes: Array<IQuizDetail> = [];
+        console.log("Recent data ", response.data);
 
-        const draftData = await axios.get(QUIZ_URL + `draft?limit=9`,
-          { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
-        );
+        await response.data.forEach(async (quiz: any, index: number) => {
+          console.log("Quiz ", quiz);
+          const result: IQuizDetail = await parseQuiz(quiz);
+          if (result.has_draft) {
+            tmpDraftQuizzes.push(result);
+            console.log("Draft quizzes length ", tmpDraftQuizzes.length);
+          }
+          else {
+            tmpRecentQuizzes.push(result);
+            console.log("Recent quizzes length ", tmpRecentQuizzes.length);
+          }
+          if (index === response.data.length - 1) {
+            setRecentQuizzes(tmpRecentQuizzes);
+            setDraftQuizzes(tmpDraftQuizzes);
+          }
+        });
 
-        console.log("Recent data ", recentData.data);
-        console.log("Draft data ", draftData.data);
 
       } catch (e) {
         console.log(e);
       }
-
-      
-
-      const quizzes = recentQuizzes.concat(draftQuizzes, favoriteQuizzes);
-      const recentQuizzesUpdated = quizzes.filter(
-        (quiz: ILibraryQuiz) => quiz.published
-      );
-      const draftQuizzesUpdated = quizzes.filter(
-        (quiz: ILibraryQuiz) => quiz.status === "draft"
-      );
-      const favoriteQuizzesUpdated = quizzes.filter(
-        (quiz: ILibraryQuiz) => quiz.favorite
-      );
-      setRecentQuizzes(recentQuizzes);
-      setDraftQuizzes(draftQuizzes);
-      setFavoriteQuizzes(favoriteQuizzes);
     };
     
     fetchQuizzes();
@@ -94,6 +94,8 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     newQuizes.splice(index + 1, 0, duplicatedQuiz);
     setQuizzes(newQuizes);
   };
+
+  console.log("rebuilding dsdf");
 
   const activeClass = "text-primary-500 border-b-primary-500 text-base";
   const inactiveClass =
@@ -184,6 +186,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                   {recentQuizzes.map((quiz, index) => (
                     <QuizCard
                       key={index}
+                      index={index}
                       id={quiz.id}
                       title={quiz.title}
                       image_url={quiz.image_url}
@@ -223,11 +226,10 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             >
               {draftQuizzes.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4 w-full h-full overflow-hidden">
-                  {draftQuizzes
-                    .filter((quiz) => !quiz.favorite)
-                    .map((quiz, index) => (
+                  {draftQuizzes.map((quiz, index) => (
                       <QuizCard
                         key={index}
+                        index={index}
                         id={quiz.id}
                         title={quiz.title}
                         image_url={quiz.image_url}
@@ -270,6 +272,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                   {favoriteQuizzes.map((quiz, index) => (
                     <QuizCard
                       key={index}
+                      index={index}
                       id={quiz.id}
                       title={quiz.title}
                       image_url={quiz.image_url}

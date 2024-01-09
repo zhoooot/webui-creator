@@ -311,7 +311,7 @@ import axios from "axios";
 
 const getAuthorName = async (auth_id: string) => {
     try {
-        const res = await axios.get(CREATOR_URL + "/api/creator/" + auth_id);
+        const res = await axios.get(CREATOR_URL + "creator/" + auth_id);
         if (res.data.error) {
             return "Anonymous";
         }
@@ -334,6 +334,8 @@ export const parseQuiz = async (quiz: any) => {
     author: await getAuthorName(quiz.auth_id),
     authorId: quiz.auth_id,
     is_reported: false,
+    has_draft: quiz.has_draft,
+    favorite: quiz.favorite,
     questions: quiz.questions.map((question: any) => {
       return {
         question: question.question,

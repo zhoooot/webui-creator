@@ -11,7 +11,8 @@ import {
 import Link from 'next/link'; 
 
 type CardProps = {
-  id: number;
+  id: string;
+  index: number;
   title: string;
   image_url: string;
   updated_at: string;
@@ -38,19 +39,19 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
               author={true}
               favorite={quiz.favorite}
               onClickDelete={() => {
-                quiz.onClickDelete(quiz.id);
+                quiz.onClickDelete(quiz.index);
               }}
               onClickFavorite={() => {
-                quiz.onClickFavorite(quiz.id);
+                quiz.onClickFavorite(quiz.index);
               }}
               onClickRename={() => {
-                quiz.onClickRename(quiz.id);
+                quiz.onClickRename(quiz.index);
               }}
               onClickDuplicate={() => {
-                quiz.onClickDuplicate(quiz.id);
+                quiz.onClickDuplicate(quiz.index);
               }}
               onClickShare={() => {
-                quiz.onClickShare(quiz.id);
+                quiz.onClickShare(quiz.index);
               }}
             />
           </div>

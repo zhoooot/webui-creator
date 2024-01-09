@@ -9,6 +9,8 @@ export interface IQuizDetail {
   author: string;
   authorId: string;
   is_reported: boolean;
+  favorite: boolean;
+  has_draft: boolean;
   questions: {
     question: string;
     options: { id: number, text: string; correct: boolean }[];
