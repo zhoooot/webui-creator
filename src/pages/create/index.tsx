@@ -185,10 +185,11 @@ const QuizPage: React.FC = () => {
     setUpdateModalVisible(false);
   };
 
-  const handleCreateQuestion = () => {
+  const handleCreateQuestion = async () => {
     if (!handleMessageErrors()) {
       return;
     }
+    await handleSaveQuiz();
     const newQuestion: Question = {
       questionNumber: questionData?.length,
       questionText: "",
@@ -279,7 +280,10 @@ const QuizPage: React.FC = () => {
     });
   };
 
-  const handleSaveQuiz = async () => {
+  const handleSaveQuiz = () => {
+    if (!handleMessageErrors()) {
+      return;
+    }
     console.log("handleSaveQuiz");
     if (!isDraft) {
       console.log("Nothing changed");
@@ -320,6 +324,8 @@ const QuizPage: React.FC = () => {
       // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
       // console.log(response);
       // router.push("/create/" + response.data.quiz_id);
+      // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
+      router.push('/my-library', { scroll: false })
     }
     catch (e: any) {
       console.log(e);
