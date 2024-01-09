@@ -125,7 +125,7 @@ const QuizDetailPage = () => {
             {(quiz.is_reported) ? (
             <div className="w-full bg-red-500 flex flex-row items-center justify-center">
               <div className="font-bold text-white text-lg p-4 text-center "> Your quiz was reported!</div>
-              <button className="btn btn-active"
+              {/* <button className="btn btn-active"
                 onClick={() => {
                   const userResponse = window.confirm("Are you sure you want to appeal this report?");
                   if (userResponse)
@@ -134,7 +134,7 @@ const QuizDetailPage = () => {
                 }
               >
                 Appeal Now
-              </button>
+              </button> */}
             </div>
             ) : (
               <></>

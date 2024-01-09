@@ -48,11 +48,14 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             tmpRecentQuizzes.push(result);
             console.log("Recent quizzes length ", tmpRecentQuizzes.length);
           }
-          if (index === response.data.length - 1) {
+          if (tmpDraftQuizzes.length + tmpRecentQuizzes.length === response.data.length) {
+            console.log("Setting quizzes");
             setRecentQuizzes(tmpRecentQuizzes);
             setDraftQuizzes(tmpDraftQuizzes);
           }
         });
+
+        console.log("out of loop");
 
 
       } catch (e) {
