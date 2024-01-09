@@ -65,7 +65,7 @@ export default function Modal(props: ModalProps) {
   ];
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={true} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-50"

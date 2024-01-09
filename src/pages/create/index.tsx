@@ -186,6 +186,7 @@ const QuizPage: React.FC = () => {
       return;
     }
     // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
+    router.push('/my-library', { scroll: false })
   }
 
   const handleExitQuiz = () => {
