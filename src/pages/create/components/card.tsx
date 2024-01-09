@@ -58,9 +58,9 @@ const Card: React.FC<CardProps> = (props) => {
     </div>
     <div className={`${active ? 'ring-primary-500 ring-4 bg-white' : 'bg-gray-100'} card rounded-md w-full` } onClick={() => {props.onClick(props.index);}}>
       <div className="card-body p-3 ">
-        <p className="line-clamp-2">{props.question == "" ? "<Missing>" : props.question}</p>
-        <div className="bg-white px-2 rounded">
-          <p className={`line-clamp-1 ${props.missingCorrectAnswer ? "text-red-600" : ""}`}>{props.answer}</p>
+        <p className={`line-clamp-2 ${props.question == "" ? "text-gray-300" : ""}`}>{props.question == "" ? "Question" : props.question}</p>
+        <div className={`${active ? 'bg-primary-50' : 'bg-white '} px-2 rounded`}>
+          <p className={`line-clamp-1 ${props.missingCorrectAnswer ? "text-gray-300" : ""}`}>{props.answer}</p>
         </div>
         <div className="flex justify-between mt-2">
           <div className="flex items-center">

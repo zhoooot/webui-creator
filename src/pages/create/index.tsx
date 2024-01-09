@@ -9,6 +9,7 @@ import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
 import { TIME } from "./components/time-input";
 import { handleSaveQuiz } from "../tmp/redux/actions";
+import { useRouter } from 'next/navigation'
 import router, { Router } from "next/router";
 
 interface Question {
@@ -61,27 +62,29 @@ const QuizPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [quizImage, setQuizImage] = useState("");
-  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] =
-    useState(false);
+
+  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] = useState(false);
+  const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
+  const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+
+  const router = useRouter();
 
   const [isDraft, setIsDraft] = useState(false);
 
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
-  const [questionData, setQuestionData] = useState<Array<Question>>([
-    {
-      questionNumber: 1,
-      questionText: "",
-      answerTexts: ["", "", "", ""],
-      correctAnswer: -1,
-      time: 5,
-      powerUps: true,
-    },
+
+  const [questionData, setQuestionData] = useState<Array<Question>>([{
+    questionNumber: 0,
+    questionText: "",
+    answerTexts: ["", "", "", ""],
+    correctAnswer: -1,
+    time: 0,
+    powerUps: true,
+  }
   ]);
 
-  const [questionValue, setQuestionValue] = useState(
-    questionData[0]?.questionText
-  );
-  const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+  
+  const [questionValue, setQuestionValue] = useState(questionData[0].questionText);
 
   useEffect(() => {
     console.log("useEffect");
@@ -180,6 +183,9 @@ const QuizPage: React.FC = () => {
   };
 
   const handleCreateQuestion = () => {
+    if (!handleMessageErrors()) {
+      return;
+    }
     const newQuestion: Question = {
       questionNumber: questionData?.length,
       questionText: "",
@@ -206,6 +212,11 @@ const QuizPage: React.FC = () => {
   };
 
   const handleDeleteQuestion = (questionNumber: number) => {
+    if (questionData.length === 1) {
+      window.alert("Your quiz must have at least a question.");
+      return;
+    }
+
     let check = true;
     if (activeQuestion != questionNumber) {
       check = false;
@@ -225,6 +236,7 @@ const QuizPage: React.FC = () => {
       newQuestionData.splice(questionNumber, 1);
       return newQuestionData;
     });
+
     if (check) {
       if (activeQuestion >= questionData?.length - 1) {
         setQuestionValue(questionData[activeQuestion - 1]?.questionText);
@@ -236,15 +248,14 @@ const QuizPage: React.FC = () => {
   };
 
   const handleQuestionCardClick = (clickedQuestionIndex: number) => {
-    if (questionData[activeQuestion]?.correctAnswer === -1) {
-      setShowMissingCorrectAnswerPopover(true);
-    } else {
-      if (questionData[activeQuestion]?.questionText.trim() === "") {
+    if (clickedQuestionIndex !== activeQuestion) {
+      if (!handleMessageErrors()) {
         return;
       }
-      setActiveQuestion(clickedQuestionIndex);
-      setQuestionValue(questionData[clickedQuestionIndex]?.questionText);
+
     }
+    setActiveQuestion(clickedQuestionIndex);
+    setQuestionValue(questionData[clickedQuestionIndex].questionText);
   };
 
   const handleAnswerChange = (id: number, text: string) => {
@@ -266,19 +277,51 @@ const QuizPage: React.FC = () => {
   };
 
   const handleSaveQuiz = () => {
-    console.log("handleSaveQuiz");
-  };
+    if (!handleMessageErrors()) {
+      return;
+    }
+    // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
+    router.push('/my-library', { scroll: false })
+  }
 
   const handleExitQuiz = () => {
-    console.log("handleExitQuiz");
+    if (!handleMessageErrors()) {
+      return;
+    }
+    
+    const response = window.confirm("You have unsaved changes. Do you want to save it to draft?");
+    if (response) {
+      // Save to draft
+    }
+    // Exit quiz, navigate to home
+    router.push('/my-library', { scroll: false })
+  }
 
-    const handleBlur = () => {
-      if (questionData[activeQuestion]?.correctAnswer === -1) {
-        setShowMissingCorrectAnswerPopover(true);
-      } else {
-        setShowMissingCorrectAnswerPopover(false);
-      }
-    };
+  const handleMessageErrors = () => {
+    if (handleMissingCorrectAnswer() || handleMissingQuestion()) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleMissingQuestion = () => {
+    if (questionValue.trim() === "") {
+      setShowMissingQuestionPopover(true);
+      return true;
+    } else {
+      setShowMissingQuestionPopover(false);
+      return false;
+    }
+  };
+
+  const handleMissingCorrectAnswer = () => {
+    if (questionData[activeQuestion].correctAnswer === -1) {
+      setShowMissingCorrectAnswerPopover(true);
+      return true;
+    } else {
+      setShowMissingCorrectAnswerPopover(false);
+      return false;
+    }
   };
 
   return (
@@ -315,11 +358,7 @@ const QuizPage: React.FC = () => {
                   }
                   index={index}
                   question={question.questionText}
-                  answer={
-                    question.correctAnswer === -1
-                      ? "<missing>"
-                      : question.answerTexts[question.correctAnswer]
-                  }
+                  answer={question.correctAnswer === -1 ? "Correct answer" : question.answerTexts[question.correctAnswer]}
                   time={TIME[question.time]}
                   powerUps={question.powerUps}
                   activeIndex={activeQuestion}
@@ -341,10 +380,25 @@ const QuizPage: React.FC = () => {
         </div>
 
         <div className="bg-gray-300 w-screen flex flex-col border-gray-200 dark:bg-gray-500 px-6 py-6 gap-x-5 items-center">
+          
+    <div className="relative w-full items-center">
           <QuestionInput
             questionValue={questionValue}
             handleQuestionChange={handleQuestionChange}
           />
+          {showMissingQuestionPopover && (
+        <div className="flex flex-col items-center w-full absolute -bottom-12">
+          <div className="self-center items-center flex flex-col justify-center ">
+            <svg className="self-center scale-105 text-primary-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 2"><path fill="currentColor" d="M1 21h22L12 2"/></svg>
+            <div
+              className="popover bg-primary-500 px-2 py-1 rounded-md text-white"
+            >
+              <p>You haven't added a question.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
 
           <div className="grid grid-cols-12 grow gap-5 justify-center items-center mb-10 mt-8 col-span-full">
             <div className="flex justify-center items-center col-span-3">

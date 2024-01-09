@@ -52,18 +52,19 @@ const NavBar: React.FC<NavBarProps> = (props) => {
                     </button>
                 </div>
                 <div className="items-center order-2 col-end-13 col-span-2 grid grid-cols-2 gap-x-5">
-                    <Link
-                        href="/"
+                    <button
                         className="flex justify-center text-primary-700 bg-gray-50 dark:text-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                        onClick={props.handleExitQuiz}
                     >
                         Exit
-                    </Link>
-                    <a
-                        href="#"
+
+                    </button>
+                    <button
                         className="flex justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                        onClick={props.handleSaveQuiz}
                     >
                         Save
-                    </a>
+                    </button>
                 </div>
             </nav>
         </header>
