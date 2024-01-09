@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 
 const QuizImage = ({ src }: { src: string }) => {
-  return <img src={src} alt="" className="w-full h-64 object-cover" />;
+  return <img src={src} alt="Quiz Image" className="w-full h-64 object-cover" />;
 };
 
 const QuizTitle = ({ children }: { children: React.ReactNode }) => {

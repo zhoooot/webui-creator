@@ -26,7 +26,8 @@
     "react-router-dom": "^6.21.1",
     "react-verification-input": "^4.1.0",
     "rippleui": "^1.12.1",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.10.2"
   },
   "devDependencies": {
     "@types/node": "^20",

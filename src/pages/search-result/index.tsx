@@ -37,7 +37,7 @@ const SearchPage : React.FC = ()  => {
           number: quiz.num_play_times,
           name: quiz.title,
           questionCount: quiz.num_questions,
-          imageUrl: quiz.image_url,
+          imageUrl: quiz.image,
         };
         console.log("There is a quiz with data: ", quizData);
         quizzesData.push(quizData);
@@ -66,7 +66,7 @@ const SearchPage : React.FC = ()  => {
             Found {data && data.length} quizzes
           </h1>
           {/* <button className="btn btn-wide">See more...</button> */}
-          <div className="grid grid-cols-1 gap-4 grow w-full overflow-y-auto">
+          <div className="grid grid-cols-1 gap-4 w-full overflow-y-auto">
             {data && data.map((quiz) => (
               <QuizCard
                 key={quiz.id}

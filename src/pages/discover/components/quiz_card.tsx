@@ -42,7 +42,7 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
         query: { id: props.id },
       }}
     >
-      <div className={`card shadow-xl image-full h-48 w-full object-full`}>
+      <div className={`card shadow-xl image-full h-48 w-full max-w-5xl`}>
         <figure className="w-full h-48">
           <img
             src="https://picsum.photos/1000/1000"
