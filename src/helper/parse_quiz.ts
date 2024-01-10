@@ -316,7 +316,7 @@ const getAuthorName = async (auth_id: string) => {
         if (res.data.error) {
             return "Anonymous";
         }
-        return res.data.name;
+        return res.data.fullname;
     }
     catch (err) {
         return "Anonymous";
@@ -330,7 +330,7 @@ export const parseQuiz = async (quiz: any) => {
     title: quiz.title,
     description: quiz.description,
     num_played: quiz.num_play_times,
-    updated_at: quiz.created_at,
+    updated_at: new Date(quiz.created_at).toLocaleDateString(),
     published: quiz.is_public,
     author: await getAuthorName(quiz.auth_id),
     authorId: quiz.auth_id,
@@ -340,7 +340,7 @@ export const parseQuiz = async (quiz: any) => {
     questions: quiz.questions.map((question: any) => {
     const questionTime = question.time_limit / 1000;
     let time = TIME.find((val, id) => val === questionTime);
-    if (time === undefined) {
+    if (time === undefined || time >= TIME.length || time < 0) {
         time = 0;
     }
       return {

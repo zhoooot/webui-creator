@@ -1,3 +1,6 @@
+// import TIME from time-input
+import {TIME} from '../../create/components/time-input';
+
 type CardProps = {
     questionNumber: number;
     questionText: string;
@@ -32,7 +35,7 @@ const QuestionCard : React.FC<CardProps> = (props) => {
             </svg>
 
             <p className="text-s text-gray-600 font-medium ml-2 dark:text-gray-400">
-              {props.time}s
+              {TIME[props.time]}s
             </p>
           </div>
           {props.powerUps ?
