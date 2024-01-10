@@ -5,6 +5,7 @@ type ActionProps = {
   qid: string;
   author: boolean;
   favorite: boolean;
+  is_draft: boolean;
   onClickFavorite: () => void;
   onClickDelete: () => void;
   onClickShare: () => void;
@@ -30,7 +31,7 @@ const Action: React.FC<ActionProps> = (props) => {
         disabled={!props.author}
         onClick={props.onClickDelete}
       >
-        <Link href={`/create/${props.qid}`} className="w-full h-full">
+        <Link href={`/create/${props.qid}?state=${props.is_draft ? "draft" : "quiz"}`} className="w-full h-full">
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />
         <span className="sr-only">Icon description</span>
         </Link>

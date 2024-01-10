@@ -19,6 +19,7 @@ type CardProps = {
   published: boolean;
   author: string;
   favorite: boolean;
+  is_draft: boolean;
   onClickFavorite: (arg0: number) => void;
   onClickDelete: (arg0: number) => void;
   onClickShare: (arg0: number) => void;
@@ -39,6 +40,7 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
               author={true}
               qid={quiz.id}
               favorite={quiz.favorite}
+              is_draft={quiz.is_draft}
               onClickDelete={() => {
                 quiz.onClickDelete(quiz.index);
               }}
@@ -68,7 +70,7 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
 
             <button
               type="button"
-              className="px-6 py-3.5 text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              className={`${quiz.is_draft ? "btn-disabled" : "" } px-6 py-3.5 text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-primary-200 disabled:pointer-events-none`}
             >
               <Link href={`/details/${quiz.id}`}>Play</Link>
             </button>

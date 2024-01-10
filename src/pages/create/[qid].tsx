@@ -16,6 +16,7 @@ import axios from "axios";
 import { parseQuiz } from "@/helper/parse_quiz";
 import { IQuizDetail } from "@/interface/IQuizDetail";
 import * as logic from "./logic/logic";
+import { useSearchParams } from 'next/navigation'
 
 interface Question {
   questionNumber: number;
@@ -75,8 +76,12 @@ const QuizPage: React.FC = () => {
 
   const router = useRouter();
   const { qid } = router.query;
+  const stateParams = useSearchParams()
+ 
+  const state = stateParams.get('state')
 
-  console.log("Detail edit quiz ", qid);
+
+  console.log("Detail edit quiz ", qid, " ", state)
 
   useEffect(() => {
     const action = async () => {
@@ -92,7 +97,7 @@ const QuizPage: React.FC = () => {
           router.replace("/auth");
           return;
         }
-        const url = QUIZ_URL + `quiz/${qid}`;
+        const url = QUIZ_URL + state + `/${qid}`;
         const response = await axios.get(url, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
@@ -150,7 +155,7 @@ const QuizPage: React.FC = () => {
           description={description}
           visibility={visibility}
           imageUrl={quizImage}
-          handleSaveModal={() =>
+          handleSaveModal={(quizTitle: string, description: string, visibility: string, quizImage: string) =>
             logic.handleQuizDetailChange(
               quizTitle,
               description,
@@ -194,6 +199,7 @@ const QuizPage: React.FC = () => {
             visibility,
             quizImage,
             questionData,
+            qid!.toString(),
             router
           )
         }

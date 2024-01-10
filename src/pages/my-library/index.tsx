@@ -51,6 +51,9 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
               }
             );
 
+            console.log("Fetch draft from", QUIZ_URL + `draft/${result.id}`);
+            console.log("Draft data ", responseDraft.data);
+
             tmpDraftQuizzes.push(await parseQuiz(responseDraft.data));
             console.log("Draft quizzes length ", tmpDraftQuizzes.length);
           } else {
@@ -58,7 +61,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
             console.log("Recent quizzes length ", tmpRecentQuizzes.length);
           }
           if (
-            response.data.length ==
+            response.data.length ===
             tmpRecentQuizzes.length + tmpDraftQuizzes.length
           ) {
             setRecentQuizzes(tmpRecentQuizzes);
@@ -204,6 +207,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                       updated_at={quiz.updated_at}
                       published={quiz.published}
                       author={quiz.author}
+                      is_draft={false}
                       favorite={quiz.favorite}
                       onClickFavorite={onFavoriteClick}
                       onClickDelete={onDeleteClick}
@@ -247,6 +251,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                       updated_at={quiz.updated_at}
                       published={quiz.published}
                       author={quiz.author}
+                      is_draft={true}
                       favorite={quiz.favorite}
                       onClickFavorite={onFavoriteClick}
                       onClickDelete={onDeleteClick}
@@ -289,6 +294,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                       image_url={quiz.image_url}
                       updated_at={quiz.updated_at}
                       published={quiz.published}
+                      is_draft={true}
                       author={quiz.author}
                       favorite={quiz.favorite}
                       onClickFavorite={onFavoriteClick}

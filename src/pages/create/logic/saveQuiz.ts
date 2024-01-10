@@ -33,11 +33,11 @@ export const handleSaveQuiz = async (
     let data = {
       auth_id: decode(jwt!).sub,
       title: quizTitle || "Untitled Quiz",
-      description: description,
+      description: description || "",
       quiz_id: qid,
       num_play_times: 0,
       is_public: visibility === "public",
-      image: quizImage,
+      image: quizImage || "",
       questions: questionData.map(
         (
           question: {

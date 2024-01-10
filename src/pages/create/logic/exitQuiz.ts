@@ -1,8 +1,9 @@
-import { JWT_LOCAL_STORAGE_KEY } from "@/config";
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { decode } from "@/helper/decode_jwt";
 import router from "next/router";
 import { TIME } from "../components/time-input";
 import swal from 'sweetalert';
+import axios from "axios";
 
 export const handleExitQuiz = (
   quizTitle: string,
@@ -10,6 +11,7 @@ export const handleExitQuiz = (
   visibility: string,
   quizImage: string,
   questionData: any,
+  qid: string | undefined,
   router: any
 ) => {
   console.log("handleExitQuiz");
@@ -19,21 +21,21 @@ export const handleExitQuiz = (
     icon: "warning",
     buttons: ["No", "Yes"],
     dangerMode: true,
-  }).then((response) => {
+  }).then(async (response) => {
     if (response) {
         // Save to draft
+        console.log(" image url ", quizImage);
         if (typeof window === "undefined") return;
         if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null)
           throw Error("JWT not found");
         const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
         const data = {
+          quiz_id: qid,
           auth_id: decode(jwt!).sub,
           title: quizTitle || "Untitled Quiz",
           description: description,
           num_play_times: 0,
           is_public: visibility === "public",
-          num_questions: questionData.length,
-          has_draft: true,
           image: quizImage,
           questions: questionData.map((question: { questionText: any; answerTexts: any[]; correctAnswer: any; time: number; powerUps: any; }, index: any) => {
             return {
@@ -51,19 +53,17 @@ export const handleExitQuiz = (
             };
           }),
         };
-        console.log(data);
     
-        // const url = QUIZ_URL + "/draft/";
-        // const response = await axios.post(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
-        // console.log(response);
+        const url = QUIZ_URL + "draft";
+        console.log("Sending ", data, " to ", url);
+        const response = await axios.put(url, data, {headers: {Authorization: `Bearer ${jwt}`}});
+        console.log(response);
         // router.push("/create/" + response.data.quiz_id);
         swal("Saved!", "Your quiz has been saved to a draft.", "success").then(() => {
           router.push("/my-library", { scroll: false });
         }
         );
       }
-
-
     else {
       swal(
         {
