@@ -32,7 +32,7 @@ const Discover: React.FC = () => {
           number: quiz.num_play_times,
           name: quiz.title,
           questionCount: quiz.num_questions,
-          imageUrl: quiz.image_url,
+          imageUrl: quiz.image,
         };
         console.log("There is a quiz with data: ", quizData);
         quizzesData.push(quizData);

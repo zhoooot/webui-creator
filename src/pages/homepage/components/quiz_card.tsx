@@ -42,7 +42,7 @@ const QuizCard: React.FC<QuizCardProps> = (props) => {
       <div className={`card shadow-md image-full h-full w-full max-w-5xl `}>
         <figure className="w-full h-48">
           <img
-            src={props.imageUrl}
+            src={props.imageUrl == "" ? "quiz-cover.jpg" : props.imageUrl}
             alt="Quiz Image"
             className="object-cover w-full h-48"
           />
