@@ -8,6 +8,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { QUIZ_URL } from "@/config";
 import { IQuizDetail } from "@/interface/IQuizDetail";
 import { parseQuiz } from "@/helper/parse_quiz";
+import { createNewQuiz } from "@/pages/create/logic/createNewQuiz";
 
 const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
@@ -37,37 +38,38 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
         const tmpDraftQuizzes: Array<IQuizDetail> = [];
         console.log("Recent data ", response.data);
 
-        await response.data.forEach(async (quiz: any, index: number) => {
-          console.log("Quiz ", quiz);
-          const result: IQuizDetail = await parseQuiz(quiz);
-          if (result.has_draft) {
-            // Fetch cai draft
-            const responseDraft = await axios.get(
-              QUIZ_URL + `draft/${result.id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-                },
-              }
-            );
+        let i;
+        for (i = 0; i < response.data.length; i++) {
+          const result: IQuizDetail = await parseQuiz(response.data[i]);
+          console.log("Quiz ", result);
+          tmpRecentQuizzes.push(result);
+          console.log("Recent quizzes length ", tmpRecentQuizzes.length);
+        }
 
-            console.log("Fetch draft from", QUIZ_URL + `draft/${result.id}`);
-            console.log("Draft data ", responseDraft.data);
+        setRecentQuizzes(tmpRecentQuizzes);
 
-            tmpDraftQuizzes.push(await parseQuiz(responseDraft.data));
-            console.log("Draft quizzes length ", tmpDraftQuizzes.length);
-          } else {
-            tmpRecentQuizzes.push(result);
-            console.log("Recent quizzes length ", tmpRecentQuizzes.length);
+        
+        const responseDraft = await axios.get(
+          QUIZ_URL + `draft`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
           }
-          if (
-            response.data.length ===
-            tmpRecentQuizzes.length + tmpDraftQuizzes.length
-          ) {
-            setRecentQuizzes(tmpRecentQuizzes);
-            setDraftQuizzes(tmpDraftQuizzes);
-          }
-        });
+        );
+
+        console.log("Fetch draft from", QUIZ_URL + `draft`);
+        console.log("Draft data ", responseDraft.data);
+
+        for (i = 0; i < responseDraft.data.length; i++) {
+          const result: IQuizDetail = await parseQuiz(responseDraft.data[i]);
+          console.log("Quiz ", result);
+          tmpDraftQuizzes.push(result);
+          console.log("Recent quizzes length ", tmpDraftQuizzes.length);
+        }
+
+        setDraftQuizzes(tmpDraftQuizzes);
+
         console.log("out of loop");
       } catch (e) {
         console.log(e);
@@ -176,15 +178,14 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 </button>
               </li> */}
             </ul>
-            <Link href="/create">
               <button
                 type="button"
                 className="py-3 px-4 text-sm font-semibold text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                onClick={createNewQuiz}
               >
                 <Icon icon="akar-icons:plus" className="w-4 h-4 mr-1" />
                 Create
               </button>
-            </Link>
           </div>
           <div id="default-tab-content" className="grow overflow-y-auto">
             <div

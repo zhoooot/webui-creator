@@ -33,10 +33,10 @@ export const handleExitQuiz = (
           quiz_id: qid,
           auth_id: decode(jwt!).sub,
           title: quizTitle || "Untitled Quiz",
-          description: description,
+          description: description || "",
           num_play_times: 0,
           is_public: visibility === "public",
-          image: quizImage,
+          image: quizImage || "",
           questions: questionData.map((question: { questionText: any; answerTexts: any[]; correctAnswer: any; time: number; powerUps: any; }, index: any) => {
             return {
               index: index,

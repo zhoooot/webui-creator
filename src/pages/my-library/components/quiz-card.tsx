@@ -31,7 +31,7 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
   return (
       <div className=" bg-white shadow-xl rounded-lg w-full h-40 flex flex-row ">
         <div className="min-w-0.5 overflow-clip">
-          <QuizImage src={quiz.image_url} />
+          <QuizImage src={quiz.image_url === "" ? "quiz-cover.jpg" : quiz.image_url} />
         </div>
         <div className="h-50 w-full p-6 flex flex-col grow">
           <div className="w-full flex flex-row justify-between items-center h-10 flex-none">
