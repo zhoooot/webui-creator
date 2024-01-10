@@ -193,7 +193,7 @@ const QuizDetailPage = () => {
               </button>
               <div className="flex flex-row justify-between items-center h-10"></div>
             </div>
-            {quiz.is_reported ? (
+            {quiz.is_reported && user.id === quiz.authorId ? (
               <div className="w-full bg-red-500 flex flex-row items-center justify-center">
                 <div className="font-bold text-white text-lg p-4 text-center ">
                   {" "}

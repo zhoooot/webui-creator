@@ -305,7 +305,7 @@
 } 
 */
 
-import { CREATOR_URL } from "@/config"
+import { ADMIN_URL, CREATOR_URL } from "@/config"
 import { IQuizDetail } from "@/interface/IQuizDetail"
 import axios from "axios";
 import {TIME} from "@/pages/create/components/time-input";
@@ -323,7 +323,21 @@ const getAuthorName = async (auth_id: string) => {
     }
 }
 
+const isQuizReported = async (quiz_id: string) => {
+    try {
+        const res = await axios.get(ADMIN_URL + "violation/check/" + quiz_id);
+        console.log('Violation check ', res.data);
+        return res.data;
+    }
+    catch (err) {
+        console.log('Error violation ', err);
+        return false;
+    }
+}
+
 export const parseQuiz = async (quiz: any) => {
+  // get userid from localstorage
+  const user_id = JSON.parse(localStorage.info).id;
   const quizDetail: IQuizDetail = {
     id: quiz.quiz_id,
     image_url: quiz.image,
@@ -334,7 +348,7 @@ export const parseQuiz = async (quiz: any) => {
     published: quiz.is_public,
     author: await getAuthorName(quiz.auth_id),
     authorId: quiz.auth_id,
-    is_reported: false,
+    is_reported: user_id === quiz.auth_id ? await isQuizReported(quiz.quiz_id) : false,
     has_draft: quiz.has_draft,
     favorite: quiz.favorite,
     questions: quiz.questions.map((question: any) => {

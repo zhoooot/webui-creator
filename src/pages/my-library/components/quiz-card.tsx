@@ -24,7 +24,7 @@ type CardProps = {
   onClickDelete: (arg0: number) => void;
   onClickShare: (arg0: number) => void;
   onClickRename: (arg0: number) => void;
-  onClickDuplicate: (arg0: number) => void;
+  onClickDuplicate: (arg0: number, qid: string) => void;
 };
 
 const QuizCard: React.FC<CardProps> = (quiz) => {
@@ -51,7 +51,8 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
                 quiz.onClickRename(quiz.index);
               }}
               onClickDuplicate={() => {
-                quiz.onClickDuplicate(quiz.index);
+                console.log("Duplicate");
+                quiz.onClickDuplicate(quiz.index, quiz.id);
               }}
               onClickShare={() => {
                 quiz.onClickShare(quiz.index);

@@ -9,6 +9,7 @@ import { QUIZ_URL } from "@/config";
 import { IQuizDetail } from "@/interface/IQuizDetail";
 import { parseQuiz } from "@/helper/parse_quiz";
 import { createNewQuiz } from "@/pages/create/logic/createNewQuiz";
+import { duplicateQuiz } from "@/helper/duplicate_quiz";
 
 const MyLibrary = ({ creatorId }: { creatorId: any }) => {
   const [activeTab, setActiveTab] = useState("recent");
@@ -104,11 +105,12 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
 
   const onClickShare = (index: number) => {};
 
-  const onClickDuplicate = (index: number) => {
+  const onClickDuplicate = (index: number, qid: string) => {
     const newQuizes = [...quizzes];
     const duplicatedQuiz = { ...newQuizes[index] };
     newQuizes.splice(index + 1, 0, duplicatedQuiz);
     setQuizzes(newQuizes);
+    // duplicateQuiz(qid);
   };
 
   console.log("rebuilding dsdf");
