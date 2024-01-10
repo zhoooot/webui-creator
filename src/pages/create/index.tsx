@@ -114,6 +114,7 @@ const QuizPage: React.FC = () => {
           visibility,
           questionData,
           quizImage,
+          undefined,
           router
         )}
           

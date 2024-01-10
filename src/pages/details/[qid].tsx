@@ -19,7 +19,7 @@ import swal from "sweetalert2";
 
 const QuizDetailPage = () => {
   const user = {
-    id: "7070afde-f8b5-487e-a288-f2be9d162b0bx",
+    id: "7070afde-f8b5-487e-a288-f2be9d162b0b",
     username: "John Doe",
   };
 

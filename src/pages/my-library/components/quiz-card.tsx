@@ -37,6 +37,7 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
             <QuizTitle>{quiz.title}</QuizTitle>
             <Action
               author={true}
+              qid={quiz.id}
               favorite={quiz.favorite}
               onClickDelete={() => {
                 quiz.onClickDelete(quiz.index);

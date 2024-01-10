@@ -37,7 +37,6 @@ export const handleSaveQuiz = async (
       quiz_id: qid,
       num_play_times: 0,
       is_public: visibility === "public",
-      created_at: new Date().toISOString(),
       image: quizImage,
       questions: questionData.map(
         (
@@ -70,13 +69,37 @@ export const handleSaveQuiz = async (
     
     console.log('Saved quiz with data ', data);
 
-    const response = await axios.put(url, data);
+    const response = await axios.put(url, data, {
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
+
+    });
     console.log('Save quiz response ', response);
+
+    const new_qid = response.data.quiz_id;
+    if (isDraft) {
+      swal("Quiz saved!", "Your quiz has been saved.", "success").then(() => {
+        router.push("/my-library", { scroll: false });
+      });
+    } else {
+      const url = QUIZ_URL + "draft/" + new_qid + "/publish";
+      const response = await axios.post(
+        url,
+        { quiz_id: new_qid },
+        {
+          headers: {
+            Authorization: "Bearer " + jwt,
+          },
+        }
+      );
+      swal("Quiz saved!", "Your quiz has been saved.", "success").then(() => {
+        router.push("/my-library", { scroll: false });
+      });
+    }
+
     // router.push("/create/" + response.data.quiz_id);
     // SAVE QUIZ HEREEEEEEEEEEEEEEEEEEEEEEEEEE
-    swal("Quiz saved!", "Your quiz has been saved.", "success").then(() => {
-      router.push("/my-library", { scroll: false });
-    });
   } catch (error) {
     console.log(error);
     window.alert("Error saving quiz!");

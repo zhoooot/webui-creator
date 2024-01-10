@@ -18,7 +18,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     []
   );
 
-  const [loading, setLoading] = useState<boolean>(true);  
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [quizzes, setQuizzes] = useState<Array<IQuizDetail>>([]);
 
@@ -30,9 +30,9 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     const fetchQuizzes = async () => {
       console.log("fetching quizzes");
       try {
-        const response = await axios.get(QUIZ_URL + `quiz`,
-          { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
-        );
+        const response = await axios.get(QUIZ_URL + `quiz`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
+        });
         const tmpRecentQuizzes: Array<IQuizDetail> = [];
         const tmpDraftQuizzes: Array<IQuizDetail> = [];
         console.log("Recent data ", response.data);
@@ -41,28 +41,36 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
           console.log("Quiz ", quiz);
           const result: IQuizDetail = await parseQuiz(quiz);
           if (result.has_draft) {
-            tmpDraftQuizzes.push(result);
+            // Fetch cai draft
+            const responseDraft = await axios.get(
+              QUIZ_URL + `draft/${result.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                },
+              }
+            );
+
+            tmpDraftQuizzes.push(await parseQuiz(responseDraft.data));
             console.log("Draft quizzes length ", tmpDraftQuizzes.length);
-          }
-          else {
+          } else {
             tmpRecentQuizzes.push(result);
             console.log("Recent quizzes length ", tmpRecentQuizzes.length);
           }
-          if (tmpDraftQuizzes.length + tmpRecentQuizzes.length === response.data.length) {
-            console.log("Setting quizzes");
+          if (
+            response.data.length ==
+            tmpRecentQuizzes.length + tmpDraftQuizzes.length
+          ) {
             setRecentQuizzes(tmpRecentQuizzes);
             setDraftQuizzes(tmpDraftQuizzes);
           }
         });
-
         console.log("out of loop");
-
-
       } catch (e) {
         console.log(e);
       }
     };
-    
+
     fetchQuizzes();
   }, [creatorId]);
 
@@ -209,7 +217,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 <div className="flex flex-col justify-center items-center h-full gap-1">
                   <div className="text-3xl font-bold">No Quizzes</div>
                   <div className="text-gray-500">
-                    You have no quizzes.  
+                    You have no quizzes.
                     <Link href="/create">
                       <button className="text-primary-500 font-body font-bold text-right hover:underline cursor-pointer ml-1">
                         Create one now!
@@ -230,23 +238,23 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
               {draftQuizzes.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4 w-full h-full overflow-hidden">
                   {draftQuizzes.map((quiz, index) => (
-                      <QuizCard
-                        key={index}
-                        index={index}
-                        id={quiz.id}
-                        title={quiz.title}
-                        image_url={quiz.image_url}
-                        updated_at={quiz.updated_at}
-                        published={quiz.published}
-                        author={quiz.author}
-                        favorite={quiz.favorite}
-                        onClickFavorite={onFavoriteClick}
-                        onClickDelete={onDeleteClick}
-                        onClickRename={onClickRename}
-                        onClickShare={onClickShare}
-                        onClickDuplicate={onClickDuplicate}
-                      />
-                    ))}
+                    <QuizCard
+                      key={index}
+                      index={index}
+                      id={quiz.id}
+                      title={quiz.title}
+                      image_url={quiz.image_url}
+                      updated_at={quiz.updated_at}
+                      published={quiz.published}
+                      author={quiz.author}
+                      favorite={quiz.favorite}
+                      onClickFavorite={onFavoriteClick}
+                      onClickDelete={onDeleteClick}
+                      onClickRename={onClickRename}
+                      onClickShare={onClickShare}
+                      onClickDuplicate={onClickDuplicate}
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="flex flex-col justify-center items-center h-full gap-1">

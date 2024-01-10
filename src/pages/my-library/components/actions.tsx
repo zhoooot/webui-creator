@@ -1,6 +1,8 @@
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 type ActionProps = {
+  qid: string;
   author: boolean;
   favorite: boolean;
   onClickFavorite: () => void;
@@ -28,10 +30,10 @@ const Action: React.FC<ActionProps> = (props) => {
         disabled={!props.author}
         onClick={props.onClickDelete}
       >
-        <a href="/create" className="w-full h-full">
+        <Link href={`/create/${props.qid}`} className="w-full h-full">
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />
         <span className="sr-only">Icon description</span>
-        </a>
+        </Link>
       </button>
       <button
         type="button"
