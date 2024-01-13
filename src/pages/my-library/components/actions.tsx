@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import router from "next/router";
 
 type ActionProps = {
   qid: string;
@@ -29,7 +30,7 @@ const Action: React.FC<ActionProps> = (props) => {
           props.author ? "text-inherit" : "text-gray-300"
         } hover:text-primary-400 ${buttonClass}`}
         disabled={!props.author}
-        onClick={props.onClickDelete}
+        onClick={() => {}}
       >
         <Link href={`/create/${props.qid}?state=${props.is_draft ? "draft" : "quiz"}`} className="w-full h-full">
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />

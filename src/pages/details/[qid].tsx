@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from "react";
 import {
   QuizImage,
@@ -16,10 +17,15 @@ import { useRouter } from "next/router";
 import { ADMIN_URL, JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { parseQuiz } from "@/helper/parse_quiz";
 import swal from "sweetalert2";
+import { decode } from "@/helper/decode_jwt";
 
 const QuizDetailPage = () => {
+  if (typeof window === "undefined") return;
+    if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null)
+      throw Error("JWT not found");
+  const jwt = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
   const user = {
-    id: JSON.parse(localStorage.info).id,
+    id: decode(jwt!).sub,
   };
   console.log("User is ", user.id);
 

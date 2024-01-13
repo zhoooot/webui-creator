@@ -47,6 +47,7 @@ const ForgotPanelNewPassword = (props: { next: any }): JSX.Element => {
       localStorage.removeItem(EMAIL_LOCAL_STORAGE_KEY);
       localStorage.removeItem(OTP_LOCAL_STORAGE_KEY);
       alert("Reset password successfully");
+      props.next("login");
     } catch (e: any) {
       alert(e.message)
       const error = e as AxiosError;

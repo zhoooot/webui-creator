@@ -80,7 +80,7 @@ export const handleSaveQuiz = async (
     const new_qid = response.data.quiz_id;
     if (isDraft) {
       swal("Quiz saved!", "Your quiz has been saved.", "success").then(() => {
-        router.push("/my-library", { scroll: false });
+        router.replace("/my-library", { scroll: false });
       });
     } else {
       const url = QUIZ_URL + "draft/" + new_qid + "/publish";

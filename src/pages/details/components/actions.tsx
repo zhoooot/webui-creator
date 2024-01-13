@@ -39,7 +39,6 @@ const Action: React.FC<ActionProps> = (props) => {
           props.author ? "text-inherit" : "text-gray-300"
         } hover:text-primary-400 ${buttonClass}`}
         onClick={() => {
-          router.push("/create");
           props.onClickEdit();
         }
         }

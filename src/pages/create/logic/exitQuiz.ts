@@ -24,7 +24,6 @@ export const handleExitQuiz = (
   }).then(async (response) => {
     if (response) {
         // Save to draft
-        console.log(" image url ", quizImage);
         if (typeof window === "undefined") return;
         if (localStorage.getItem(JWT_LOCAL_STORAGE_KEY) === null)
           throw Error("JWT not found");

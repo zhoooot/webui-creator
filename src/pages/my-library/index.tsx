@@ -20,7 +20,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
     []
   );
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [quizzes, setQuizzes] = useState<Array<IQuizDetail>>([]);
 
@@ -30,6 +30,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
+      setLoading(true);
       console.log("fetching quizzes");
       try {
         const response = await axios.get(QUIZ_URL + `quiz`, {
@@ -70,6 +71,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
         }
 
         setDraftQuizzes(tmpDraftQuizzes);
+        setLoading(false);
 
         console.log("out of loop");
       } catch (e) {
@@ -189,6 +191,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
                 Create
               </button>
           </div>
+          {loading ? <div className=" w-full h-full font-bold text-lg text-center items-center justify-center flex">Loading...</div> :
           <div id="default-tab-content" className="grow overflow-y-auto">
             <div
               className={`${tabClass} ${
@@ -326,6 +329,7 @@ const MyLibrary = ({ creatorId }: { creatorId: any }) => {
               )}
             </div>
           </div>
+          }
         </div>
       </div>
     </Layout>

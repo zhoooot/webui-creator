@@ -48,6 +48,10 @@ const PrivateQuizzes: React.FC = () => {
     
   }, []);
 
+  if (data && data.length > 6) {
+    data.splice(6, data.length - 6);
+  }
+
   return (
     <div className="h-full bg-base-100 px-12 py-6 w-full rounded-2xl flex flex-col">
       <div className="flex flex-row justify-between items-center w-full pb-4">
