@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UploadImage from "./components/upload-image";
 import QuestionInput from "./components/question-input";
 import Modal from "./components/modal";
@@ -7,8 +7,14 @@ import AnswerButton from "./components/answer-button";
 import Navbar from "./components/nav-bar";
 import Toggle from "./components/toggle";
 import TimeInput from "./components/time-input";
-import {TIME} from "./components/time-input";
-import { handleSaveQuiz } from "../tmp/redux/actions";
+import { TIME } from "./components/time-input";
+import { useRouter } from "next/router";
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
+import { decode } from "@/helper/decode_jwt";
+import axios from "axios";
+import { parseQuiz } from "@/helper/parse_quiz";
+import { IQuizDetail } from "@/interface/IQuizDetail";
+import * as logic from "./logic/logic";
 
 interface Question {
   questionNumber: number;
@@ -43,255 +49,86 @@ const QuizPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [quizImage, setQuizImage] = useState("");
-
-  const handleQuizDetailChange = (title: string, description: string, visibility: string, quizImage: string) => {
-    console.log("handleQuizDetailChange");
-    setQuizTitle(title);
-    setDescription(description);
-    setVisibility(visibility);
-    setQuizImage(quizImage);
-  }
-
+  const [showMissingCorrectAnswerPopover, setShowMissingCorrectAnswerPopover] =
+    useState(false);
+  const [showMissingQuestionPopover, setShowMissingQuestionPopover] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
-  const [questionData, setQuestionData] = useState<Array<Question>>([
-    {
-      questionNumber: 0,
-      questionText: "What is the role of the President of the United States?",
-      answerTexts: [
-        "To interpret laws",
-        "To enforce laws",
-        "To make laws",
-        "To declare laws unconstitutional",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 1,
-      questionText: "What is the famous quote from the movie The Terminator?",
-      answerTexts: [
-        "I'll be back",
-        "I'll be there",
-        "I'll be waiting",
-        "I'll be watching",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 2,
-      questionText: "What is the famous quote from the movie Inception?",
-      answerTexts: [
-        "You mustn't be afraid to dream a little bigger, darling",
-        "You mustn't be afraid to dream a little bigger, honey",
-        "You mustn't be afraid to dream a little bigger, baby",
-        "You mustn't be afraid to dream a little bigger, sweetheart",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },  
-    {
-      questionNumber: 3,
-      questionText: "What is the famous quote from the movie The Dark Knight?",
-      answerTexts: [
-        "Why so serious?",
-        "Why so angry?",
-        "Why so sad?",
-        "Why so mad?",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 4,
-      questionText: "What is the famous quote from the movie The Godfather?",
-      answerTexts: [
-        "I'm going to make him an offer he can't refuse",
-        "I'm going to make him an offer he can't deny",
-        "I'm going to make him an offer he can't resist",
-        "I'm going to make him an offer he can't reject",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 5,
-      questionText: "What is the famous quote from the movie The Lord of the Rings?",
-      answerTexts: [
-        "You shall not pass!",
-        "You shall not go!",
-        "You shall not leave!",
-        "You shall not escape!",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 6,
-      questionText: "What is the famous quote from the movie Star Wars?",
-      answerTexts: [
-        "May the Force be with you",
-        "May the Force be with us",
-        "May the Force be with them",
-        "May the Force be with him",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 7,
-      questionText: "What is the famous quote from the movie The Shining?",
-      answerTexts: [
-        "Here's Johnny!",
-        "Here's John!",
-        "Here's Jack!",
-        "Here's James!",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 8,
-      questionText: "What is the famous quote from the movie Forrest Gump?",
-      answerTexts: [
-        "Life is like a box of chocolates",
-        "Life is like a box of candy",
-        "Life is like a box of sweets",
-        "Life is like a box of treats",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-    {
-      questionNumber: 9,
-      questionText: "What is the famous quote from the movie The Matrix?",
-      answerTexts: [
-        "There is no spoon",
-        "There is no knife",
-        "There is no fork",
-        "There is no spork",
-      ],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    },
-  ]);
-
-  const [questionValue, setQuestionValue] = useState(questionData[0].questionText);
+  const [questionData, setQuestionData] =
+    useState<Array<Question>>([
+      {
+        questionNumber: 1,
+        questionText: "",
+        answerTexts: ["", "", "", ""],
+        correctAnswer: -1,
+        time: 0,
+        powerUps: false,
+      },
+    ]);
+  const [questionValue, setQuestionValue] = useState(
+    questionData[0].questionText
+  );
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
 
-  const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newQuestionValue = e.target.value;
-    setQuestionValue(newQuestionValue);
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData[activeQuestion].questionText = newQuestionValue;
-      return newQuestionData;
-    });
-  };
-
-  const handleUpdateModal = () => {
-    setUpdateModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setUpdateModalVisible(false);
-  };
-
-  const handleCreateQuestion = () => {
-    const newQuestion: Question = {
-      questionNumber: questionData.length,
-      questionText: "",
-      answerTexts: ["", "", "", ""],
-      correctAnswer: 1,
-      time: 0,
-      powerUps: true,
-    };
-    setQuestionData([...questionData, newQuestion]);
-    setActiveQuestion(questionData.length);
-    setQuestionValue("");
-  };
-
-  const handeDuplicateQuestion = (questionNumber: number) => {
-    const newQuestion: Question = {
-      questionNumber: questionData.length,
-      questionText: questionData[questionNumber].questionText,
-      answerTexts: questionData[questionNumber].answerTexts,
-      correctAnswer: questionData[questionNumber].correctAnswer,
-      time: questionData[questionNumber].time,
-      powerUps: questionData[questionNumber].powerUps,
-    };
-    setQuestionData([...questionData, newQuestion]);
-  };
-
-  const handleDeleteQuestion = (questionNumber: number) => {
-    let check = true;
-    if (activeQuestion != questionNumber) {
-      check = false;
-    } 
-    if (activeQuestion > questionNumber) {
-      setActiveQuestion(activeQuestion - 1);
-    } else if ((questionNumber === questionData.length - 1) && (activeQuestion === questionNumber)) {
-      setActiveQuestion(activeQuestion - 1);
-    }
-    console.log("deleted question: " + questionNumber);
-    console.log(activeQuestion);
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData.splice(questionNumber, 1);
-      return newQuestionData;
-    });
-    if (check) {
-      if (activeQuestion >= questionData.length - 1) {
-        setQuestionValue(questionData[activeQuestion - 1].questionText);
-      } else {
-        // if (activeQuestion)
-        setQuestionValue(questionData[activeQuestion + 1].questionText);
-      }
-    }
-  };
-
-  const handleQuestionCardClick = (clickedQuestionIndex: number) => {
-    setActiveQuestion(clickedQuestionIndex);
-    setQuestionValue(questionData[clickedQuestionIndex].questionText);
-  };
-
-  const handleAnswerChange = (id: number, text: string) => {
-    setQuestionData((prev) => {
-      const newQuestionData = [...prev];
-      newQuestionData[activeQuestion].answerTexts[id] = text;
-      return newQuestionData;
-    });
-  };
-
-  const handleSaveQuiz = () => {
-    console.log("handleSaveQuiz");
-  }
-
-  const handleExitQuiz = () => {
-    console.log("handleExitQuiz");
-  }
+  const router = useRouter();
 
   return (
     <div className="flex flex-col h-screen relative">
       {/* Update Modal */}
-      {isUpdateModalVisible && <Modal handleCloseModal={handleCloseModal} title={quizTitle} description={description} visibility={visibility} imageUrl={quizImage} handleSaveModal={handleQuizDetailChange} />}
+      {isUpdateModalVisible && (
+        <Modal
+          handleCloseModal={() => logic.handleCloseModal(setUpdateModalVisible)}
+          title={quizTitle}
+          description={description}
+          visibility={visibility}
+          imageUrl={quizImage}
+          handleSaveModal={() =>
+            logic.handleQuizDetailChange(
+              quizTitle,
+              description,
+              visibility,
+              quizImage,
+              setQuizTitle,
+              setDescription,
+              setVisibility,
+              setQuizImage
+            )
+          }
+        />
+      )}
       {/* Navbar */}
       <Navbar
         title={quizTitle}
         setQuizTitle={setQuizTitle}
-        handleUpdateModal={handleUpdateModal}
-        handleSaveQuiz={handleSaveQuiz}
-        handleExitQuiz={handleExitQuiz}
+        handleUpdateModal={() => logic.handleUpdateModal(setUpdateModalVisible)}
+        handleSaveQuiz={() => logic.handleSaveQuiz(
+          logic.handleMessageErrors(
+            questionValue,
+            questionData,
+            activeQuestion,
+            setShowMissingQuestionPopover,
+            setShowMissingCorrectAnswerPopover
+          ),
+          false,
+          quizTitle,
+          description,
+          visibility,
+          questionData,
+          quizImage,
+          undefined,
+          router
+        )}
+          
+        handleExitQuiz={() =>
+          logic.handleExitQuiz(
+            quizTitle,
+            description,
+            visibility,
+            quizImage,
+            questionData,
+            undefined,
+            router
+          )
+        }
       />
 
       <div className="bg-white flex flex-row grow border-gray-200 dark:bg-gray-800 overflow-y-auto">
@@ -300,17 +137,51 @@ const QuizPage: React.FC = () => {
             <div className="flex flex-col flex-1 ">
               {questionData.map((question, index) => (
                 <Card
+                  key={index}
                   onClick={(questionIndex) =>
-                    handleQuestionCardClick(questionIndex)
+                    logic.handleQuestionCardClick(
+                      questionIndex,
+                      questionData,
+                      activeQuestion,
+                      setActiveQuestion,
+                      setQuestionValue,
+                      logic.handleMessageErrors(
+                        questionValue,
+                        questionData,
+                        activeQuestion,
+                        setShowMissingQuestionPopover,
+                        setShowMissingCorrectAnswerPopover
+                      ),
+                    )
                   }
                   index={index}
                   question={question.questionText}
-                  answer={question.answerTexts[question.correctAnswer - 1]}
+                  answer={
+                    question.correctAnswer === -1
+                      ? "Correct answer"
+                      : question.answerTexts[question.correctAnswer]
+                  }
                   time={TIME[question.time]}
                   powerUps={question.powerUps}
                   activeIndex={activeQuestion}
-                  duplicate={handeDuplicateQuestion}
-                  delete={handleDeleteQuestion}
+                  duplicate={() =>
+                    logic.handeDuplicateQuestion(
+                      questionData[activeQuestion].questionNumber,
+                      questionData,
+                      setQuestionData
+                    )
+                  }
+                  delete={() =>
+                    logic.handleDeleteQuestion(
+                      questionData[activeQuestion].questionNumber,
+                      activeQuestion,
+                      questionData,
+                      setActiveQuestion,
+                      setQuestionData,
+                      setQuestionValue
+                    )
+                  }
+                  missingCorrectAnswer={question.correctAnswer === -1}
                 />
               ))}
             </div>
@@ -318,7 +189,14 @@ const QuizPage: React.FC = () => {
           <div className="justify-center items-center h-16">
             <button
               className="py-3 px-4 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-2xl text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={handleCreateQuestion}
+              onClick={() =>
+                logic.handleCreateQuestion(
+                  questionData,
+                  setQuestionData,
+                  setActiveQuestion,
+                  setQuestionValue
+                )
+              }
             >
               Create Question
             </button>
@@ -328,8 +206,16 @@ const QuizPage: React.FC = () => {
         <div className="bg-gray-300 w-screen flex flex-col border-gray-200 dark:bg-gray-500 px-6 py-6 gap-x-5 items-center">
           <QuestionInput
             questionValue={questionValue}
-            handleQuestionChange={handleQuestionChange}
+            handleQuestionChange={(e) =>
+              logic.handleQuestionChange(
+                e,
+                setQuestionValue,
+                setQuestionData,
+                activeQuestion
+              )
+            }
           />
+
           <div className="grid grid-cols-12 grow gap-5 justify-center items-center mb-10 mt-8 col-span-full">
             <div className="flex justify-center items-center col-span-3">
               <div className="w-24">
@@ -352,27 +238,72 @@ const QuizPage: React.FC = () => {
               <UploadImage />
             </div>
             <div className="col-start-11 col-end-12">
-              <Toggle checked={questionData[activeQuestion].powerUps} onChange={(value) => {
-                setQuestionData((prev) => {
-                  const newQuestionData = [...prev];
-                  newQuestionData[activeQuestion].powerUps = value.target.checked;
-                  return newQuestionData;
-                });
-              }} />
+              <Toggle
+                checked={questionData[activeQuestion].powerUps}
+                onChange={(value) => {
+                  setQuestionData((prev) => {
+                    const newQuestionData = [...prev];
+                    newQuestionData[activeQuestion].powerUps =
+                      value.target.checked;
+                    return newQuestionData;
+                  });
+                }}
+              />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-8 col-span-full w-full">
-            {questionData[activeQuestion].answerTexts.map(
-              (answer, answerId) => (
-                <AnswerButton
-                  key={answerId}
-                  value={answer}
-                  svg_icon={answerData[answerId].icon}
-                  color={answerData[answerId].color}
-                  onChange={(text) => handleAnswerChange(answerId, text)}
-                />
-              )
+
+          <div className="flex flex-row justify-center w-full relative">
+            {showMissingCorrectAnswerPopover && (
+              <div className="flex flex-col items-center w-full absolute -top-12">
+                <div className="self-center items-center flex flex-col justify-center ">
+                  <div className="popover bg-primary-500 px-2 py-1 rounded-md text-white">
+                    <p>You haven&apos;t selected at least one right answer.</p>
+                  </div>
+                  <svg
+                    className="rotate-180 self-center scale-105 text-primary-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 2"
+                  >
+                    <path fill="currentColor" d="M1 21h22L12 2" />
+                  </svg>
+                </div>
+              </div>
             )}
+
+            <div className="grid grid-cols-2 gap-8 col-span-full w-full">
+              {questionData[activeQuestion].answerTexts.map(
+                (answer: string, answerId: number) => (
+                  <AnswerButton
+                    key={answerId}
+                    answerId={answerId}
+                    value={answer}
+                    svg_icon={answerData[answerId].icon}
+                    color={answerData[answerId].color}
+                    onChange={(text) =>
+                      logic.handleAnswerChange(
+                        answerId,
+                        text,
+                        activeQuestion,
+                        setQuestionData
+                      )
+                    }
+                    onSelected={(key) =>
+                      logic.handleCorrectAnswerChange(
+                        key,
+                        activeQuestion,
+                        setShowMissingCorrectAnswerPopover,
+                        setQuestionData
+                      )
+                    }
+                    isSelected={
+                      questionData[activeQuestion].correctAnswer === answerId
+                    }
+                  />
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>

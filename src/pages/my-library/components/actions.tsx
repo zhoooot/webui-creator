@@ -1,8 +1,12 @@
 import { Icon } from "@iconify/react";
+import Link from "next/link";
+import router from "next/router";
 
 type ActionProps = {
+  qid: string;
   author: boolean;
   favorite: boolean;
+  is_draft: boolean;
   onClickFavorite: () => void;
   onClickDelete: () => void;
   onClickShare: () => void;
@@ -26,12 +30,12 @@ const Action: React.FC<ActionProps> = (props) => {
           props.author ? "text-inherit" : "text-gray-300"
         } hover:text-primary-400 ${buttonClass}`}
         disabled={!props.author}
-        onClick={props.onClickDelete}
+        onClick={() => {}}
       >
-        <a href="/create" className="w-full h-full">
+        <Link href={`/create/${props.qid}?state=${props.is_draft ? "draft" : "quiz"}`} className="w-full h-full">
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />
         <span className="sr-only">Icon description</span>
-        </a>
+        </Link>
       </button>
       <button
         type="button"

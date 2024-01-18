@@ -1,4 +1,9 @@
+import { JWT_LOCAL_STORAGE_KEY, QUIZ_URL } from "@/config";
 import { Icon } from "@iconify/react";
+import axios from "axios";
+import { on } from "events";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 type ActionProps = {
   author: boolean;
@@ -11,7 +16,14 @@ type ActionProps = {
   onClickReport: () => void;
 };
 
+const duplicateQuiz = async () => {
+  const url = QUIZ_URL + ``;
+  const response = await axios.post(url, { headers: { Authorization: `Bearer ${localStorage.getItem(JWT_LOCAL_STORAGE_KEY)}` } } );
+  console.log(response.data);
+}
+
 const Action: React.FC<ActionProps> = (props) => {
+  const router = useRouter();
   const buttonClass =
     "h-full border-0 font-medium rounded-full text-sm p-0 text-center inline-flex items-center p-1";
   const iconClass = "w-full h-full fill-current stroke-current";
@@ -26,6 +38,11 @@ const Action: React.FC<ActionProps> = (props) => {
         className={`${
           props.author ? "text-inherit" : "text-gray-300"
         } hover:text-primary-400 ${buttonClass}`}
+        onClick={() => {
+          props.onClickEdit();
+        }
+        }
+        disabled={!props.author}
       >
         <Icon icon="majesticons:edit-pen-2-line" className={`${iconClass}`} />
         <span className="sr-only">Icon description</span>
@@ -82,7 +99,7 @@ const Action: React.FC<ActionProps> = (props) => {
               Rename
             </a>
           ) : (
-            <a className={optionClass}>
+            <a className={optionClass} onClick={props.onClickReport}>
               <Icon icon="lucide:flag" className={`${subiconClass}`} />
               Report
             </a>

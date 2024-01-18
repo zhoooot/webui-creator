@@ -1,6 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Icon } from "@iconify/react";
+import React from "react";
 
 interface ModalProps {
   title: string;
@@ -27,7 +28,8 @@ export default function Modal(props: ModalProps) {
   const [imageUrl, setImageUrl] = useState(props.imageUrl);
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <>
+    <Transition.Root show={true} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
@@ -67,10 +69,11 @@ export default function Modal(props: ModalProps) {
                       >
                         Quiz Detail
                       </Dialog.Title>
-                      <form>
+                      <form className="mt-8 space-y-6">
                         <div className="space-y-12 w-full">
                           <div className="mt-10 flex flex-row gap-x-6 gap-y-8 w-full">
                             <div className="flex flex-col gap-y-4 w-full flex-1">
+                              <fieldset>
                               <div className="col-span-1">
                                 <label
                                   htmlFor="title"
@@ -79,7 +82,7 @@ export default function Modal(props: ModalProps) {
                                   Title
                                 </label>
                                 <div className="mt-2">
-                                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                                  <div className="flex rounded-md shadow-sm px-2 ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                     <input
                                       type="text"
                                       name="title"
@@ -89,11 +92,13 @@ export default function Modal(props: ModalProps) {
                                       placeholder="Enter quiz title"
                                       value={title}
                                       onChange={(e) => setTitle(e.target.value)}
+                                      required
                                     />
                                   </div>
                                 </div>
                               </div>
-
+                              </fieldset>
+                              <fieldset>
                               <div className="col-span-1">
                                 <label
                                   htmlFor="description"
@@ -112,9 +117,11 @@ export default function Modal(props: ModalProps) {
                                     onChange={(e) =>
                                       setDescription(e.target.value)
                                     }
+                                    required
                                   />
                                 </div>
                               </div>
+                              </fieldset>
 
                               <fieldset>
                                 <label
@@ -159,39 +166,32 @@ export default function Modal(props: ModalProps) {
                                 </div>
                               </fieldset>
                             </div>
-
-                            <div className="flex-1">
+                            
+                            <div className="flex-1 grow flex flex-col">
                               <label
                                 htmlFor="cover-image"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                               >
                                 Cover image
                               </label>
-                              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                                <div className="text-center">
+                              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 bg-cover grow items-center"
+                                style={{ backgroundImage: "url('" + imageUrl + "')" }}
+                              >
+                                <button type="button" className="flex flex-row gap-1 items-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                                  onClick={() => {
+                                    const randomSeed = Math.floor(Math.random() * 100000) + 1;
+                                    setImageUrl(`https://picsum.photos/seed/${randomSeed}/2000/2000`);
+                                  }}
+                                >
                                   <Icon
-                                    icon="fe:file-image"
-                                    className="mx-auto h-12 w-12 text-gray-300"
+                                    icon="ri:dice-fill"
+                                    className="mx-auto h-8 w-8 text-white outline-1"
                                   />
-                                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                    <label
-                                      htmlFor="file-upload"
-                                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                    >
-                                      <span>Upload a file</span>
-                                      <input
-                                        id="file-upload"
-                                        name="file-upload"
-                                        type="file"
-                                        className="sr-only"
-                                      />
-                                    </label>
-                                    <p className="pl-1">or drag and drop</p>
-                                  </div>
-                                  <p className="text-xs leading-5 text-gray-600">
-                                    PNG, JPG, GIF up to 10MB
+                            
+                                  <p className="text-xs font-body normal-case leading-5 text-white">
+                                    Randomize
                                   </p>
-                                </div>
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -201,9 +201,14 @@ export default function Modal(props: ModalProps) {
                           <button
                             type="button"
                             className="text-sm font-semibold leading-6 text-gray-900"
-                            onClick={() => {
-                              setOpen(false);
-                              props.handleCloseModal();
+                            onClick={async () => {
+                              const response = window.confirm(
+                                "There are unsaved changes. Are you sure you want to discard all?"
+                              );
+                              if (response) {
+                                props.handleCloseModal();
+                                setOpen(false);
+                              }
                             }}
                             ref={cancelButtonRef}
                           >
@@ -211,16 +216,24 @@ export default function Modal(props: ModalProps) {
                           </button>
                           <button
                             type="submit"
-                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
                             onClick={() => {
-                              setOpen(false);
-                              props.handleSaveModal(
-                                title,
-                                description,
-                                visibility,
-                                imageUrl
+                              if (title === "" || description === "") {
+                                return;
+                              }
+                              const response = window.confirm(
+                                "Save all changes?"
                               );
-                              props.handleCloseModal();
+                              if (response) {
+                                props.handleSaveModal(
+                                  title,
+                                  description,
+                                  visibility,
+                                  imageUrl
+                                );
+                                props.handleCloseModal();
+                                setOpen(false);
+                              }
                             }}
                           >
                             Save
@@ -236,5 +249,6 @@ export default function Modal(props: ModalProps) {
         </div>
       </Dialog>
     </Transition.Root>
+    </>
   );
 }

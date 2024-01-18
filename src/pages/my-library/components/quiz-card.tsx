@@ -11,47 +11,51 @@ import {
 import Link from 'next/link'; 
 
 type CardProps = {
-  id: number;
+  id: string;
+  index: number;
   title: string;
   image_url: string;
   updated_at: string;
   published: boolean;
   author: string;
   favorite: boolean;
+  is_draft: boolean;
   onClickFavorite: (arg0: number) => void;
   onClickDelete: (arg0: number) => void;
   onClickShare: (arg0: number) => void;
   onClickRename: (arg0: number) => void;
-  onClickDuplicate: (arg0: number) => void;
+  onClickDuplicate: (arg0: number, qid: string) => void;
 };
 
 const QuizCard: React.FC<CardProps> = (quiz) => {
   return (
-    <Link legacyBehavior href={`/details`} className="w-full h-full">
       <div className=" bg-white shadow-xl rounded-lg w-full h-40 flex flex-row ">
         <div className="min-w-0.5 overflow-clip">
-          <QuizImage src={quiz.image_url} />
+          <QuizImage src={quiz.image_url === "" ? "quiz-cover.jpg" : quiz.image_url} />
         </div>
         <div className="h-50 w-full p-6 flex flex-col grow">
           <div className="w-full flex flex-row justify-between items-center h-10 flex-none">
             <QuizTitle>{quiz.title}</QuizTitle>
             <Action
               author={true}
+              qid={quiz.id}
               favorite={quiz.favorite}
+              is_draft={quiz.is_draft}
               onClickDelete={() => {
-                quiz.onClickDelete(quiz.id);
+                quiz.onClickDelete(quiz.index);
               }}
               onClickFavorite={() => {
-                quiz.onClickFavorite(quiz.id);
+                quiz.onClickFavorite(quiz.index);
               }}
               onClickRename={() => {
-                quiz.onClickRename(quiz.id);
+                quiz.onClickRename(quiz.index);
               }}
               onClickDuplicate={() => {
-                quiz.onClickDuplicate(quiz.id);
+                console.log("Duplicate");
+                quiz.onClickDuplicate(quiz.index, quiz.id);
               }}
               onClickShare={() => {
-                quiz.onClickShare(quiz.id);
+                quiz.onClickShare(quiz.index);
               }}
             />
           </div>
@@ -67,14 +71,13 @@ const QuizCard: React.FC<CardProps> = (quiz) => {
 
             <button
               type="button"
-              className="px-6 py-3.5 text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              className={`${quiz.is_draft ? "btn-disabled" : "btn-primary" } px-6 py-3.5 btn disabled:pointer-events-none`}
             >
-              Start
+              <Link href={`/details/${quiz.id}`}>Play</Link>
             </button>
           </div>
         </div>
       </div>
-    </Link>
   );
 };
 
